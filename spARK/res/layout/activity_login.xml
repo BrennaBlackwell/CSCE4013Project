@@ -37,7 +37,8 @@
         android:layout_below="@+id/editText2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="55dp"
-        android:text="Log In" />
+        android:text="Log In" 
+        android:onClick="login"/>
 
     <TextView
         android:id="@+id/textView1"

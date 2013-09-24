@@ -2,14 +2,16 @@ package edu.uark.csce.groupproject.spark;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
 
 public class LogInActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_login); 
 	}
 
 	@Override
@@ -19,4 +21,7 @@ public class LogInActivity extends Activity {
 		return true;
 	}
 
+	public void login(View v){
+		startActivity(new Intent(LogInActivity.this, NavDrawerTestActivity.class));
+	}
 }
