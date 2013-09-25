@@ -6,6 +6,7 @@
     
     <!-- The main content view -->
     <!--  Our current fragment goes within the frame layout -->
+    
     <FrameLayout   
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
@@ -19,4 +20,5 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:background="#111"/>
+    
 </android.support.v4.widget.DrawerLayout>
