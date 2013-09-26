@@ -1,7 +1,13 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" 
-      xmlns:edu.uark.csce.groupproject.spark="http://schemas.android.com/apk/res-auto">
-	<item android:id="@+id/action_search"
-          android:icon="@drawable/action_search"
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/search"
           android:title="@string/action_search"
-          android:showAsAction="always"/>
+          android:icon="@drawable/action_search"
+          android:showAsAction="collapseActionView|ifRoom"
+          android:actionViewClass="android.widget.SearchView" > </item>
+    <item android:id="@+id/post"
+    android:icon="@android:drawable/ic_menu_add"
+    android:showAsAction="always"
+    android:title="New Post">
+    </item>
 </menu>
