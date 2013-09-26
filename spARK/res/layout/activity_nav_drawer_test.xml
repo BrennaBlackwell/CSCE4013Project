@@ -3,10 +3,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
     <!-- The main content view -->
     <!--  Our current fragment goes within the frame layout -->
-    
     <FrameLayout   
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
@@ -17,8 +15,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
+        android:divider="#D0D0D0"
+    	android:dividerHeight="2px"
         android:background="#111"/>
-    
 </android.support.v4.widget.DrawerLayout>

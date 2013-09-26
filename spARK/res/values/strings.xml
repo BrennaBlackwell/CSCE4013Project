@@ -6,6 +6,9 @@
     <string name="hello_world">Hello world!</string><string-array name="nav_drawer_title_array">
         <item>Account</item>
         <item>Groups</item>
+        <item>Settings</item>
+        <item>Feedback</item>
+        <item>About</item>
         <item>Logout</item>
     </string-array>
     <string name="title_activity_nav_drawer_test">NavDrawerTestActivity</string><string name="action_websearch">Web search</string><string name="drawer_open">Open navigation drawer</string><string name="drawer_close">Close navigation drawer</string>

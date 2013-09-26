@@ -20,6 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity><activity android:name="edu.uark.csce.groupproject.spark.NavDrawerTestActivity" android:label="@string/title_activity_nav_drawer_test">
+>>>>>>> refs/remotes/origin/master
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

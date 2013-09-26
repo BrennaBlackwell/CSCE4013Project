@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,8 +26,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 @SuppressLint("NewApi")
-public class NavDrawerTestActivity extends Activity{
+public class NavDrawerTestActivity extends Activity {
     private DrawerLayout mDrawerLayout;
+    private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -48,9 +48,11 @@ public class NavDrawerTestActivity extends Activity{
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        
+        // set a new custom arrayadapter
+        mNavListArrayAdapter = new NavListArrayAdapter(getApplicationContext(), R.layout.drawer_list_item, mListTitles);
         // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mListTitles));
+        mDrawerList.setAdapter(mNavListArrayAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
@@ -123,9 +125,9 @@ public class NavDrawerTestActivity extends Activity{
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = new PlanetFragment();
+        Fragment fragment = new ContentFragment();
         Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_FRAGMENT_TYPE, position);
+        args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, position);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -133,7 +135,7 @@ public class NavDrawerTestActivity extends Activity{
 
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
-        setTitle(mListTitles[position]);
+        //setTitle(mListTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
@@ -165,10 +167,10 @@ public class NavDrawerTestActivity extends Activity{
     /**
      * Fragment that appears in the "content_frame" (our fragment type)
      */
-    public static class PlanetFragment extends Fragment {
+    public static class ContentFragment extends Fragment {
         public static final String ARG_FRAGMENT_TYPE = "fragment_type";
 
-        public PlanetFragment() {
+        public ContentFragment() {
             // Empty constructor required for fragment subclasses
         }
 
@@ -182,7 +184,7 @@ public class NavDrawerTestActivity extends Activity{
             int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
                             "drawable", getActivity().getPackageName());
             //((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
-            getActivity().setTitle(planet);
+            //getActivity().setTitle(planet);
             return rootView;
         }
     }

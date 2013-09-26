@@ -41,7 +41,7 @@
         android:onClick="login"/>
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textViewUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editText1"
@@ -52,7 +52,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView1"
+        android:layout_alignRight="@+id/textViewUsername"
         android:layout_below="@+id/editText2"
         android:text="Password" />
 
