@@ -22,6 +22,6 @@ public class LogInActivity extends Activity {
 	}
 
 	public void login(View v){
-		startActivity(new Intent(LogInActivity.this, NavDrawerTestActivity.class));
+		startActivity(new Intent(LogInActivity.this, MainActivity.class));
 	}
 }

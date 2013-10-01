@@ -28,7 +28,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 @SuppressLint("NewApi")
-public class NavDrawerTestActivity extends Activity {
+public class MainActivity extends Activity {
     private DrawerLayout mDrawerLayout;
     private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mDrawerList;
@@ -41,7 +41,7 @@ public class NavDrawerTestActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nav_drawer_test);
+        setContentView(R.layout.activity_nav_drawer);
 
         mTitle = mDrawerTitle = getTitle();
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
@@ -182,7 +182,7 @@ public class NavDrawerTestActivity extends Activity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.activity_nav_drawer_test, container, false);
+            View rootView = inflater.inflate(R.layout.activity_nav_drawer, container, false);
             int i = getArguments().getInt(ARG_FRAGMENT_TYPE);
             String planet = getResources().getStringArray(R.array.nav_drawer_title_array)[i];
 

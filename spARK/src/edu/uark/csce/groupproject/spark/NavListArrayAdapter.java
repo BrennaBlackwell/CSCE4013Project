@@ -31,27 +31,58 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		System.out.println("getView " + position + " " + convertView);
+		Drawable icon;
 		//if statement to determine if the position is the account, which requires different layout
 		if (convertView == null) {
 			if (position == 0) {
 				convertView = mInflater.inflate(R.layout.drawer_account, null);
+				icon = convertView.getResources().getDrawable(R.drawable.ic_menu_profile);
+			}
+			else if (position == 1) {
+				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+				icon = convertView.getResources().getDrawable(R.drawable.ic_menu_group);
+			}
+			else if (position == 2) {
+				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+				icon = convertView.getResources().getDrawable(R.drawable.ic_menu_recent);
+			}
+			else if (position == 3) {
+				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+				icon = convertView.getResources().getDrawable(R.drawable.ic_menu_bookmark);
+			}
+			else if (position == 4) {
+				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+				icon = convertView.getResources().getDrawable(R.drawable.ic_menu_settings);
+			}
+			else if (position == 5) {
+				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+				icon = convertView.getResources().getDrawable(R.drawable.ic_menu_feedback);
+			}
+			else if (position == 6) {
+				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+				icon = convertView.getResources().getDrawable(R.drawable.ic_menu_about);
+			}
+			else if (position == 7) {
+				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+				icon = convertView.getResources().getDrawable(R.drawable.ic_menu_logout);
 			}
 			else {
 				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+				icon = convertView.getResources().getDrawable(R.drawable.ic_launcher);
 			}
+			ImageView imageview = (ImageView) convertView.findViewById(R.id.navListOptionIcon);
+			imageview.setImageDrawable (icon);
 		}
 		else {
 			
 		}	
 		TextView textview = (TextView) convertView.findViewById(R.id.navListOptionTextView);
-		ImageView imageview = (ImageView) convertView.findViewById(R.id.navListOptionIcon);
+		
 
 		String s = options[position];
 		textview.setText(s);
 		Log.d(tag, "XML Inflated!");	
-		userIcon = convertView.getResources().getDrawable(R.drawable.ic_launcher);
 		//just a test for preferences icon
-		imageview.setImageDrawable(userIcon);
 
 		return convertView;
 	}
