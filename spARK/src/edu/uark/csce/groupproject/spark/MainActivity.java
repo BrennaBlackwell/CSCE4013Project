@@ -24,7 +24,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import edu.uark.csce.groupproject.spark.ClusterView_Fragment.OnFragmentInteractionListener;
 
-@SuppressLint("NewApi")
 public class MainActivity extends Activity implements OnFragmentInteractionListener{
     private DrawerLayout mDrawerLayout;
     private NavListArrayAdapter mNavListArrayAdapter;
