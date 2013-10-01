@@ -6,13 +6,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.SearchManager;
-import android.content.Intent;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,17 +20,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Toast;
+import edu.uark.csce.groupproject.spark.ClusterView_Fragment.OnFragmentInteractionListener;
 
 @SuppressLint("NewApi")
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnFragmentInteractionListener{
     private DrawerLayout mDrawerLayout;
     private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mDrawerList;
+    private FrameLayout mClusterDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
@@ -41,13 +39,22 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nav_drawer);
+        setContentView(R.layout.activity_main);
+        
+        FragmentManager fm = getFragmentManager();
 
         mTitle = mDrawerTitle = getTitle();
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
+        mClusterDrawer = (FrameLayout) findViewById(R.id.right_drawer);
+        
+        //Replace right_drawer FrameLayout with ClusterView_Fragment
+        Fragment bubble_fragment = new ClusterView_Fragment();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.right_drawer, bubble_fragment);
+        ft.commit(); 
+        
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         
@@ -56,6 +63,9 @@ public class MainActivity extends Activity {
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(mNavListArrayAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        
+        //mDrawerList_Right.setAdapter(mNavListArrayAdapter);
+        //mDrawerList_Right.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -90,7 +100,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.nav_drawer_test, menu);
+        inflater.inflate(R.menu.nav_drawer, menu);
         //MenuItem searchItem = menu.findItem(R.id.action_search);
         //SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         //configure search info, add listeners
@@ -182,7 +192,7 @@ public class MainActivity extends Activity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.activity_nav_drawer, container, false);
+            View rootView = inflater.inflate(R.layout.activity_main, container, false);
             int i = getArguments().getInt(ARG_FRAGMENT_TYPE);
             String planet = getResources().getStringArray(R.array.nav_drawer_title_array)[i];
 
@@ -193,4 +203,10 @@ public class MainActivity extends Activity {
             return rootView;
         }
     }
+
+	@Override
+	public void onFragmentInteraction(Uri uri) {
+		// TODO Auto-generated method stub
+		
+	}
 }

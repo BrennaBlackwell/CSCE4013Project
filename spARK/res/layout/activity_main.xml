@@ -1,0 +1,97 @@
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- The main content view -->
+    <!--  Our current fragment goes within the frame layout -->
+    <FrameLayout   
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        
+		<ImageView
+                android:id="@+id/handle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/drawer_tab"/>
+		
+        <!--
+        <SlidingDrawer
+            android:id="@+id/slidingDrawer1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:content="@+id/content"
+            android:handle="@+id/handle" >
+
+            <ImageView
+                android:id="@+id/handle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/drawer_tab"/>
+
+            <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@android:color/white" >
+                
+                <Button
+	                android:id="@+id/button_one"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Button1" />
+                
+                <Button
+	                android:id="@+id/button_two"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Button2" />
+            
+            </LinearLayout>
+        
+        </SlidingDrawer>
+  	-->
+  	
+    </FrameLayout>
+    <!-- The navigation drawer -->
+    <ListView android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="#D0D0D0"
+    	android:dividerHeight="2px"
+        android:background="#111"/>
+
+ 	<FrameLayout
+        android:id="@+id/right_drawer"
+	    android:layout_gravity="end"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" />
+ 	<!--  
+    <LinearLayout
+                android:id="@+id/right_drawer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="end"
+                android:background="@android:color/white" >
+                
+                <Button
+	                android:id="@+id/button_one"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Button1" />
+                
+                <Button
+	                android:id="@+id/button_two"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Button2" />
+    </LinearLayout>
+    -->
+</android.support.v4.widget.DrawerLayout>
