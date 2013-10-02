@@ -2,7 +2,6 @@ package edu.uark.csce.groupproject.spark;
 
 import java.util.Locale;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -28,7 +27,7 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
     private DrawerLayout mDrawerLayout;
     private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mDrawerList;
-    private FrameLayout mClusterDrawer;
+    private ClusterView_Fragment mClusterDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
@@ -46,7 +45,7 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mClusterDrawer = (FrameLayout) findViewById(R.id.right_drawer);
+        mClusterDrawer = (ClusterView_Fragment) fm.findFragmentById(R.id.right_drawer);
         
         //Replace right_drawer FrameLayout with ClusterView_Fragment
         Fragment bubble_fragment = new ClusterView_Fragment();
@@ -62,9 +61,6 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(mNavListArrayAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        
-        //mDrawerList_Right.setAdapter(mNavListArrayAdapter);
-        //mDrawerList_Right.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -189,14 +185,12 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.activity_main, container, false);
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_news_feed, container, false);
             int i = getArguments().getInt(ARG_FRAGMENT_TYPE);
             String planet = getResources().getStringArray(R.array.nav_drawer_title_array)[i];
 
-            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-                            "drawable", getActivity().getPackageName());
+            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()), "drawable", getActivity().getPackageName());
             //((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
             //getActivity().setTitle(planet);
             return rootView;
