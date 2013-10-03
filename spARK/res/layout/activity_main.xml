@@ -30,7 +30,7 @@
 
  	<fragment
         android:id="@+id/right_drawer"
-        android:name="edu.uark.csce.groupproject.spark.ClusterView_Fragment"
+        android:name="edu.uark.spARK.ClusterView_Fragment"
 	    android:layout_gravity="end"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent" />
