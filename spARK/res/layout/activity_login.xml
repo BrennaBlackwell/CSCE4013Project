@@ -8,61 +8,98 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".LogInActivity" >
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="74dp"
-        android:ems="10" >
-
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText1"
-        android:layout_below="@+id/editText1"
-        android:layout_marginTop="49dp"
-        android:ems="10"
-        android:inputType="textPassword" />
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/editText2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp"
-        android:text="Log In" 
-        android:onClick="login"/>
-
     <TextView
         android:id="@+id/textViewUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText1"
+        android:layout_below="@+id/Username"
         android:layout_centerHorizontal="true"
-        android:text="Username" />
+        android:text="Username" 
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/textViewUsername"
-        android:layout_below="@+id/editText2"
-        android:text="Password" />
-
+        android:layout_below="@+id/Password"
+        android:text="Password" 
+        tools:ignore="HardcodedText" />
+    
     <Button
         android:id="@+id/button2"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/button1"
         android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/button1"
         android:layout_marginBottom="44dp"
-        android:text="Create An Account" />
+        android:onClick="CreateAccount"
+        android:text="Create An Account" 
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button2"
+        android:layout_alignLeft="@+id/invalidLogin"
+        android:layout_alignRight="@+id/Password"
+        android:layout_marginBottom="14dp"
+        android:onClick="Login"
+        android:text="Log In" 
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/Username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:ems="10"
+        android:maxLength="25" >
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/Password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/Username"
+        android:layout_below="@+id/textViewUsername"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:maxLength="32" />
+
+    <TextView
+        android:id="@+id/invalidLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button1"
+        android:layout_alignLeft="@+id/Password"
+        android:layout_alignRight="@+id/Password"
+        android:layout_marginBottom="35dp"
+        android:gravity="center"
+        android:text="Invalid Login"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#FF0000"
+        android:visibility="invisible"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/accountCreated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="19dp"
+        android:gravity="center"
+        android:text="Account Created. Please Login Below"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#FF0000"
+        android:visibility="invisible"
+        tools:ignore="HardcodedText" />
 
 </RelativeLayout>

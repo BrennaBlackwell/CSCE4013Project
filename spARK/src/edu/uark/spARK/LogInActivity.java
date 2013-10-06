@@ -6,6 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import edu.uark.spARK.R;
+import edu.uark.spARK.JSONQuery.AsyncResponse;
+
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,7 +19,7 @@ import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff;
  
-public class LogInActivity extends Activity {
+public class LogInActivity extends Activity implements AsyncResponse {
  
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 1000;
@@ -56,7 +61,45 @@ public class LogInActivity extends Activity {
         }, SPLASH_TIME_OUT + 450);
     }
     
-	public void login(View v){
-		startActivity(new Intent(LogInActivity.this, MainActivity.class));
+	public void Login(View v){
+		EditText edit_text1 = (EditText)findViewById(R.id.Username);
+		EditText edit_text2 = (EditText)findViewById(R.id.Password);
+		
+		String Username = edit_text1.getText().toString();
+		String Password = edit_text2.getText().toString();		
+		
+		JSONQuery jquery = new JSONQuery(this);
+		jquery.execute("http://csce.uark.edu/~mmmcclel/spark/authentication.php", Username, Password);
+	}
+	
+	public void CreateAccount(View v){
+		Intent CreateAccountIntent = new Intent(this, RegisterActivity.class);
+		startActivityForResult(CreateAccountIntent, 1);
+	}
+
+	@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
+        	TextView text_view2 = (TextView)findViewById(R.id.accountCreated);
+        	text_view2.setVisibility(View.VISIBLE);
+        }
+	}
+	
+	@Override
+	public void processFinish(String output) {
+		TextView text_view1 = (TextView)findViewById(R.id.invalidLogin);
+		TextView text_view2 = (TextView)findViewById(R.id.accountCreated);
+		
+		text_view2.setVisibility(View.INVISIBLE);
+		if (output.contains("Success")) {
+			text_view1.setVisibility(View.INVISIBLE);
+			Intent MainIntent = new Intent(this, MainActivity.class);
+			startActivity(MainIntent);
+		} else {
+			text_view1.setVisibility(View.VISIBLE);
+		}
+		
 	}
 }

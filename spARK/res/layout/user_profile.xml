@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="Deprecated" >
+ 
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="158dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:text="Bob McBob"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:ignore="HardcodedText" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_alignTop="@+id/userName"
+        android:layout_marginRight="16dp"
+        android:layout_toLeftOf="@+id/userID"
+        android:src="@drawable/profile_icon"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/userID"
+        android:layout_width="158dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/userRank"
+        android:layout_marginTop="16dp"
+        android:text="mmmcclel53"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="158dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/userID"
+        android:progress="40" />
+
+    <TextView
+        android:id="@+id/myRecentsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/imageView1"
+        android:layout_marginTop="24dp"
+        android:text="Recent Posts"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/userRank"
+        android:layout_width="158dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/userName"
+        android:layout_marginTop="23dp"
+        android:text="Administrator"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:ignore="HardcodedText" />
+
+    <ListView
+        android:id="@+id/myRecentsList"
+        android:layout_width="wrap_content"
+        android:layout_height="122dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/myRecentsText"
+        android:layout_marginTop="14dp" >
+    </ListView>
+
+</RelativeLayout>

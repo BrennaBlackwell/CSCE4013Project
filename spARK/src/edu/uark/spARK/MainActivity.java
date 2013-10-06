@@ -88,7 +88,7 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
-            selectItem(0);
+            //selectItem(0);
         }
     }
 
@@ -143,6 +143,11 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
+
+//        if (position == 0) {
+//        	setContentView(R.layout.user_profile);
+//        }
+        
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         //setTitle(mListTitles[position]);
