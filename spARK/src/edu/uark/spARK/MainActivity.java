@@ -200,6 +200,5 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
 	@Override
 	public void onFragmentInteraction(Uri uri) {
 		// TODO Auto-generated method stub
-		
 	}
 }
