@@ -38,66 +38,87 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int action_search=0x7f020000;
-        public static final int drawer_shadow=0x7f020001;
-        public static final int drawer_tab=0x7f020002;
-        public static final int edit_text_holo_light=0x7f020003;
-        public static final int ic_drawer=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
-        public static final int ic_menu_about=0x7f020006;
-        public static final int ic_menu_add=0x7f020007;
-        public static final int ic_menu_bookmark=0x7f020008;
-        public static final int ic_menu_feedback=0x7f020009;
-        public static final int ic_menu_group=0x7f02000a;
-        public static final int ic_menu_logout=0x7f02000b;
-        public static final int ic_menu_preferences=0x7f02000c;
-        public static final int ic_menu_profile=0x7f02000d;
-        public static final int ic_menu_recent=0x7f02000e;
-        public static final int ic_menu_settings=0x7f02000f;
-        public static final int spark_logo=0x7f020010;
-        public static final int textfield_activated_holo_light=0x7f020011;
-        public static final int textfield_default_holo_light=0x7f020012;
-        public static final int textfield_disabled_focused_holo_light=0x7f020013;
-        public static final int textfield_disabled_holo_light=0x7f020014;
-        public static final int textfield_focused_holo_light=0x7f020015;
+        public static final int ab_solid_bg=0x7f020000;
+        public static final int ab_solid_bottom=0x7f020001;
+        public static final int ab_solid_stacked=0x7f020002;
+        public static final int action_search=0x7f020003;
+        public static final int drawer_shadow=0x7f020004;
+        public static final int drawer_tab=0x7f020005;
+        public static final int edit_text_holo_light=0x7f020006;
+        public static final int ic_drawer=0x7f020007;
+        public static final int ic_launcher=0x7f020008;
+        public static final int ic_menu_about=0x7f020009;
+        public static final int ic_menu_add=0x7f02000a;
+        public static final int ic_menu_bookmark=0x7f02000b;
+        public static final int ic_menu_feedback=0x7f02000c;
+        public static final int ic_menu_group=0x7f02000d;
+        public static final int ic_menu_logout=0x7f02000e;
+        public static final int ic_menu_preferences=0x7f02000f;
+        public static final int ic_menu_profile=0x7f020010;
+        public static final int ic_menu_recent=0x7f020011;
+        public static final int ic_menu_settings=0x7f020012;
+        public static final int profile_icon=0x7f020013;
+        public static final int progress_bg=0x7f020014;
+        public static final int progress_horizontal=0x7f020015;
+        public static final int progress_primary=0x7f020016;
+        public static final int progress_secondary=0x7f020017;
+        public static final int spark_logo=0x7f020018;
+        public static final int textfield_activated_holo_light=0x7f020019;
+        public static final int textfield_default_holo_light=0x7f02001a;
+        public static final int textfield_disabled_focused_holo_light=0x7f02001b;
+        public static final int textfield_disabled_holo_light=0x7f02001c;
+        public static final int textfield_focused_holo_light=0x7f02001d;
     }
     public static final class id {
-        public static final int LinearLayout1=0x7f0a0010;
-        public static final int RelativeLayout1=0x7f0a000b;
-        public static final int action_settings=0x7f0a0018;
-        public static final int btn1=0x7f0a0014;
-        public static final int btn2=0x7f0a0013;
-        public static final int btn3=0x7f0a0012;
-        public static final int button1=0x7f0a0002;
-        public static final int button2=0x7f0a0005;
-        public static final int content_frame=0x7f0a0007;
-        public static final int drawer_layout=0x7f0a0006;
-        public static final int editText1=0x7f0a0000;
-        public static final int editText2=0x7f0a0001;
-        public static final int expandableListView1=0x7f0a0015;
-        public static final int fragment_bubble_view_=0x7f0a0011;
-        public static final int handle=0x7f0a0008;
-        public static final int imageView1=0x7f0a0017;
-        public static final int includeLogin=0x7f0a0016;
-        public static final int left_drawer=0x7f0a0009;
-        public static final int navListOptionIcon=0x7f0a000c;
-        public static final int navListOptionTextView=0x7f0a000d;
-        public static final int post=0x7f0a001a;
-        public static final int progressBar1=0x7f0a000f;
-        public static final int right_drawer=0x7f0a000a;
-        public static final int search=0x7f0a0019;
-        public static final int textView2=0x7f0a0004;
-        public static final int textViewUsername=0x7f0a0003;
-        public static final int userEmail=0x7f0a000e;
+        public static final int LinearLayout1=0x7f0a0016;
+        public static final int Password=0x7f0a0003;
+        public static final int RelativeLayout1=0x7f0a0011;
+        public static final int Username=0x7f0a0001;
+        public static final int accountCreated=0x7f0a0007;
+        public static final int action_settings=0x7f0a0023;
+        public static final int btn1=0x7f0a001a;
+        public static final int btn2=0x7f0a0019;
+        public static final int btn3=0x7f0a0018;
+        public static final int button1=0x7f0a0005;
+        public static final int button2=0x7f0a0004;
+        public static final int content_frame=0x7f0a0009;
+        public static final int drawer_layout=0x7f0a0008;
+        public static final int expandableListView1=0x7f0a001b;
+        public static final int fragment_bubble_view_=0x7f0a0017;
+        public static final int handle=0x7f0a000a;
+        public static final int imageView1=0x7f0a001d;
+        public static final int includeLogin=0x7f0a001c;
+        public static final int invalidLogin=0x7f0a0006;
+        public static final int left_drawer=0x7f0a000b;
+        public static final int myRecentsList=0x7f0a0022;
+        public static final int myRecentsText=0x7f0a0021;
+        public static final int navListOptionIcon=0x7f0a0012;
+        public static final int navListOptionTextView=0x7f0a0013;
+        public static final int post=0x7f0a0025;
+        public static final int progressBar1=0x7f0a0015;
+        public static final int registerEmail=0x7f0a000e;
+        public static final int registerPassword=0x7f0a000f;
+        public static final int registerUsername=0x7f0a000d;
+        public static final int right_drawer=0x7f0a000c;
+        public static final int search=0x7f0a0024;
+        public static final int textView2=0x7f0a0002;
+        public static final int textViewUsername=0x7f0a0000;
+        public static final int userEmail=0x7f0a0014;
+        public static final int userID=0x7f0a001f;
+        public static final int userName=0x7f0a001e;
+        public static final int userRank=0x7f0a0020;
+        public static final int userTaken=0x7f0a0010;
     }
     public static final class layout {
         public static final int activity_login=0x7f030000;
         public static final int activity_main=0x7f030001;
-        public static final int drawer_account=0x7f030002;
-        public static final int drawer_list_item=0x7f030003;
-        public static final int fragment_cluster_view=0x7f030004;
-        public static final int fragment_news_feed=0x7f030005;
-        public static final int splash=0x7f030006;
+        public static final int activity_register=0x7f030002;
+        public static final int drawer_account=0x7f030003;
+        public static final int drawer_list_item=0x7f030004;
+        public static final int fragment_cluster_view=0x7f030005;
+        public static final int fragment_news_feed=0x7f030006;
+        public static final int splash=0x7f030007;
+        public static final int user_profile=0x7f030008;
     }
     public static final class menu {
         public static final int log_in=0x7f090000;
@@ -172,7 +193,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name android:buttonBarButtonStyle
+          @attr name edu.uark.spARK:buttonBarButtonStyle
         */
         public static final int ButtonBarContainerTheme_buttonBarButtonStyle = 1;
         /**
@@ -182,7 +203,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name android:buttonBarStyle
+          @attr name edu.uark.spARK:buttonBarStyle
         */
         public static final int ButtonBarContainerTheme_buttonBarStyle = 0;
     };
