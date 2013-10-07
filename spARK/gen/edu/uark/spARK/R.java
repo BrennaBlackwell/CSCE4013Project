@@ -22,10 +22,14 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int buttonBarStyle=0x7f010000;
     }
     public static final class color {
-        public static final int black_overlay=0x7f040000;
-        public static final int grey_bg=0x7f040001;
-        public static final int purple=0x7f040003;
-        public static final int red=0x7f040002;
+        public static final int black_overlay=0x7f040002;
+        public static final int blue=0x7f040007;
+        public static final int grey_bg=0x7f040003;
+        public static final int grey_bg2=0x7f040004;
+        public static final int purple=0x7f040006;
+        public static final int red=0x7f040005;
+        public static final int white_ab=0x7f040000;
+        public static final int white_dialog=0x7f040001;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -70,44 +74,44 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int textfield_focused_holo_light=0x7f02001d;
     }
     public static final class id {
-        public static final int LinearLayout1=0x7f0a0016;
+        public static final int LinearLayout1=0x7f0a0017;
         public static final int Password=0x7f0a0003;
-        public static final int RelativeLayout1=0x7f0a0011;
+        public static final int RelativeLayout1=0x7f0a0012;
         public static final int Username=0x7f0a0001;
         public static final int accountCreated=0x7f0a0007;
-        public static final int action_settings=0x7f0a0023;
-        public static final int btn1=0x7f0a001a;
-        public static final int btn2=0x7f0a0019;
-        public static final int btn3=0x7f0a0018;
+        public static final int btn1=0x7f0a001b;
+        public static final int btn2=0x7f0a001a;
+        public static final int btn3=0x7f0a0019;
         public static final int button1=0x7f0a0005;
         public static final int button2=0x7f0a0004;
-        public static final int content_frame=0x7f0a0009;
-        public static final int drawer_layout=0x7f0a0008;
-        public static final int expandableListView1=0x7f0a001b;
-        public static final int fragment_bubble_view_=0x7f0a0017;
-        public static final int handle=0x7f0a000a;
-        public static final int imageView1=0x7f0a001d;
-        public static final int includeLogin=0x7f0a001c;
+        public static final int buttonDebug=0x7f0a0008;
+        public static final int content_frame=0x7f0a000a;
+        public static final int drawer_layout=0x7f0a0009;
+        public static final int expandableListView1=0x7f0a001c;
+        public static final int fragment_bubble_view_=0x7f0a0018;
+        public static final int handle=0x7f0a000b;
+        public static final int imageView1=0x7f0a001e;
+        public static final int includeLogin=0x7f0a001d;
         public static final int invalidLogin=0x7f0a0006;
-        public static final int left_drawer=0x7f0a000b;
-        public static final int myRecentsList=0x7f0a0022;
-        public static final int myRecentsText=0x7f0a0021;
-        public static final int navListOptionIcon=0x7f0a0012;
-        public static final int navListOptionTextView=0x7f0a0013;
+        public static final int left_drawer=0x7f0a000c;
+        public static final int myRecentsList=0x7f0a0023;
+        public static final int myRecentsText=0x7f0a0022;
+        public static final int navListOptionIcon=0x7f0a0013;
+        public static final int navListOptionTextView=0x7f0a0014;
         public static final int post=0x7f0a0025;
-        public static final int progressBar1=0x7f0a0015;
-        public static final int registerEmail=0x7f0a000e;
-        public static final int registerPassword=0x7f0a000f;
-        public static final int registerUsername=0x7f0a000d;
-        public static final int right_drawer=0x7f0a000c;
+        public static final int progressBar1=0x7f0a0016;
+        public static final int registerEmail=0x7f0a000f;
+        public static final int registerPassword=0x7f0a0010;
+        public static final int registerUsername=0x7f0a000e;
+        public static final int right_drawer=0x7f0a000d;
         public static final int search=0x7f0a0024;
         public static final int textView2=0x7f0a0002;
         public static final int textViewUsername=0x7f0a0000;
-        public static final int userEmail=0x7f0a0014;
-        public static final int userID=0x7f0a001f;
-        public static final int userName=0x7f0a001e;
-        public static final int userRank=0x7f0a0020;
-        public static final int userTaken=0x7f0a0010;
+        public static final int userEmail=0x7f0a0015;
+        public static final int userID=0x7f0a0020;
+        public static final int userName=0x7f0a001f;
+        public static final int userRank=0x7f0a0021;
+        public static final int userTaken=0x7f0a0011;
     }
     public static final class layout {
         public static final int activity_login=0x7f030000;
@@ -156,14 +160,15 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
     
+ API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f080000;
-        public static final int AppBaseTheme_NoActionBar=0x7f080003;
         /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;
-        public static final int EditTextAppTheme=0x7f080004;
+        public static final int AppTheme_NoActionBar=0x7f080004;
+        public static final int EditTextAppTheme=0x7f080005;
+        public static final int ProgressBar=0x7f080003;
     }
     public static final class styleable {
         /** 

@@ -62,6 +62,12 @@ public class LogInActivity extends Activity implements AsyncResponse {
     }
     
 	public void Login(View v){
+		//debugging so we don't have to enter user/password every time. We will have to delete this later, but it might be useful for now
+		if (v.getId() == R.id.buttonDebug) {
+			Intent MainIntent = new Intent(this, MainActivity.class);
+			startActivity(MainIntent);
+		}
+		
 		EditText edit_text1 = (EditText)findViewById(R.id.Username);
 		EditText edit_text2 = (EditText)findViewById(R.id.Password);
 		
@@ -91,7 +97,6 @@ public class LogInActivity extends Activity implements AsyncResponse {
 	public void processFinish(String output) {
 		TextView text_view1 = (TextView)findViewById(R.id.invalidLogin);
 		TextView text_view2 = (TextView)findViewById(R.id.accountCreated);
-		
 		text_view2.setVisibility(View.INVISIBLE);
 		if (output.contains("Success")) {
 			text_view1.setVisibility(View.INVISIBLE);
@@ -101,5 +106,12 @@ public class LogInActivity extends Activity implements AsyncResponse {
 			text_view1.setVisibility(View.VISIBLE);
 		}
 		
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		//hides the invalid login
+		findViewById(R.id.invalidLogin).setVisibility(View.INVISIBLE);
 	}
 }

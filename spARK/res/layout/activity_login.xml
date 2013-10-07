@@ -102,4 +102,16 @@
         android:visibility="invisible"
         tools:ignore="HardcodedText" />
 
+    <Button
+        android:id="@+id/buttonDebug"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_alignLeft="@+id/invalidLogin"
+        android:layout_alignRight="@+id/accountCreated"
+        android:layout_centerVertical="true"
+        android:onClick="Login"
+        android:text="Skip Login (Testing only)"
+        android:textSize="12dp" />
+
 </RelativeLayout>

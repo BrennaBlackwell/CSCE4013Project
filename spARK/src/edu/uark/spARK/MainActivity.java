@@ -144,9 +144,9 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
 
-//        if (position == 0) {
-//        	setContentView(R.layout.user_profile);
-//        }
+        //if (position == 0) {
+        //	setContentView(R.layout.user_profile);
+        //}
         
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
