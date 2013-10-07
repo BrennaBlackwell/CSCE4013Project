@@ -56,22 +56,23 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int ic_menu_bookmark=0x7f02000b;
         public static final int ic_menu_feedback=0x7f02000c;
         public static final int ic_menu_group=0x7f02000d;
-        public static final int ic_menu_logout=0x7f02000e;
-        public static final int ic_menu_preferences=0x7f02000f;
-        public static final int ic_menu_profile=0x7f020010;
-        public static final int ic_menu_recent=0x7f020011;
-        public static final int ic_menu_settings=0x7f020012;
-        public static final int profile_icon=0x7f020013;
-        public static final int progress_bg=0x7f020014;
-        public static final int progress_horizontal=0x7f020015;
-        public static final int progress_primary=0x7f020016;
-        public static final int progress_secondary=0x7f020017;
-        public static final int spark_logo=0x7f020018;
-        public static final int textfield_activated_holo_light=0x7f020019;
-        public static final int textfield_default_holo_light=0x7f02001a;
-        public static final int textfield_disabled_focused_holo_light=0x7f02001b;
-        public static final int textfield_disabled_holo_light=0x7f02001c;
-        public static final int textfield_focused_holo_light=0x7f02001d;
+        public static final int ic_menu_info_details=0x7f02000e;
+        public static final int ic_menu_logout=0x7f02000f;
+        public static final int ic_menu_preferences=0x7f020010;
+        public static final int ic_menu_profile=0x7f020011;
+        public static final int ic_menu_recent=0x7f020012;
+        public static final int ic_menu_settings=0x7f020013;
+        public static final int profile_icon=0x7f020014;
+        public static final int progress_bg=0x7f020015;
+        public static final int progress_horizontal=0x7f020016;
+        public static final int progress_primary=0x7f020017;
+        public static final int progress_secondary=0x7f020018;
+        public static final int spark_logo=0x7f020019;
+        public static final int textfield_activated_holo_light=0x7f02001a;
+        public static final int textfield_default_holo_light=0x7f02001b;
+        public static final int textfield_disabled_focused_holo_light=0x7f02001c;
+        public static final int textfield_disabled_holo_light=0x7f02001d;
+        public static final int textfield_focused_holo_light=0x7f02001e;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f0a0017;
@@ -198,7 +199,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name edu.uark.spARK:buttonBarButtonStyle
+          @attr name android:buttonBarButtonStyle
         */
         public static final int ButtonBarContainerTheme_buttonBarButtonStyle = 1;
         /**
@@ -208,7 +209,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name edu.uark.spARK:buttonBarStyle
+          @attr name android:buttonBarStyle
         */
         public static final int ButtonBarContainerTheme_buttonBarStyle = 0;
     };

@@ -53,7 +53,7 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 					break;
 				case 4:
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_settings);
+					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_preferences);
 					break;
 				case 5:
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
