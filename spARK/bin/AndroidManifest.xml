@@ -30,7 +30,10 @@
             android:configChanges="screenSize|orientation" >
         </activity>
         <activity android:name="RegisterActivity"></activity>
-        
+    <meta-data
+		android:name="com.google.android.maps.v2.API_KEY"
+		android:value="AIzaSyCyecNzsGtPyFYhaHfimJD14MLzM00KUpA">
+    </meta-data>
     </application>
 
 </manifest>

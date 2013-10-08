@@ -88,30 +88,31 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int buttonDebug=0x7f0a0008;
         public static final int content_frame=0x7f0a000a;
         public static final int drawer_layout=0x7f0a0009;
-        public static final int expandableListView1=0x7f0a001c;
+        public static final int expandableListView1=0x7f0a001d;
         public static final int fragment_bubble_view_=0x7f0a0018;
         public static final int handle=0x7f0a000b;
-        public static final int imageView1=0x7f0a001e;
-        public static final int includeLogin=0x7f0a001d;
+        public static final int imageView1=0x7f0a001f;
+        public static final int includeLogin=0x7f0a001e;
         public static final int invalidLogin=0x7f0a0006;
         public static final int left_drawer=0x7f0a000c;
-        public static final int myRecentsList=0x7f0a0023;
-        public static final int myRecentsText=0x7f0a0022;
+        public static final int mapFragment=0x7f0a001c;
+        public static final int myRecentsList=0x7f0a0024;
+        public static final int myRecentsText=0x7f0a0023;
         public static final int navListOptionIcon=0x7f0a0013;
         public static final int navListOptionTextView=0x7f0a0014;
-        public static final int post=0x7f0a0025;
+        public static final int post=0x7f0a0026;
         public static final int progressBar1=0x7f0a0016;
         public static final int registerEmail=0x7f0a000f;
         public static final int registerPassword=0x7f0a0010;
         public static final int registerUsername=0x7f0a000e;
         public static final int right_drawer=0x7f0a000d;
-        public static final int search=0x7f0a0024;
+        public static final int search=0x7f0a0025;
         public static final int textView2=0x7f0a0002;
         public static final int textViewUsername=0x7f0a0000;
         public static final int userEmail=0x7f0a0015;
-        public static final int userID=0x7f0a0020;
-        public static final int userName=0x7f0a001f;
-        public static final int userRank=0x7f0a0021;
+        public static final int userID=0x7f0a0021;
+        public static final int userName=0x7f0a0020;
+        public static final int userRank=0x7f0a0022;
         public static final int userTaken=0x7f0a0011;
     }
     public static final class layout {
@@ -121,9 +122,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int drawer_account=0x7f030003;
         public static final int drawer_list_item=0x7f030004;
         public static final int fragment_cluster_view=0x7f030005;
-        public static final int fragment_news_feed=0x7f030006;
-        public static final int splash=0x7f030007;
-        public static final int user_profile=0x7f030008;
+        public static final int fragment_map_view=0x7f030006;
+        public static final int fragment_news_feed=0x7f030007;
+        public static final int splash=0x7f030008;
+        public static final int user_profile=0x7f030009;
     }
     public static final class menu {
         public static final int log_in=0x7f090000;
@@ -199,7 +201,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name android:buttonBarButtonStyle
+          @attr name edu.uark.spARK:buttonBarButtonStyle
         */
         public static final int ButtonBarContainerTheme_buttonBarButtonStyle = 1;
         /**
@@ -209,7 +211,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name android:buttonBarStyle
+          @attr name edu.uark.spARK:buttonBarStyle
         */
         public static final int ButtonBarContainerTheme_buttonBarStyle = 0;
     };
