@@ -3,27 +3,25 @@ package edu.uark.spARK;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.LightingColorFilter;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Display;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-import edu.uark.spARK.R;
-import edu.uark.spARK.JSONQuery.AsyncResponse;
-
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.graphics.Color;
-import android.graphics.LightingColorFilter;
-import android.graphics.PorterDuff;
+import android.widget.TextView;
+import edu.uark.spARK.JSONQuery.AsyncResponse;
  
 public class LogInActivity extends Activity implements AsyncResponse {
  
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 1000;
     private View mLoginView;
+    
+
     
     @SuppressLint("NewApi")
 	@Override
@@ -42,8 +40,16 @@ public class LogInActivity extends Activity implements AsyncResponse {
        	 
             @Override
             public void run() {
-            	ImageView ivSplash = (ImageView) findViewById(R.id.imageView1);
-            	ivSplash.animate().translationY(-450).withLayer();
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                //float width = size.x;
+                float height = size.y;
+                ImageView ivSplash = (ImageView) findViewById(R.id.imageView1);
+                //float spark_X = ivSplash.getLeft();
+                float spark_Y = ivSplash.getTop();
+            	float distance = (0-spark_Y);
+            	ivSplash.animate().translationY(distance).withLayer();
             }
         }, (SPLASH_TIME_OUT));
         
