@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.android.gms.maps.MapFragment;
@@ -202,10 +203,10 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_news_feed, container, false);
             int i = getArguments().getInt(ARG_FRAGMENT_TYPE);
-            String planet = getResources().getStringArray(R.array.nav_drawer_title_array)[i];
+            String title = getResources().getStringArray(R.array.nav_drawer_title_array)[i];
 
-            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()), "drawable", getActivity().getPackageName());
-            //((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
+            //int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()), "drawable", getActivity().getPackageName());
+            //((ImageView) rootView.findViewById(R.id.image))
             //getActivity().setTitle(planet);
             return rootView;
         }
