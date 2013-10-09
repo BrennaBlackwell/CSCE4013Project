@@ -6,18 +6,45 @@
     <!-- The main content view -->
     <!--  Our current fragment goes within the frame layout -->
     <FrameLayout   
-        android:id="@+id/content_frame"
+        android:id="@+id/main_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-        
+
 		<ImageView
                 android:id="@+id/handle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:src="@drawable/drawer_tab"/>
-  	
+		<!-- 
+		<SlidingDrawer
+		     android:id="@+id/map_drawer"
+		     android:layout_width="match_parent"
+		     android:layout_height="300dp"
+		     android:handle="@+id/map_handle"
+		     android:layout_gravity="top|center_horizontal"
+		     android:orientation="vertical"
+		     android:content="@+id/mapFragment"
+		     android:rotation="180">
+		
+			<ImageView
+                android:id="@+id/map_handle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:src="@drawable/map_tab"
+                android:rotation="180"/>
+
+		   	<fragment
+			   	android:id="@+id/mapFragment"
+			    class="com.google.android.gms.maps.MapFragment"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:rotation="90"/>
+ 		</SlidingDrawer>
+ 		-->
     </FrameLayout>
+    
     <!-- The navigation drawer -->
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"
@@ -34,5 +61,6 @@
 	    android:layout_gravity="end"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent" />
+ 	
 
 </android.support.v4.widget.DrawerLayout>
