@@ -204,7 +204,7 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
             View rootView = inflater.inflate(R.layout.fragment_news_feed, container, false);
             int i = getArguments().getInt(ARG_FRAGMENT_TYPE);
             String title = getResources().getStringArray(R.array.nav_drawer_title_array)[i];
-
+            //
             //int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()), "drawable", getActivity().getPackageName());
             //((ImageView) rootView.findViewById(R.id.image))
             //getActivity().setTitle(planet);
