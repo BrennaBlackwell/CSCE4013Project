@@ -23,10 +23,8 @@ import android.widget.ListView;
 
 import com.google.android.gms.maps.MapFragment;
 
-import edu.uark.spARK.ClusterView_Fragment.OnFragmentInteractionListener;
 
-
-public class MainActivity extends Activity implements OnFragmentInteractionListener{
+public class MainActivity extends Activity{
     private DrawerLayout mDrawerLayout;
     private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mDrawerList;
@@ -36,6 +34,9 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mListTitles;	//option titles
+    
+    public static final int CLUSTERVIEW_FRAGMENT = 0;
+    public static final int MAPVIEW_FRAGMENT = 1;
         
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,10 +145,32 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
     }
 
     private void selectItem(int position) {
+    	//Position 7 is logout, which doesn't need to switch fragments
+    	if (position != 7)
+    		switchFragment(position);
+    }
+
+    private void switchFragment(int fragmentName){
         // update the main content by replacing fragments
-        Fragment fragment = new ContentFragment();
-        Bundle args = new Bundle();
-        args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, position);
+    	
+    	Fragment fragment;
+    	//int fragmentName is statically declared
+    	switch (fragmentName){
+	    	case CLUSTERVIEW_FRAGMENT: //0
+	    		fragment = new ClusterView_Fragment();
+	    		break;
+	    	case MAPVIEW_FRAGMENT: //1
+	    		new MapViewFragment();
+				fragment = MapFragment.newInstance();
+	    		break;
+	    	default:
+	    		//(currently blank)
+	    		fragment = new ContentFragment();
+	    		break;
+    	}
+
+    	Bundle args = new Bundle();
+        args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -159,11 +182,10 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
         //}
         
         // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
+        mDrawerList.setItemChecked(fragmentName, true);
         //setTitle(mListTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
-
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
@@ -192,28 +214,5 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
     /**
      * Fragment that appears in the "content_frame" (our fragment type)
      */
-    public static class ContentFragment extends Fragment {
-        public static final String ARG_FRAGMENT_TYPE = "fragment_type";
 
-        public ContentFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_news_feed, container, false);
-            int i = getArguments().getInt(ARG_FRAGMENT_TYPE);
-            String title = getResources().getStringArray(R.array.nav_drawer_title_array)[i];
-            //
-            //int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()), "drawable", getActivity().getPackageName());
-            //((ImageView) rootView.findViewById(R.id.image))
-            //getActivity().setTitle(planet);
-            return rootView;
-        }
-    }
-
-	@Override
-	public void onFragmentInteraction(Uri uri) {
-		// TODO Auto-generated method stub
-	}
 }
