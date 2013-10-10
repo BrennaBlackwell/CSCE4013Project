@@ -160,8 +160,7 @@ public class MainActivity extends Activity{
 	    		fragment = new ClusterView_Fragment();
 	    		break;
 	    	case MAPVIEW_FRAGMENT: //1
-	    		new MapViewFragment();
-				fragment = MapFragment.newInstance();
+	    		fragment = new MapView_Fragment();
 	    		break;
 	    	default:
 	    		//(currently blank)
@@ -175,7 +174,6 @@ public class MainActivity extends Activity{
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).commit();
-
 
         //if (position == 0) {
         //	setContentView(R.layout.user_profile);
