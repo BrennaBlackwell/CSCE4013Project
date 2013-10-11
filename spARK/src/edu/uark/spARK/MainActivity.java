@@ -237,13 +237,13 @@ public class MainActivity extends Activity implements TabListener{
      */
 
 	public void onClick(View v) {
-//		switch (v.getId()) {
-//        	case R.id.scanButton:
-//        		Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-//                intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-//                startActivityForResult(intent, 0);
-//                break;
-//		}
+		switch (v.getId()) {
+        	case R.id.scanButton:
+        		Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+                startActivityForResult(intent, 0);
+                break;
+		}
         }
 
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
