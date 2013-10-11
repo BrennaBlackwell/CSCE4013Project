@@ -1,10 +1,13 @@
 package edu.uark.spARK;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,7 +28,7 @@ public class MapView_Fragment extends Fragment{
  
         try {
             // Loading map
-            initilizeMap();
+        	initializeMap();
  
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,13 +38,14 @@ public class MapView_Fragment extends Fragment{
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map_view, container, false);
+    	return inflater.inflate(R.layout.fragment_map_view, container, false);
     }
- 
+    
+
     /**
      * function to load map. If map is not created it will create it for you
      * */
-    private void initilizeMap() {
+    private void initializeMap() {
         if (map == null) {
             map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
             map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -50,18 +54,27 @@ public class MapView_Fragment extends Fragment{
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             
             // check if map is created successfully or not
-/*            if (map == null) {
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
+            if (map == null) {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Map could not be created", Toast.LENGTH_SHORT)
                         .show();
-            }*/
+            }
         }
     }
  
     @Override
 	public void onResume() {
         super.onResume();
-        initilizeMap();
+        initializeMap();
+    }
+        
+    @Override
+    public void onDestroyView() {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.remove(getFragmentManager().findFragmentById(R.id.map));
+        transaction.commit();
+
+        super.onDestroyView();
     }
     
 }

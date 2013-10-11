@@ -1,27 +1,20 @@
 package edu.uark.spARK;
 
-import java.util.Locale;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-
-import com.google.android.gms.maps.MapFragment;
 
 
 public class MainActivity extends Activity{
@@ -35,8 +28,10 @@ public class MainActivity extends Activity{
     private CharSequence mTitle;
     private String[] mListTitles;	//option titles
     
-    public static final int CLUSTERVIEW_FRAGMENT = 0;
-    public static final int MAPVIEW_FRAGMENT = 1;
+    private static final int PROFILE_FRAGMENT = 0;
+    private static final int MAPVIEW_FRAGMENT = 1;
+    private static final int CLUSTERVIEW_FRAGMENT = 2;
+    private int page = -1;
         
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,37 +148,47 @@ public class MainActivity extends Activity{
     private void switchFragment(int fragmentName){
         // update the main content by replacing fragments
     	
-    	Fragment fragment;
-    	//int fragmentName is statically declared
-    	switch (fragmentName){
-	    	case CLUSTERVIEW_FRAGMENT: //0
-	    		fragment = new ClusterView_Fragment();
-	    		break;
-	    	case MAPVIEW_FRAGMENT: //1
-	    		fragment = new MapView_Fragment();
-	    		break;
-	    	default:
-	    		//(currently blank)
-	    		fragment = new ContentFragment();
-	    		break;
+    	if (fragmentName != page){
+	    	Fragment fragment;
+	    	//int fragmentName is statically declared
+	    	switch (fragmentName){
+	    		case PROFILE_FRAGMENT: //0
+	    			fragment = new Profile_Fragment();
+	    			break;
+		    	case MAPVIEW_FRAGMENT://1
+		    		fragment = new MapView_Fragment();	
+		    		break;
+		    	case CLUSTERVIEW_FRAGMENT: //2
+	    			fragment = new ClusterView_Fragment();
+		    		break;
+		    	default:
+		    		//(currently blank)
+		    		fragment = new ContentFragment();
+		    		break;
+	    	}
+	
+	    	Bundle args = new Bundle();
+	        args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
+	        fragment.setArguments(args);
+	        
+	        FragmentManager fragmentManager = getFragmentManager();
+	        fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).commit();
+	
+	        //if (position == 0) {
+	        //	setContentView(R.layout.user_profile);
+	        //}
+
+	        // update selected item and title, then close the drawer
+	        mDrawerList.setItemChecked(fragmentName, true);
+	        //setTitle(mListTitles[position]);
+	        
+	    	page = fragmentName;
+
     	}
-
-    	Bundle args = new Bundle();
-        args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).commit();
-
-        //if (position == 0) {
-        //	setContentView(R.layout.user_profile);
-        //}
-        
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(fragmentName, true);
-        //setTitle(mListTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
+	    mDrawerLayout.closeDrawer(mDrawerList);
+    	
     }
+    
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
