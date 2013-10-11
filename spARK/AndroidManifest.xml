@@ -39,7 +39,8 @@
         </activity>
         <activity
             android:name="edu.uark.spARK.MainActivity"
-            android:configChanges="screenSize|orientation" >
+            android:configChanges="screenSize|orientation"
+            android:uiOptions="splitActionBarWhenNarrow">
         </activity>
         <activity android:name="RegisterActivity"></activity>
     <meta-data

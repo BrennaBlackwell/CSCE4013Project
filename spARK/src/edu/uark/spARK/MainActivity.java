@@ -1,10 +1,13 @@
 package edu.uark.spARK;
 
-import java.util.Locale;
-
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,18 +18,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-
-import com.google.android.gms.maps.MapFragment;
-
 import edu.uark.spARK.ClusterView_Fragment.OnFragmentInteractionListener;
 
 
-public class MainActivity extends Activity implements OnFragmentInteractionListener{
+public class MainActivity extends Activity implements OnFragmentInteractionListener, TabListener{
     private DrawerLayout mDrawerLayout;
     private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mDrawerList;
@@ -75,6 +76,14 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+        ActionBar bar = getActionBar();
+        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        ActionBar.Tab tabA = bar.newTab().setText("Discussions");
+        ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
+        tabA.setTabListener(this);
+        tabB.setTabListener(this);
+        bar.addTab(tabA);
+        bar.addTab(tabB);
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
@@ -216,4 +225,23 @@ public class MainActivity extends Activity implements OnFragmentInteractionListe
 	public void onFragmentInteraction(Uri uri) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
+	}
+
+	@Override
+	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {	
+	}
+	
+	@Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return true;
+    }
 }
