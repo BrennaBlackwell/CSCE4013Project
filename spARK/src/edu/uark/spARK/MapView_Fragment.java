@@ -24,7 +24,6 @@ public class MapView_Fragment extends Fragment{
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
  
         try {
             // Loading map
@@ -76,5 +75,4 @@ public class MapView_Fragment extends Fragment{
 
         super.onDestroyView();
     }
-    
 }

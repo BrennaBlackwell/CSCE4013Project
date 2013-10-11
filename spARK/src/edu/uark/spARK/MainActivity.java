@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -15,13 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 public class MainActivity extends Activity{
     private DrawerLayout mDrawerLayout;
     private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mDrawerList;
-    private ClusterView_Fragment mClusterDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
@@ -31,6 +32,7 @@ public class MainActivity extends Activity{
     private static final int PROFILE_FRAGMENT = 0;
     private static final int MAPVIEW_FRAGMENT = 1;
     private static final int CLUSTERVIEW_FRAGMENT = 2;
+    private static final int CHECKIN_FRAGMENT = 3;
     private int page = -1;
         
     @Override
@@ -38,13 +40,10 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        FragmentManager fm = getFragmentManager();
-
         mTitle = mDrawerTitle = getTitle();
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mClusterDrawer = (ClusterView_Fragment) fm.findFragmentById(R.id.right_drawer);
 	    
 /*        Fragment fragment = new MapFragment();
 
@@ -148,9 +147,10 @@ public class MainActivity extends Activity{
     private void switchFragment(int fragmentName){
         // update the main content by replacing fragments
     	
+    	//if the desired fragment isn't the same as the already loaded page
     	if (fragmentName != page){
 	    	Fragment fragment;
-	    	//int fragmentName is statically declared
+	    	//int fragmentName is statically declared above
 	    	switch (fragmentName){
 	    		case PROFILE_FRAGMENT: //0
 	    			fragment = new Profile_Fragment();
@@ -160,6 +160,9 @@ public class MainActivity extends Activity{
 		    		break;
 		    	case CLUSTERVIEW_FRAGMENT: //2
 	    			fragment = new ClusterView_Fragment();
+		    		break;
+		    	case CHECKIN_FRAGMENT: //2
+	    			fragment = new CheckIn_Fragment();
 		    		break;
 		    	default:
 		    		//(currently blank)
@@ -218,4 +221,27 @@ public class MainActivity extends Activity{
      * Fragment that appears in the "content_frame" (our fragment type)
      */
 
+	public void onClick(View v) {
+		switch (v.getId()) {
+        	case R.id.scanButton:
+        		Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+                startActivityForResult(intent, 0);
+                break;
+		}
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+	    if (requestCode == 0) {
+	        if (resultCode == RESULT_OK) {
+	            String contents = intent.getStringExtra("SCAN_RESULT");
+	            String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+	            // Handle successful scan
+	            TextView txtScanResult = (TextView)findViewById(R.id.txtScanResult);
+	            txtScanResult.setText(contents);
+	        } else if (resultCode == RESULT_CANCELED) {
+	            // Handle cancel
+	        }
+	    }
+	}
 }
