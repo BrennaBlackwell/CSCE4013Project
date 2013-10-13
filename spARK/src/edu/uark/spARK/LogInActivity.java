@@ -45,7 +45,7 @@ public class LogInActivity extends Activity implements AsyncResponse {
                 display.getSize(size);
                 //float width = size.x;
                 float height = size.y;
-                ImageView ivSplash = (ImageView) findViewById(R.id.imageView1);
+                ImageView ivSplash = (ImageView) findViewById(R.id.profileImageView);
                 //float spark_X = ivSplash.getLeft();
                 float spark_Y = ivSplash.getTop();
             	float distance = (0-spark_Y);

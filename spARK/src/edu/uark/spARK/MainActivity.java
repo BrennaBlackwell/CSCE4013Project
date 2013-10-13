@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +22,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -34,6 +37,7 @@ public class MainActivity extends Activity implements TabListener{
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mListTitles;	//option titles
+    private Menu mMenu;
         
     private static final int PROFILE_FRAGMENT = 0;
     private static final int MAPVIEW_FRAGMENT = 1;
@@ -45,7 +49,6 @@ public class MainActivity extends Activity implements TabListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
         mTitle = mDrawerTitle = getTitle();
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -76,16 +79,17 @@ public class MainActivity extends Activity implements TabListener{
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-        //actionbar tabs
+        
         ActionBar bar = getActionBar();
+        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_HOME_AS_UP);
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        bar.setDisplayShowTitleEnabled(true);
         ActionBar.Tab tabA = bar.newTab().setText("Discussions");
         ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
         tabA.setTabListener(this);
         tabB.setTabListener(this);
         bar.addTab(tabA);
         bar.addTab(tabB);
-
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -116,9 +120,9 @@ public class MainActivity extends Activity implements TabListener{
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.nav_drawer, menu);
-        //MenuItem searchItem = menu.findItem(R.id.action_search);
         //SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         //configure search info, add listeners
+        mMenu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -126,7 +130,7 @@ public class MainActivity extends Activity implements TabListener{
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+    	boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -140,8 +144,8 @@ public class MainActivity extends Activity implements TabListener{
         }
         // Handle action buttons
         switch(item.getItemId()) {
-        
         }
+
             return super.onOptionsItemSelected(item);
     }
 

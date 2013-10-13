@@ -7,8 +7,8 @@
 
     <string-array name="nav_drawer_title_array">
         <item>Account</item>
+        <item>Home</item>
         <item>Groups</item>
-        <item>Recently Viewed</item>
         <item>Bookmarked</item>
         <item>Settings</item>
         <item>Feedback</item>
