@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 
 public class RegisterActivity extends Activity implements AsyncResponse {

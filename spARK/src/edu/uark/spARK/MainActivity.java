@@ -7,24 +7,19 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -38,7 +33,7 @@ public class MainActivity extends Activity implements TabListener{
     private CharSequence mTitle;
     private String[] mListTitles;	//option titles
     private Menu mMenu;
-        
+
     private static final int PROFILE_FRAGMENT = 0;
     private static final int MAPVIEW_FRAGMENT = 1;
     private static final int CLUSTERVIEW_FRAGMENT = 2;
@@ -46,7 +41,7 @@ public class MainActivity extends Activity implements TabListener{
     private static final int COMBINEDMAPNEWS_FRAGMENT = 4;
     private static final int NEWSFEED_FRAGMENT = 5;
     private int page = -1;
-        
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,23 +50,10 @@ public class MainActivity extends Activity implements TabListener{
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-	    
-/*        Fragment fragment = new MapFragment();
 
-        fm.beginTransaction().replace(R.id.main_frame, fragment).commit();*/
-        
-        //Replace right_drawer FrameLayout with ClusterView_Fragment
-/*        Fragment map_fragment = new MapView_Fragment();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.main_frame, map_fragment);
-        ft.commit(); 
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).commit();*/
-        
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        
+
         // set a new custom arrayadapter
         mNavListArrayAdapter = new NavListArrayAdapter(getApplicationContext(), R.layout.drawer_list_item, mListTitles);
         // set up the drawer's list view with items and click listener
@@ -81,7 +63,7 @@ public class MainActivity extends Activity implements TabListener{
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-        
+
         ActionBar bar = getActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_HOME_AS_UP);
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -100,7 +82,7 @@ public class MainActivity extends Activity implements TabListener{
                 R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
-                ) {
+        ) {
             public void onDrawerClosed(View view) {
                 //getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -132,15 +114,15 @@ public class MainActivity extends Activity implements TabListener{
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-    	boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-         // The action bar home/up action should open or close the drawer.
-         // ActionBarDrawerToggle will take care of this.
+        // The action bar home/up action should open or close the drawer.
+        // ActionBarDrawerToggle will take care of this.
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -148,7 +130,7 @@ public class MainActivity extends Activity implements TabListener{
         switch(item.getItemId()) {
         }
 
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     /* The click listner for ListView in the navigation drawer */
@@ -160,9 +142,9 @@ public class MainActivity extends Activity implements TabListener{
     }
 
     private void selectItem(int position) {
-    	//Position 7 is logout, which doesn't need to switch fragments
-    	if (position != 7)
-    		switchFragment(position);
+        //Position 7 is logout, which doesn't need to switch fragments
+        if (position != 7)
+            switchFragment(position);
     }
 
     private void switchFragment(int fragmentName){
@@ -197,25 +179,25 @@ public class MainActivity extends Activity implements TabListener{
 		    		break;
 	    	}
 	
-        Bundle args = new Bundle();
-	        args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).commit();
-
-
-        //if (position == 0) {
-        //	setContentView(R.layout.user_profile);
-        //}
+	        Bundle args = new Bundle();
+		    args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
+	        fragment.setArguments(args);
         
-        // update selected item and title, then close the drawer
-	        mDrawerList.setItemChecked(fragmentName, true);
-        //setTitle(mListTitles[position]);
-	        
-	    	page = fragmentName;
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).commit();
 
-    	}
+
+            //if (position == 0) {
+            //	setContentView(R.layout.user_profile);
+            //}
+
+            // update selected item and title, then close the drawer
+            mDrawerList.setItemChecked(fragmentName, true);
+            //setTitle(mListTitles[position]);
+
+            page = fragmentName;
+
+        }
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
@@ -248,46 +230,51 @@ public class MainActivity extends Activity implements TabListener{
      * Fragment that appears in the "content_frame" (our fragment type)
      */
 
-	public void onClick(View v) {
-		switch (v.getId()) {
-        	case R.id.scanButton:
-        		Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.scanButton:
+                Intent intent = new Intent("com.google.zxing.client.android.SCAN");
                 intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
                 startActivityForResult(intent, 0);
                 break;
-		}
-        }
-
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-	    if (requestCode == 0) {
-	        if (resultCode == RESULT_OK) {
-	            String contents = intent.getStringExtra("SCAN_RESULT");
-	            String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-	            // Handle successful scan
-	            TextView txtScanResult = (TextView)findViewById(R.id.txtScanResult);
-	            txtScanResult.setText(contents);
-	        } else if (resultCode == RESULT_CANCELED) {
-	            // Handle cancel
         }
     }
-	}
 
-	@Override
-	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                String contents = intent.getStringExtra("SCAN_RESULT");
+                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                // Handle successful scan
+                TextView txtScanResult = (TextView)findViewById(R.id.txtScanResult);
+                txtScanResult.setText(contents);
+            } else if (resultCode == RESULT_CANCELED) {
+                // Handle cancel
+            }
+        }
+    }
 
-	@Override
-	public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
-	}
+    @Override
+    public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {	
-	}
-	
-	@Override
+    }
+
+    @Override
+    public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
+    }
+
+    @Override
+    public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }
