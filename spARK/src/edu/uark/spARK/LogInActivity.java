@@ -13,6 +13,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import edu.uark.spARK.JSONQuery.AsyncResponse;
  
 public class LogInActivity extends Activity implements AsyncResponse {
