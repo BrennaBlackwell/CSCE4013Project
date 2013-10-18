@@ -6,10 +6,11 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ExpandableListView
-        android:id="@+id/expandableListView1"
+    <ListView
+        android:id="@+id/ListView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-    </ExpandableListView>
+
+    </ListView>
 
 </FrameLayout>

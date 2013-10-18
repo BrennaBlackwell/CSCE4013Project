@@ -76,7 +76,7 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 		TextView textview = (TextView) convertView.findViewById(R.id.navListOptionTextView);
 		String s = options[position];
 		textview.setText(s);
-		Log.d(tag, "XML Inflated!");	
+		Log.d(tag, "XML Inflated!");
 		return convertView;
 	}
 	

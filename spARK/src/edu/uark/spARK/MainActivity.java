@@ -43,6 +43,8 @@ public class MainActivity extends Activity implements TabListener{
     private static final int MAPVIEW_FRAGMENT = 1;
     private static final int CLUSTERVIEW_FRAGMENT = 2;
     private static final int CHECKIN_FRAGMENT = 3;
+    private static final int COMBINEDMAPNEWS_FRAGMENT = 4;
+    private static final int NEWSFEED_FRAGMENT = 5;
     private int page = -1;
         
     @Override
@@ -182,6 +184,12 @@ public class MainActivity extends Activity implements TabListener{
 		    		break;
 		    	case CHECKIN_FRAGMENT: //2
 	    			fragment = new CheckIn_Fragment();
+		    		break;
+		    	case COMBINEDMAPNEWS_FRAGMENT: //4
+		    		fragment = new CombinedMapNews_Fragment();
+		    		break;
+		    	case NEWSFEED_FRAGMENT: //5
+		    		fragment = new NewsFeed_Fragment();
 		    		break;
 		    	default:
 		    		//(currently blank)
