@@ -53,7 +53,7 @@ public class NewsFeed_Fragment extends Fragment {
 	                                                                        }
 	    });
 	    listView.addHeaderView(invisibleView);
-	    listView.setAdapter(new NavListArrayAdapter(getActivity().getApplicationContext(), R.layout.drawer_list_item, mListTitles));
+	    listView.setAdapter(new NewsFeedAdapter(getActivity().getApplicationContext()));
 
 		return view;
 	}

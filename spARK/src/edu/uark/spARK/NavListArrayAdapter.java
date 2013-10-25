@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 public class NavListArrayAdapter extends ArrayAdapter<String>{
 	private static final String tag = "NavListArrayAdapter";
+	private static final String MENU[] = 
+		{"Account", "Home", "Checkin", "Groups", "Bookmarks", "Settings", "About", "Logout"};
 	
 	private LayoutInflater mInflater;
 	private Context context;
@@ -74,7 +76,7 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 			
 		//}	
 		TextView textview = (TextView) convertView.findViewById(R.id.navListOptionTextView);
-		String s = options[position];
+		String s = MENU[position];
 		textview.setText(s);
 		Log.d(tag, "XML Inflated!");
 		return convertView;
