@@ -18,7 +18,7 @@
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/descTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/textViewUsername"
@@ -30,16 +30,16 @@
         android:id="@+id/button2"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
+        android:layout_alignLeft="@+id/likeButton"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/button1"
+        android:layout_alignRight="@+id/likeButton"
         android:layout_marginBottom="44dp"
         android:onClick="CreateAccount"
         android:text="Create An Account" 
         tools:ignore="HardcodedText" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/likeButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button2"
@@ -77,7 +77,7 @@
         android:id="@+id/invalidLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button1"
+        android:layout_above="@+id/likeButton"
         android:layout_alignLeft="@+id/Password"
         android:layout_alignRight="@+id/Password"
         android:layout_marginBottom="35dp"

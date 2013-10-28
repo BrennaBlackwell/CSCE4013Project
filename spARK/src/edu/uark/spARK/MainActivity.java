@@ -55,7 +55,7 @@ public class MainActivity extends Activity implements TabListener{
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         // set a new custom arrayadapter
-        mNavListArrayAdapter = new NavListArrayAdapter(getApplicationContext(), R.layout.drawer_list_item, mListTitles);
+        mNavListArrayAdapter = new NavListArrayAdapter(getApplicationContext(), R.layout.drawer_list_item);
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(mNavListArrayAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -155,10 +155,10 @@ public class MainActivity extends Activity implements TabListener{
 	    	Fragment fragment;
 	    	//int fragmentName is statically declared above
 	    	switch (fragmentName){
-	    		case PROFILE_FRAGMENT: //0
+	    		case PROFILE_FRAGMENT: //4
 	    			fragment = new Profile_Fragment();
 	    			break;
-		    	case MAPVIEW_FRAGMENT://1
+		    	case COMBINEDMAPNEWS_FRAGMENT://1
 		    		fragment = new MapView_Fragment();	
 		    		break;
 		    	case CLUSTERVIEW_FRAGMENT: //2
@@ -167,7 +167,7 @@ public class MainActivity extends Activity implements TabListener{
 		    	case CHECKIN_FRAGMENT: //2
 	    			fragment = new CheckIn_Fragment();
 		    		break;
-		    	case COMBINEDMAPNEWS_FRAGMENT: //4
+		    	case MAPVIEW_FRAGMENT: //0
 		    		fragment = new CombinedMapNews_Fragment();
 		    		break;
 		    	case NEWSFEED_FRAGMENT: //5

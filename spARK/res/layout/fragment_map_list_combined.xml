@@ -13,8 +13,8 @@ tools:context=".MainActivity" >
 
 <fragment
     android:id="@+id/news_fragment"
-    class="edu.uark.spARK.NewsFeed_Fragment"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent" />
+    android:layout_height="fill_parent"
+    class="edu.uark.spARK.NewsFeed_Fragment" />
 
     </RelativeLayout>

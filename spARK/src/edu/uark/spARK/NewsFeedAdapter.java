@@ -43,7 +43,7 @@ public class NewsFeedAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.list_discussion, null);
 		}
-		TextView tv1 = (TextView) convertView.findViewById(R.id.textView1);
+		TextView tv1 = (TextView) convertView.findViewById(R.id.headerTextView);
 		tv1.setText(TEST[position]);
 		
 		return convertView;
