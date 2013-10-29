@@ -35,8 +35,8 @@ public class LogInActivity extends Activity implements AsyncResponse {
         setContentView(R.layout.splash);
     	mLoginView = findViewById(R.id.includeLogin);
     	mLoginView.setAlpha(0f);
-    	//findViewById(R.id.button1).getBackground().setColorFilter(new LightingColorFilter(0xFFFF0000, 0xFFFF0000));
-        //findViewById(R.id.button2).getBackground().setColorFilter(new LightingColorFilter(0xFFFF0000, 0xFFFF0000));
+    	findViewById(R.id.likeButton).getBackground().setColorFilter(new LightingColorFilter(0xFFFF0000, 0xFFFF0000));
+        findViewById(R.id.button2).getBackground().setColorFilter(new LightingColorFilter(0xFFFF0000, 0xFFFF0000));
         new Handler().postDelayed(new Runnable() {
        	 
             @Override

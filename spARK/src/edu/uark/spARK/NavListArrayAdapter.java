@@ -13,20 +13,18 @@ import android.widget.TextView;
 public class NavListArrayAdapter extends ArrayAdapter<String>{
 	private static final String tag = "NavListArrayAdapter";
 	private static final String MENU[] = 
-		{"Account", "Home", "Checkin", "Groups", "Bookmarks", "Settings", "About", "Logout"};
+		{"Account", "Home", "Check In", "Groups", "Bookmarks", "Settings", "About", "Logout"};
 	
 	private LayoutInflater mInflater;
 	private Context context;
 	private int resourceID;
 	private Drawable userIcon;
-	private final String[] options;
 	
-	public NavListArrayAdapter(Context context, int layoutid, String[] mListTitles) {
-		super(context, layoutid, mListTitles);
+	public NavListArrayAdapter(Context context, int layoutid) {
+		super(context, layoutid, MENU);
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.context = context;
 		this.resourceID = layoutid;
-		this.options = mListTitles;
 	}
 	
 	@Override
@@ -36,33 +34,37 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 		//if statement to determine if the position is the account, which requires different layout
 		//if (convertView == null) {
 			switch (position) {
-				case 0:
+				case 0:	//profile
 					convertView = mInflater.inflate(R.layout.drawer_account, null);
 					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_profile);
 					break;
-				case 1:
+				case 1: //home
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
 					icon = convertView.getResources().getDrawable(R.drawable.drawer_home);
 					break;
-				case 2:
+				case 2:	//check in
+					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_checkin);
+					break;
+				case 3:	//groups
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
 					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_group);
 					break;
-				case 3:
+				case 4:	//bookmarks
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
 					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_bookmarks);
 					break;
-				case 4:
+				case 5:	//settings
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
 					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_preferences);
 					break;
-				case 5:
-					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_feedback);
-					break;
-				case 6:
+				case 6:	//about
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
 					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_about);
+					break;
+				case 7:	//logout
+					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_logout);
 					break;
 				default:
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);

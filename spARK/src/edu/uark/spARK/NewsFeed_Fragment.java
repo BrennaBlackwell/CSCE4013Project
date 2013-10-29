@@ -2,11 +2,14 @@ package edu.uark.spARK;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.graphics.Color;
@@ -40,8 +43,7 @@ public class NewsFeed_Fragment extends Fragment {
 
 	    View view = inflater.inflate(R.layout.fragment_news_feed, container, false);
 	    ListView listView = (ListView) view.findViewById(R.id.ListView1);
-	    final String[] mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
-	    
+	    //listView.setBackgroundResource(R.color.grey_bg);
 	    // An invisible view added as a header to the list and clicking it leads to the mapfragment
 	    TextView invisibleView = new TextView(inflater.getContext());
 	    invisibleView.setBackgroundColor(Color.TRANSPARENT);
@@ -50,11 +52,34 @@ public class NewsFeed_Fragment extends Fragment {
 	        @Override
 	        public void onClick(View v) {
 	        	//set focus to the map fragment
+	        	MapView_Fragment f = (MapView_Fragment) getFragmentManager().findFragmentById(R.id.map_fragment);
+	        	NewsFeed_Fragment n = (NewsFeed_Fragment) getFragmentManager().findFragmentById(R.id.news_fragment);
+	        	f.getView().setOnKeyListener(new OnKeyListener()
+	        	{
+	        	    @Override
+	        	    public boolean onKey( View v, int keyCode, KeyEvent event )
+	        	    {
+	        	        if( keyCode == KeyEvent.KEYCODE_BACK )
+	        	        {
+		        	    	System.out.println("This works!");
+	        	        	getFragmentManager().beginTransaction()
+	        	            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+	        	            .show(getFragmentManager().findFragmentById(R.id.news_fragment)).commit();
+	        	        }
+	        	        return false;
+	        	    }
+	        	} );
+	        	
+	        	View v1 =  f.getView();
+	        	//v1.bringToFront();
+	        	getFragmentManager().beginTransaction()
+	            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+	            .hide(n)
+	            .addToBackStack("Newsfeed").commit();
 	                                                                        }
 	    });
 	    listView.addHeaderView(invisibleView);
 	    listView.setAdapter(new NewsFeedAdapter(getActivity().getApplicationContext()));
-
 		return view;
 	}
 	

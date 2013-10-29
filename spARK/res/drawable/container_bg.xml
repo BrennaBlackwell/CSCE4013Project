@@ -4,32 +4,49 @@
      <!-- Drop Shadow Stack -->
      <item>
         <shape>
-            <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
-            <solid android:color="#00CCCCCC" />
+            <solid android:color="@color/grey_bg" />
+        </shape>
+     </item>
+     <item>
+        <shape>
+            <padding android:top="5dp" android:right="10dp" android:bottom="5dp" android:left="10dp" />
+            <solid android:color="#00444444" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
      <item>
         <shape>
             <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
-            <solid android:color="#10CCCCCC" />
+            <solid android:color="#10444444" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
      <item>
         <shape>
             <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
-            <solid android:color="#20CCCCCC" />
+            <solid android:color="#20444444" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
      <item>
         <shape>
             <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
-            <solid android:color="#30CCCCCC" />
+            <solid android:color="#30444444" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
-    <item>
+         <item>
         <shape>
             <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
-            <solid android:color="#50CCCCCC" />
+            <solid android:color="#50444444" />
+            <corners android:radius="3dp" />
+        </shape>
+    </item>
+        <item>
+        <shape>
+            <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <solid android:color="@android:color/black" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
 
