@@ -2,18 +2,19 @@ package edu.uark.spARK;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
-import android.widget.*;
-import android.graphics.Color;
-import android.view.View.OnClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
 
 
 public class NewsFeed_Fragment extends Fragment {
@@ -54,28 +55,14 @@ public class NewsFeed_Fragment extends Fragment {
 	        	//set focus to the map fragment
 	        	MapView_Fragment f = (MapView_Fragment) getFragmentManager().findFragmentById(R.id.map_fragment);
 	        	NewsFeed_Fragment n = (NewsFeed_Fragment) getFragmentManager().findFragmentById(R.id.news_fragment);
-	        	f.getView().setOnKeyListener(new OnKeyListener()
-	        	{
-	        	    @Override
-	        	    public boolean onKey( View v, int keyCode, KeyEvent event )
-	        	    {
-	        	        if( keyCode == KeyEvent.KEYCODE_BACK )
-	        	        {
-		        	    	System.out.println("This works!");
-	        	        	getFragmentManager().beginTransaction()
-	        	            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-	        	            .show(getFragmentManager().findFragmentById(R.id.news_fragment)).commit();
-	        	        }
-	        	        return false;
-	        	    }
-	        	} );
-	        	
-	        	View v1 =  f.getView();
-	        	//v1.bringToFront();
-	        	getFragmentManager().beginTransaction()
-	            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-	            .hide(n)
-	            .addToBackStack("Newsfeed").commit();
+
+	        	FragmentManager fm = getFragmentManager();
+	        	FragmentTransaction ft = fm.beginTransaction();
+	        	ft.addToBackStack(null);
+	        	//animations are ordered (enter, exit, popEnter, popExit)
+	        	ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, 
+	        			android.R.animator.fade_in, android.R.animator.fade_out)
+	        	.hide(n).commit();
 	                                                                        }
 	    });
 	    listView.addHeaderView(invisibleView);

@@ -29,7 +29,7 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		System.out.println("getView " + position + " " + convertView);
+		//System.out.println("getView " + position + " " + convertView);
 		Drawable icon;
 		//if statement to determine if the position is the account, which requires different layout
 		//if (convertView == null) {
