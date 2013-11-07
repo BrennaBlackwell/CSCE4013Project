@@ -2,23 +2,55 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/FrameLayout1"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:background="@drawable/container_bg" >
 
-    <LinearLayout
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/container_bg"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/headerTextView"
+        <TableRow
+            android:id="@+id/tableRow2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:paddingLeft="5dp"
-            android:text="Free Cheesburgers in the Union!"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/black" />
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:weightSum="1.0" >
+
+            <TextView
+                android:id="@+id/headerTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".85"
+                android:paddingLeft="5dp"
+                android:text="Free Cheesburgers in the Union!"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/black" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight=".15"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="Campus Events"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/TextView02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="17 mins ago"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+        </TableRow>
 
         <View
             android:id="@+id/titleSeparator"
@@ -26,133 +58,183 @@
             android:layout_height="1dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:alpha=".25"
             android:background="@color/red" />
 
-        <TableLayout
+        <TableRow
+            android:id="@+id/tableRow1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:weightSum="1.0" >
 
-            <TableRow
-                android:id="@+id/tableRow1"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_weight="1.0"
                 android:weightSum="1.0" >
 
                 <TextView
                     android:id="@+id/descTextView"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_weight="1"
+                    android:layout_toLeftOf="@id/LinearLayout1"
+                    android:layout_weight="1.0"
+                    android:text="adflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkj"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/black" />
 
-                <QuickContactBadge
-                    android:id="@+id/QuickContactBadge1"
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@color/black_overlay"
-                    android:padding="1dp"
-                    android:src="@drawable/profile_icon" />
-
-            </TableRow>
-
-            <View
-                android:id="@+id/contentSeparator"
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey_bg2" />
-
-            <TableRow
-                android:id="@+id/tableRow3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/container_items_bg"
-                android:baselineAligned="true"
-                android:weightSum="1" >
-
-                <RelativeLayout
-                    android:id="@+id/RelativeLayout02"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@id/LinearLayout1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:gravity="left" >
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="5dp"
+                    android:orientation="vertical" >
 
-                    <Button
-                        android:id="@+id/likeBtn"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/thumbs_up" />
+                    <QuickContactBadge
+                        android:id="@+id/QuickContactBadge1"
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:layout_gravity="right"
+                        android:background="@color/black_overlay"
+                        android:padding="1dp"
+                        android:src="@drawable/profile_icon" />
 
                     <TextView
-                        android:id="@+id/scoreTextView"
+                        android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_toRightOf="@+id/likeBtn"
-                        android:text="25"
+                        android:layout_gravity="right"
+                        android:text="username"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@android:color/black" />
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </TableRow>
 
-                    <Button
-                        android:id="@+id/dislikeBtn"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_centerVertical="true"
+        <View
+            android:id="@+id/contentSeparator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_bg2"
+            android:visibility="visible" />
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/container_items_bg"
+            android:baselineAligned="true"
+            android:visibility="visible"
+            android:weightSum="1" >
+
+            <RelativeLayout
+                android:id="@+id/RelativeLayout02"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:gravity="right" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_margin="5dp"
-                        android:layout_toRightOf="@+id/scoreTextView"
-                        android:background="@drawable/thumbs_down" />
+                        android:paddingLeft="5dp" >
 
-                    <Button
-                        android:id="@+id/commentBtn"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20dp"
-                        android:layout_toLeftOf="@+id/expandBtn"
-                        android:background="@drawable/btn_comment" />
+                        <Button
+                            android:id="@+id/likeBtn"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/thumbs_up" />
 
-                    <Button
-                        android:id="@+id/favoriteBtn"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_centerVertical="true"
+                        <TextView
+                            android:id="@+id/likeScoreTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="+14"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@android:color/black" />
+
+                        <Button
+                            android:id="@+id/dislikeBtn"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/thumbs_down" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_margin="5dp"
-                        android:layout_toLeftOf="@+id/overflowBtn"
-                        android:background="@drawable/ic_menu_bookmark" />
+                        android:paddingLeft="5dp" >
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="5dp" >
+
+                        <Button
+                            android:id="@+id/commentBtn"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/btn_comment" />
+
+                        <TextView
+                            android:id="@+id/TextView01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="5"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@android:color/black" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/overflowBtn"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/ic_menu_moreoverflow_normal_holo_light"
+                    android:gravity="right|center_vertical|center_horizontal" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/overflowBtn" >
 
                     <Button
                         android:id="@+id/expandBtn"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:layout_centerVertical="true"
                         android:layout_margin="5dp"
-                        android:layout_toLeftOf="@+id/favoriteBtn"
                         android:background="@drawable/ic_media_fullscreen" />
 
                     <Button
-                        android:id="@+id/overflowBtn"
+                        android:id="@+id/favoriteBtn"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
                         android:layout_margin="5dp"
-                        android:background="@drawable/ic_menu_moreoverflow_normal_holo_light" />
-                </RelativeLayout>
-
-            </TableRow>
-
-        </TableLayout>
-    </LinearLayout>
+                        android:background="@drawable/ic_menu_bookmark" />
+                </LinearLayout>
+            </RelativeLayout>
+        </TableRow>
+    </TableLayout>
 
 </FrameLayout>
