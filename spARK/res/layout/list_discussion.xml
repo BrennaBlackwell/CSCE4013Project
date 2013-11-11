@@ -82,9 +82,12 @@
                     android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@id/LinearLayout1"
                     android:layout_weight="1.0"
-                    android:text="adflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkj"
+                    android:text="adflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkj"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black" 
+                    android:scrollHorizontally="true"
+					android:ellipsize="end" 
+					android:maxLines="4"/>
 
                 <LinearLayout
                     android:id="@id/LinearLayout1"

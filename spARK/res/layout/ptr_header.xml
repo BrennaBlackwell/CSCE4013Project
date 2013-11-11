@@ -8,12 +8,15 @@
         android:id="@+id/ptr_id_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical" >
+        android:gravity="right" >
 
 	    <ImageView
 	        android:id="@+id/ptr_id_image"
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" />
+	        android:layout_height="wrap_content"
+	        android:layout_margin="5dp"
+	        android:gravity="right|center_vertical|center_horizontal"
+	        android:src="@drawable/pulldown_refresh" />
 
 	    <ProgressBar
 	        android:id="@+id/ptr_id_spinner"
@@ -24,7 +27,8 @@
         <LinearLayout
             android:id="@+id/ptr_id_textwrapper"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:visibility="invisible" >
 
             <TextView
                 android:id="@+id/ptr_id_text"

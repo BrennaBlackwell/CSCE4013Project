@@ -3,7 +3,7 @@ package edu.uark.spARK.entities;
 import java.util.Date;
 
 /**
- * Class created for bulletins. We will probably want to load items from the server into the discussion object.
+ * Class created for bulletins. We will probably want to load items from the server into the bulletin object.
  * 
  */
 
