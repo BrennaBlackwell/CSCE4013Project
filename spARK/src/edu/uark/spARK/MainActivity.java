@@ -41,6 +41,10 @@ public class MainActivity extends Activity implements TabListener{
     private static final int COMBINEDMAPNEWS_FRAGMENT = 4;
     private static final int NEWSFEED_FRAGMENT = 5;
     private int page = -1;
+    
+    //FRAGMENTS (need this for onclick listeners to pass click events from the main activity to the fragment)
+    static Fragment mainContentFragment;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +172,9 @@ public class MainActivity extends Activity implements TabListener{
 	    			fragment = new CheckIn_Fragment();
 		    		break;
 		    	case MAPVIEW_FRAGMENT: //0
-		    		fragment = new CombinedMapNews_Fragment();
+		    		fragment = new CombinedMapNews_Fragment(
+		    				
+		    				);
 		    		break;
 		    	case NEWSFEED_FRAGMENT: //5
 		    		fragment = new NewsFeed_Fragment();
@@ -276,5 +282,12 @@ public class MainActivity extends Activity implements TabListener{
     @Override
     protected void onResume() {
         super.onResume();
+    }
+    
+    public void onToggle(View view) {
+//    	if mainContentFragment.getClass().equals(CombinedMapNews_Fragment.class){
+//    		((CombinedMapNews_Fragment) mainContentFragment).
+//    	}
+    	System.out.println("onToggle: view id" + view.getId());
     }
 }

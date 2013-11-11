@@ -6,13 +6,22 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ListView
-        android:id="@+id/ListView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:dividerHeight="0dp"
-		android:divider="@null">
+<!--     <ListView -->
+<!--         android:id="@+id/ListView1" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content"  -->
+<!--         android:dividerHeight="0dp" -->
+<!-- 		android:divider="@null"> -->
+<!--     </ListView> -->
+    
+          <edu.uark.spARK.PullToRefreshListView
+        android:id="@+id/pullToRefreshListView"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:cacheColorHint="@android:color/white"
+        android:divider="@null"
+        android:dividerHeight="0dp" >
 
-    </ListView>
+    	</edu.uark.spARK.PullToRefreshListView>
 
 </FrameLayout>

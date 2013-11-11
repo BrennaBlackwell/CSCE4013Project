@@ -13,6 +13,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.uark.spARK.JSONQuery.AsyncResponse;
  
@@ -73,6 +74,7 @@ public class LogInActivity extends Activity implements AsyncResponse {
 		if (v.getId() == R.id.buttonDebug) {
 			Intent MainIntent = new Intent(this, MainActivity.class);
 			startActivity(MainIntent);
+			return;
 		}
 		
 		EditText edit_text1 = (EditText)findViewById(R.id.Username);
@@ -81,8 +83,21 @@ public class LogInActivity extends Activity implements AsyncResponse {
 		String Username = edit_text1.getText().toString();
 		String Password = edit_text2.getText().toString();		
 		
-		JSONQuery jquery = new JSONQuery(this);
-		jquery.execute("http://csce.uark.edu/~mmmcclel/spark/authentication.php", Username, Password);
+		//make sure text has been added to the login screen
+		if (Username.matches("")) {
+			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a username!", 2);
+			toast.show();
+			return;
+		}
+		else if (Password.matches("")) {
+			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a password!", 2);
+			toast.show();
+			return;
+		}
+		else {
+			JSONQuery jquery = new JSONQuery(this);
+			jquery.execute("http://csce.uark.edu/~mmmcclel/spark/authentication.php", Username, Password);
+		}
 	}
 	
 	public void CreateAccount(View v){
