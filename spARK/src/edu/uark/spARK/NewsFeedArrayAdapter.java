@@ -5,6 +5,8 @@ import java.util.List;
 import edu.uark.spARK.entities.Content;
 import android.content.Context;
 import android.graphics.Rect;
+import android.text.Layout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.TouchDelegate;
 import android.view.View;
@@ -53,7 +55,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements OnCli
 			convertView = mInflater.inflate(R.layout.list_discussion, null);
 		}
 		TextView t = (TextView) convertView.findViewById(R.id.headerTextView);
-		TextView d = (TextView) convertView.findViewById(R.id.descTextView);
+		final TextView d = (TextView) convertView.findViewById(R.id.descTextView);
 		TextView g = (TextView) convertView.findViewById(R.id.groupTextView);
 		TextView u = (TextView) convertView.findViewById(R.id.usernameTextView);
 		TextView c = (TextView) convertView.findViewById(R.id.creationDateTextView);
@@ -66,6 +68,30 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements OnCli
 		u.setText(getItem(position).getAuthor().getName());
 		c.setText(getItem(position).getDate());
 		s.setText("" + getItem(position).getScore());
+		
+		//generic idea for expanding ellipsized text
+		d.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Layout l = d.getLayout();
+				if (l != null) {
+					int lines = l.getLineCount();
+					if (lines > 0)
+						if (l.getEllipsisCount(lines-1) > 0) {
+							d.setMaxLines(Integer.MAX_VALUE);
+							d.setEllipsize(null);
+						}
+						else {
+							d.setMaxLines(4);
+							d.setEllipsize(TextUtils.TruncateAt.END);
+						}
+					d.invalidate();
+				}
+			}
+			
+		});
+		
 		//((RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup)).setOnClickListener(this);
 		mdiscussionScoreRadioGroup = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
 		mdiscussionScoreRadioGroup.setOnCheckedChangeListener(ToggleListener);
