@@ -35,7 +35,7 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/groupTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -43,7 +43,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/TextView02"
+                    android:id="@+id/creationDateTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -77,13 +77,17 @@
                     android:id="@+id/descTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@id/LinearLayout1"
                     android:layout_weight="1.0"
-                    android:text="adflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkj"
+                    android:text="adflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkj"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black" 
+                    android:scrollHorizontally="true"
+					android:ellipsize="end" 
+					android:maxLines="4"/>
 
                 <LinearLayout
                     android:id="@id/LinearLayout1"
@@ -95,7 +99,7 @@
                     android:orientation="vertical" >
 
                     <QuickContactBadge
-                        android:id="@+id/QuickContactBadge1"
+                        android:id="@+id/userQuickContactBadge"
                         android:layout_width="52dp"
                         android:layout_height="52dp"
                         android:layout_gravity="right"
@@ -104,13 +108,15 @@
                         android:src="@drawable/profile_icon" />
 
                     <TextView
-                        android:id="@+id/textView2"
+                        android:id="@+id/usernameTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:text="username"
+                        android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+                        android:text="name"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textSize="12sp" />
+
                 </LinearLayout>
             </RelativeLayout>
         </TableRow>
@@ -141,66 +147,48 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true" >
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <RadioGroup
+                        android:id="@+id/discussionScoreRadioGroup"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:paddingLeft="5dp" >
+                        android:orientation="horizontal"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp" >
 
-                        <Button
+                        <ToggleButton
                             android:id="@+id/likeBtn"
                             style="?android:attr/buttonStyleSmall"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:background="@drawable/thumbs_up" />
+                            android:background="@drawable/btn_like"
+                            android:onClick="onClick"
+                            android:textOff=""
+                            android:textOn="" />
 
                         <TextView
-                            android:id="@+id/likeScoreTextView"
+                            android:id="@+id/totalScoreTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:clickable="false"
+                            android:enabled="false"
                             android:gravity="center"
                             android:text="+14"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@android:color/black" />
 
-                        <Button
+                        <ToggleButton
                             android:id="@+id/dislikeBtn"
                             style="?android:attr/buttonStyleSmall"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:background="@drawable/thumbs_down" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:paddingLeft="5dp" >
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:paddingLeft="5dp" >
-
-                        <Button
-                            android:id="@+id/commentBtn"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:background="@drawable/btn_comment" />
-
-                        <TextView
-                            android:id="@+id/TextView01"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="5"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@android:color/black" />
-                    </LinearLayout>
+                            android:background="@drawable/btn_dislike"
+                            android:onClick="onClick"
+                            android:textOff=""
+                            android:textOn="" />
+                    </RadioGroup>
                 </LinearLayout>
 
                 <Button
