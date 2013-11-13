@@ -247,7 +247,7 @@ public class PullToRefreshListView extends ListView{
         setVerticalFadingEdgeEnabled(false);
 
         headerContainer = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.ptr_header, null);
-        
+      
         header = (RelativeLayout) headerContainer.findViewById(R.id.ptr_id_header);
         text = (TextView) header.findViewById(R.id.ptr_id_text);
         lastUpdatedTextView = (TextView) header.findViewById(R.id.ptr_id_last_updated);
@@ -271,6 +271,9 @@ public class PullToRefreshListView extends ListView{
 
 	    mapHeader = new View(c);
 	    mapHeader.setBackgroundColor(Color.TRANSPARENT);
+	    
+	    TextView footerView =  new TextView(c);
+	    footerView.setBackgroundColor(Color.RED);
 	    
 	    final float scale = getContext().getResources().getDisplayMetrics().density;
 	    int pixels = (int) (100 * scale + 0.5f);
@@ -299,6 +302,8 @@ public class PullToRefreshListView extends ListView{
         
         addHeaderView(headerContainer);
 	    addHeaderView(mapHeader);
+	    addFooterView(footerView);
+	    footerView.setText("Loading more data...");
         
         setState(State.PULL_TO_REFRESH);
         scrollbarEnabled = isVerticalScrollBarEnabled();

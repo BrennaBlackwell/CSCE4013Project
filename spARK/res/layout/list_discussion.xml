@@ -166,7 +166,6 @@
                             android:layout_height="32dp"
                             android:layout_gravity="center"
                             android:background="@drawable/btn_like"
-                            android:onClick="onToggle"
                             android:textOff=""
                             android:textOn="" />
 
@@ -187,7 +186,6 @@
                             android:layout_width="32dp"
                             android:layout_height="match_parent"
                             android:background="@drawable/btn_dislike"
-                            android:onClick="onToggle"
                             android:textOff=""
                             android:textOn="" />
 

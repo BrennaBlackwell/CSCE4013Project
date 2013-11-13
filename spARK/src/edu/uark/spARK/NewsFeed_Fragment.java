@@ -3,29 +3,23 @@ package edu.uark.spARK;
 import java.util.ArrayList;
 import java.util.Date;
 
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Content;
-import edu.uark.spARK.entities.Discussion;
-import edu.uark.spARK.entities.User;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.RadioGroup;
-import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Content;
+import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.User;
 
 
 public class NewsFeed_Fragment extends Fragment {
@@ -48,6 +42,7 @@ public class NewsFeed_Fragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		loadContent();
 	}
 
 	public void loadContent() {
@@ -109,8 +104,7 @@ public class NewsFeed_Fragment extends Fragment {
     });
 	    mNewsFeedAdapter = new NewsFeedArrayAdapter(getActivity().getApplicationContext(), R.layout.list_discussion, arrayListContent);
 	    listView.setAdapter(mNewsFeedAdapter);
-		loadContent();
-		mNewsFeedAdapter.notifyDataSetChanged();
+
 		return view;
 	}
 	

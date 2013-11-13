@@ -1,5 +1,6 @@
 package edu.uark.spARK;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -21,17 +22,18 @@ import edu.uark.spARK.entities.Content;
 import edu.uark.spARK.entities.Discussion;
 
 public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
-	private static final String tag = "NewsFeedAdapter";
+	private static final String tag = "NewsFeedArrayAdapter";
 	
 	
 	private Context mContext;
 	private LayoutInflater mInflater;
+	private List<Content> mContent;
 	ViewHolder holder;
 	
 	
 	public NewsFeedArrayAdapter(Context context, int layoutid, List<Content> content) {
 		super(context, layoutid, content);
-		
+		this.mContent = content;
 		mContext = context;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -40,101 +42,77 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		// TODO Auto-generated method stub
 		// PROBLEM WITH SETTING THE LAST POSITION, IT THINKS IT IS 0. 
+		//ViewHolder holder;
+		System.out.println("position: " + position);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.list_discussion, null);
-			final Content d = (Content) getItem(position);
 			
 			holder.mainFL = (FrameLayout) convertView.findViewById(R.id.list_discussionMainFrame);
 			holder.titleTV = (TextView) convertView.findViewById(R.id.headerTextView);
+			holder.titleTV.setTag(position);
 			holder.descTV = (TextView) convertView.findViewById(R.id.descTextView);	
-			//generic idea for expanding ellipsized text
-			holder.descTV.setOnClickListener(new OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					
-					Layout l = holder.descTV.getLayout();
-					if (l != null) {
-						int lines = l.getLineCount();
-						if (lines > 0)
-							if (l.getEllipsisCount(lines-1) > 0) {
-								holder.descTV.setMaxLines(Integer.MAX_VALUE);
-								holder.descTV.setEllipsize(null);
-							}
-							else {
-								holder.descTV.setMaxLines(4);
-								holder.descTV.setEllipsize(TextUtils.TruncateAt.END);
-							}
-						holder.descTV.invalidate();
-					}
-				}
-				
-			});
 			holder.groupTV = (TextView) convertView.findViewById(R.id.groupTextView);
 			holder.usernameTV = (TextView) convertView.findViewById(R.id.usernameTextView);
 			holder.usernameTV.setTag(position);
-			holder.usernameTV.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-				}
-				
-			});
+//			holder.usernameTV.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//				}
+//				
+//			});
 			holder.creationDateTV = (TextView) convertView.findViewById(R.id.creationDateTextView);
 			holder.totalScoreTV = (TextView) convertView.findViewById(R.id.totalScoreTextView);
 			
 			holder.likeBtn = (ToggleButton) convertView.findViewById(R.id.likeBtn);
-			holder.likeBtn.setOnClickListener(new OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					((RadioGroup)v.getParent()).check(v.getId());	
-					d.increaseScore();
-					update();
-				}
-				
-			});
-			holder.likeBtn.setTag(position);
 				
 			holder.dislikeBtn = (ToggleButton) convertView.findViewById(R.id.dislikeBtn);
-			holder.dislikeBtn.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					((RadioGroup)v.getParent()).check(v.getId());
-					d.decreaseScore();
-					update();
-				}
-				
-			});
-			holder.dislikeBtn.setTag(position);
 			
 			holder.scoreRG = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
-			holder.scoreRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-		        @Override
-		        public void onCheckedChanged(final RadioGroup radioGroup, final int i) {
-		            for (int j = 0; j < radioGroup.getChildCount(); j++) {
-		            	if (radioGroup.getChildAt(j).isEnabled()) {
-		            		final ToggleButton view = (ToggleButton) radioGroup.getChildAt(j);
-		            		view.setChecked(view.getId() == i);
-		            	}
-		            }
-		        }
-		    });		
+			holder.scoreRG.setTag(position);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+		Content c = (Content) mContent.get(position);
 		
-		holder.titleTV.setText(getItem(position).getTitle());
-		holder.descTV.setText(getItem(position).getDescription());
-		holder.groupTV.setText(getItem(position).getGroup());
-		holder.usernameTV.setText(getItem(position).getAuthor().getName());
-		holder.totalScoreTV.setText("" + getItem(position).getScore());
-		holder.creationDateTV.setText(getItem(position).getDate());
-		holder.totalScoreTV.setText("" + getItem(position).getScore());
-		
+		holder.titleTV.setText(c.getTitle());
+		holder.descTV.setText(c.getDescription());
+		holder.groupTV.setText(c.getGroup());
+		holder.usernameTV.setText(c.getAuthor().getName());
+		holder.totalScoreTV.setText("" + c.getScore());
+		holder.creationDateTV.setText(c.getDate());
+		holder.totalScoreTV.setText("" + c.getScore());
+		holder.likeBtn.setTag(Integer.valueOf(position));
+		holder.dislikeBtn.setTag(position);
+		//generic idea for expanding ellipsized text
+//		holder.descTV.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				
+//				Layout l = holder.descTV.getLayout();
+//				if (l != null) {
+//					int lines = l.getLineCount();
+//					System.out.println("num lines: " + lines);
+//					if (lines > 0)
+//						if (l.getEllipsisCount(lines-1) > 0) {
+//							System.out.println("getEllipsisCount(): " + l.getEllipsisCount(lines-1));
+//							holder.descTV.setMaxLines(Integer.MAX_VALUE);
+//							holder.descTV.setEllipsize(null);
+//						}
+//						else {
+//							holder.descTV.setMaxLines(4);
+//							holder.descTV.setEllipsize(TextUtils.TruncateAt.END);
+//						}
+//					holder.descTV.invalidate();
+//				}
+//			}
+//			
+//		});
 
 		//increase touch area of like and dislike buttons (not really working)
 //		final View buttonparent = (View) mButtonLike.getParent();
@@ -151,6 +129,37 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 //				buttonparent.setTouchDelegate(new TouchDelegate(delegateArea, mButtonDislike));
 //			}
 //		});
+		holder.scoreRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+	        @Override
+	        public void onCheckedChanged(final RadioGroup radioGroup, final int i) {
+	            for (int j = 0; j < radioGroup.getChildCount(); j++) {
+	            	if (radioGroup.getChildAt(j).isEnabled()) {
+	            		final ToggleButton view = (ToggleButton) radioGroup.getChildAt(j);
+	            		view.setChecked(view.getId() == i);
+	            	}
+	            }
+	        }
+	    });	
+		holder.likeBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				((RadioGroup)v.getParent()).check(v.getId());	
+				getItem((Integer) v.getTag()).increaseScore();
+				update();
+			}
+			
+		});
+		holder.dislikeBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				((RadioGroup)v.getParent()).check(v.getId());
+				getItem((Integer) v.getTag()).decreaseScore();
+				update();
+			}
+			
+		});
 		return convertView;
 	}
 	
@@ -172,4 +181,10 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 	public void update() {
 		notifyDataSetChanged();
 	}
+	
+	@Override
+	public Content getItem(int pos) {
+		return super.getItem(pos);
+	}
+	
 }
