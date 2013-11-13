@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
@@ -47,7 +48,6 @@ public class NewsFeed_Fragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		loadContent();
 	}
 
 	public void loadContent() {
@@ -61,7 +61,8 @@ public class NewsFeed_Fragment extends Fragment {
 				"Yesterday's Game", 
 				"C'mon Razorbacks! What was that yesterday? \n\nThat's it. I give up. I'm just going to retire.", 
 				"Football",
-				new Date(113, 11, 10, 15, 30)));		arrayListContent.add(new Discussion(new User("fred"), 
+				new Date(113, 11, 10, 15, 30)));		
+		arrayListContent.add(new Discussion(new User("fred"), 
 				"SSBM Tournament", 
 				"Super Smash Brothers Melee tournament at the Union Student Technology room. \n\nBring your own controllers!", 
 				"Games",
@@ -89,15 +90,6 @@ public class NewsFeed_Fragment extends Fragment {
 
 	    View view = inflater.inflate(R.layout.fragment_news_feed, container, false);
 	    final PullToRefreshListView listView = (PullToRefreshListView) view.findViewById(R.id.pullToRefreshListView);
-	    listView.setOnItemClickListener(new OnItemClickListener() {
-
-	    	@Override
-	    	public void onItemClick(AdapterView<?> parent, View v, int id, long position) {
-	    		System.out.println("id: " + id + "pos: " + position);
-	    	}
-	    	
-	    });
-	    
 	    //set mapHeader clicklistener so the listview can be hidden
 	    listView.mapHeader.setOnClickListener(new OnClickListener() {
         @Override
@@ -117,8 +109,8 @@ public class NewsFeed_Fragment extends Fragment {
     });
 	    mNewsFeedAdapter = new NewsFeedArrayAdapter(getActivity().getApplicationContext(), R.layout.list_discussion, arrayListContent);
 	    listView.setAdapter(mNewsFeedAdapter);
-
-	    
+		loadContent();
+		mNewsFeedAdapter.notifyDataSetChanged();
 		return view;
 	}
 	
@@ -146,4 +138,5 @@ public class NewsFeed_Fragment extends Fragment {
 		// TODO: Update argument type and name
 		public void onFragmentInteraction(Uri uri);
 	}
+	
 }

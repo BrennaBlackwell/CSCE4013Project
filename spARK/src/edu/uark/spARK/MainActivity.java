@@ -283,11 +283,4 @@ public class MainActivity extends Activity implements TabListener{
     protected void onResume() {
         super.onResume();
     }
-    
-    public void onToggle(View view) {
-//    	if mainContentFragment.getClass().equals(CombinedMapNews_Fragment.class){
-//    		((CombinedMapNews_Fragment) mainContentFragment).
-//    	}
-    	System.out.println("onToggle: view id" + view.getId());
-    }
 }

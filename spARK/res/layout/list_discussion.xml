@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/FrameLayout1"
+    android:id="@+id/list_discussionMainFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/container_bg" >
@@ -55,7 +55,7 @@
         <View
             android:id="@+id/titleSeparator"
             android:layout_width="fill_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@color/red" />
@@ -75,19 +75,19 @@
 
                 <TextView
                     android:id="@+id/descTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@id/LinearLayout1"
                     android:layout_weight="1.0"
-                    android:text="adflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkjadflkajfd;lakjfd;lakjfd;aldfkja;flasdkfja;ldsfajfd;aldfkj"
+                    android:ellipsize="end"
+                    android:maxLines="4"
+                    android:scrollHorizontally="false"
+                    android:text=""
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@android:color/black" 
-                    android:scrollHorizontally="true"
-					android:ellipsize="end" 
-					android:maxLines="4"/>
+                    android:textColor="@android:color/black" />
 
                 <LinearLayout
                     android:id="@id/LinearLayout1"
@@ -124,7 +124,7 @@
         <View
             android:id="@+id/contentSeparator"
             android:layout_width="fill_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:background="@color/grey_bg2"
             android:visibility="visible" />
 
@@ -146,6 +146,7 @@
                 android:gravity="right" >
 
                 <LinearLayout
+                    android:id="@+id/list_discussionRatingLinearLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true" >
@@ -163,8 +164,9 @@
                             style="?android:attr/buttonStyleSmall"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
+                            android:layout_gravity="center"
                             android:background="@drawable/btn_like"
-                            android:onClick="onClick"
+                            android:onClick="onToggle"
                             android:textOff=""
                             android:textOn="" />
 
@@ -183,11 +185,12 @@
                             android:id="@+id/dislikeBtn"
                             style="?android:attr/buttonStyleSmall"
                             android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_height="match_parent"
                             android:background="@drawable/btn_dislike"
-                            android:onClick="onClick"
+                            android:onClick="onToggle"
                             android:textOff=""
                             android:textOn="" />
+
                     </RadioGroup>
                 </LinearLayout>
 
@@ -212,15 +215,47 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_margin="5dp"
-                        android:background="@drawable/ic_media_fullscreen" />
+                        android:background="@drawable/btn_comment"
+                        android:visibility="invisible" />
 
                     <Button
                         android:id="@+id/favoriteBtn"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
+                        android:layout_gravity="center"
                         android:layout_margin="5dp"
-                        android:background="@drawable/ic_menu_bookmark" />
+                        android:background="@drawable/btn_star"
+                        android:gravity="center" />
+
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/list_discussionCommentLinearLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/list_discussionRatingLinearLayout" >
+
+                    <TextView
+                        android:layout_width="1px"
+                        android:layout_height="32dp"
+                        android:background="@color/grey_bg2" />
+
+                    <TextView
+                        android:id="@+id/TextView01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:clickable="false"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:text="12 comments"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+
             </RelativeLayout>
         </TableRow>
     </TableLayout>
