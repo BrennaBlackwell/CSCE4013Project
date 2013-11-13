@@ -35,11 +35,11 @@ public class MainActivity extends Activity implements TabListener{
     private Menu mMenu;
 
     private static final int PROFILE_FRAGMENT = 0;
-    private static final int MAPVIEW_FRAGMENT = 1;
-    private static final int CLUSTERVIEW_FRAGMENT = 2;
-    private static final int CHECKIN_FRAGMENT = 3;
-    private static final int COMBINEDMAPNEWS_FRAGMENT = 4;
-    private static final int NEWSFEED_FRAGMENT = 5;
+    private static final int MAPVIEW_FRAGMENT = -1;
+    private static final int CLUSTERVIEW_FRAGMENT = -2;
+    private static final int CHECKIN_FRAGMENT = 2;
+    private static final int COMBINEDMAPNEWS_FRAGMENT = 1;
+    private static final int NEWSFEED_FRAGMENT = -3;
     private int page = -1;
     
     //FRAGMENTS (need this for onclick listeners to pass click events from the main activity to the fragment)
@@ -102,6 +102,8 @@ public class MainActivity extends Activity implements TabListener{
         if (savedInstanceState == null) {
             //selectItem(0);
         }
+        switchFragment(COMBINEDMAPNEWS_FRAGMENT);
+
     }
 
     @Override
@@ -163,7 +165,7 @@ public class MainActivity extends Activity implements TabListener{
 	    			fragment = new Profile_Fragment();
 	    			break;
 		    	case COMBINEDMAPNEWS_FRAGMENT://1
-		    		fragment = new MapView_Fragment();	
+		    		fragment = new CombinedMapNews_Fragment();
 		    		break;
 		    	case CLUSTERVIEW_FRAGMENT: //2
 	    			fragment = new ClusterView_Fragment();
@@ -172,9 +174,7 @@ public class MainActivity extends Activity implements TabListener{
 	    			fragment = new CheckIn_Fragment();
 		    		break;
 		    	case MAPVIEW_FRAGMENT: //0
-		    		fragment = new CombinedMapNews_Fragment(
-		    				
-		    				);
+		    		fragment = new MapView_Fragment();
 		    		break;
 		    	case NEWSFEED_FRAGMENT: //5
 		    		fragment = new NewsFeed_Fragment();
@@ -232,9 +232,7 @@ public class MainActivity extends Activity implements TabListener{
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    /**
-     * Fragment that appears in the "content_frame" (our fragment type)
-     */
+
 
     public void onClick(View v) {
         switch (v.getId()) {
