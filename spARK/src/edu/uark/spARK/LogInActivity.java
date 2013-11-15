@@ -3,6 +3,7 @@ package edu.uark.spARK;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.LightingColorFilter;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import edu.uark.spARK.JSONQuery.AsyncResponse;
  
 public class LogInActivity extends Activity implements AsyncResponse {
@@ -85,12 +85,12 @@ public class LogInActivity extends Activity implements AsyncResponse {
 		
 		//make sure text has been added to the login screen
 		if (Username.matches("")) {
-			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a username!", 2);
+			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Username", 2);
 			toast.show();
 			return;
 		}
 		else if (Password.matches("")) {
-			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a password!", 2);
+			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Password", 2);
 			toast.show();
 			return;
 		}
@@ -122,6 +122,15 @@ public class LogInActivity extends Activity implements AsyncResponse {
 		text_view2.setVisibility(View.INVISIBLE);
 		if (output.contains("Success")) {
 			text_view1.setVisibility(View.INVISIBLE);
+			
+			EditText userText = (EditText)findViewById(R.id.Username);
+			String user = userText.getText().toString();
+			SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+			SharedPreferences.Editor editor = preferences.edit();
+			
+			editor.putString("currentUser", user);
+			editor.apply();
+			
 			Intent MainIntent = new Intent(this, MainActivity.class);
 			startActivity(MainIntent);
 		} else {
