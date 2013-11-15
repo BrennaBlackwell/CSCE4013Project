@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 
-public class Profile_Fragment extends Fragment implements AsyncResponse {
+public class MyProfile_Fragment extends Fragment implements AsyncResponse {
     public static final String ARG_FRAGMENT_TYPE = "fragment_type";
 
-    public Profile_Fragment() {
+    public MyProfile_Fragment() {
         // Empty constructor required for fragment subclasses
     }
 
@@ -21,11 +21,11 @@ public class Profile_Fragment extends Fragment implements AsyncResponse {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         
     	SharedPreferences preferences = this.getActivity().getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-		String user = preferences.getString("currentUser", "");
+		String currentUser = preferences.getString("currentUser", "");
 		
-		View profileView = (TextView)inflater.inflate(R.layout.fragment_profile, container, false);
+		View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 		TextView textview = (TextView)profileView.findViewById(R.id.userID);
-		textview.setText(user);
+		textview.setText(currentUser);
 		
     	return profileView;
     }
