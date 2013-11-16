@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -39,23 +40,20 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 	}
 	
 	@Override
-	public View getView(final int position, View convertView, final ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		// PROBLEM WITH SETTING THE LAST POSITION, IT THINKS IT IS 0. 
-		//ViewHolder holder;
-		System.out.println("position: " + position);
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = mInflater.inflate(R.layout.list_discussion, null);
+			convertView = mInflater.inflate(R.layout.discussion_list, null);
 			
 			holder.mainFL = (FrameLayout) convertView.findViewById(R.id.list_discussionMainFrame);
-			holder.titleTV = (TextView) convertView.findViewById(R.id.headerTextView);
-			holder.titleTV.setTag(position);
-			holder.descTV = (TextView) convertView.findViewById(R.id.descTextView);	
-
-			holder.groupTV = (TextView) convertView.findViewById(R.id.groupTextView);
-			holder.usernameTV = (TextView) convertView.findViewById(R.id.usernameTextView);
-			holder.usernameTV.setTag(position);
+			holder.titleTextView = (TextView) convertView.findViewById(R.id.headerTextView);
+			holder.titleTextView.setTag(position);
+			holder.descTextView = (TextView) convertView.findViewById(R.id.descTextView);	
+			holder.commentTextView = (TextView) convertView.findViewById(R.id.commentTextView);
+			holder.groupTextView = (TextView) convertView.findViewById(R.id.groupTextView);
+			holder.usernameTextView = (TextView) convertView.findViewById(R.id.usernameTextView);
+			holder.usernameTextView.setTag(position);
 //			holder.usernameTV.setOnClickListener(new OnClickListener() {
 //
 //				@Override
@@ -63,29 +61,31 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 //				}
 //				
 //			});
-			holder.creationDateTV = (TextView) convertView.findViewById(R.id.creationDateTextView);
-			holder.totalScoreTV = (TextView) convertView.findViewById(R.id.totalScoreTextView);
+			holder.creationDateTextView = (TextView) convertView.findViewById(R.id.creationDateTextView);
+			holder.totalScoreTextView = (TextView) convertView.findViewById(R.id.totalScoreTextView);
 			
 			holder.likeBtn = (ToggleButton) convertView.findViewById(R.id.likeBtn);
 
 				
 			holder.dislikeBtn = (ToggleButton) convertView.findViewById(R.id.dislikeBtn);
 			
-			holder.scoreRG = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
-			holder.scoreRG.setTag(position);
+			holder.scoreRadioGroup = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
+			holder.scoreRadioGroup.setTag(position);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		Content c = (Content) mContent.get(position);
+		final Content c = (Content) mContent.get(position);
 		
-		holder.titleTV.setText(c.getTitle());
-		holder.descTV.setText(c.getDescription());
-		holder.groupTV.setText(c.getGroup());
-		holder.usernameTV.setText(c.getAuthor().getName());
-		holder.totalScoreTV.setText("" + c.getScore());
-		holder.creationDateTV.setText(c.getDate());
-		holder.totalScoreTV.setText("" + c.getScore());
+		holder.titleTextView.setText(c.getTitle());
+		holder.descTextView.setText(c.getDescription());
+		holder.groupTextView.setText(c.getGroup());
+		holder.usernameTextView.setText(c.getAuthor().getName());
+		holder.totalScoreTextView.setText("" + c.getScore());
+		holder.creationDateTextView.setText(c.getDate());
+		holder.totalScoreTextView.setText("" + c.getScore());
+		if (c instanceof Discussion)	
+			holder.commentTextView.setText(((Discussion) c).getCommentList().size() + " comments");
 		holder.likeBtn.setTag(Integer.valueOf(position));
 		holder.dislikeBtn.setTag(position);
 		//generic idea for expanding ellipsized text
@@ -129,7 +129,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 //				buttonparent.setTouchDelegate(new TouchDelegate(delegateArea, mButtonDislike));
 //			}
 //		});
-		holder.scoreRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+		holder.scoreRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 	        @Override
 	        public void onCheckedChanged(final RadioGroup radioGroup, final int i) {
 	            for (int j = 0; j < radioGroup.getChildCount(); j++) {
@@ -160,19 +160,34 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 			}
 			
 		});
+		holder.commentTextView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				System.out.println("on item clicked! " + v.getId());
+				if (v.getId() == R.id.commentTextView)
+					System.out.println("textview selected!");
+				Intent i = new Intent(v.getContext(), CommentActivity.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				i.putExtra("Object", c);
+				v.getContext().startActivity(i);
+			}
+			
+		});
 		return convertView;
 	}
 	
 	//use this to load items, saving performance from not having to lookup id
 	static class ViewHolder {
 		FrameLayout mainFL;
-		TextView titleTV;
-		TextView descTV;
-		TextView groupTV;
-		TextView usernameTV;
-		TextView creationDateTV;
-		TextView totalScoreTV;
-		RadioGroup scoreRG;
+		TextView titleTextView;
+		TextView descTextView;
+		TextView groupTextView;
+		TextView usernameTextView;
+		TextView creationDateTextView;
+		TextView totalScoreTextView;
+		TextView commentTextView;
+		RadioGroup scoreRadioGroup;
 		ToggleButton likeBtn;
 		ToggleButton dislikeBtn;
 		int position;
@@ -186,5 +201,4 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 	public Content getItem(int pos) {
 		return super.getItem(pos);
 	}
-	
 }

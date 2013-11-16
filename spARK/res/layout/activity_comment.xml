@@ -1,0 +1,71 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/commentFrameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/commentLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".CommentActivity" >
+
+        <include
+            android:id="@+id/comment_discussion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/content" />
+
+        <View
+            android:id="@+id/contentSeparator"
+            android:layout_width="fill_parent"
+            android:layout_height="2px"
+            android:background="@color/red"
+            android:visibility="visible" />
+
+        <ListView
+            android:id="@+id/commentListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="48dp"
+            android:background="@color/white_dialog"
+            android:divider="@drawable/divider"
+            android:dividerHeight="2px"
+            android:drawSelectorOnTop="true"
+            tools:listitem="@layout/comment_list" >
+
+        </ListView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/addCommentLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/ab_solid_bottom"
+        android:orientation="horizontal"
+        android:weightSum="1.0" >
+
+        <EditText
+            android:id="@+id/addCommentEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1.0"
+            android:hint="Join the conversation!"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageButton
+            android:id="@+id/postCommentBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/selector"
+            android:src="@drawable/ic_menu_send" />
+
+    </LinearLayout>
+
+</FrameLayout>

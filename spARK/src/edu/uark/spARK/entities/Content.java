@@ -1,5 +1,6 @@
 package edu.uark.spARK.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import android.text.format.DateFormat;
@@ -9,8 +10,12 @@ import android.text.format.DateFormat;
  * This is the easiest way to separate them by using the class name
  * */
 
-public class Content {
+public class Content implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8949619690322767155L;
 	int intScore = 0;
 	String title;
 	String content;

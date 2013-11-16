@@ -29,7 +29,7 @@ public class CombinedMapNews_Fragment extends Fragment {
     public void onDestroyView() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.remove(getFragmentManager().findFragmentById(R.id.map));
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
 
         super.onDestroyView();
     }

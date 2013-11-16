@@ -4,25 +4,25 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/ptr_id_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right" >
+        android:layout_height="wrap_content" >
 
-	    <ImageView
-	        android:id="@+id/ptr_id_image"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_margin="5dp"
-	        android:gravity="right|center_vertical|center_horizontal"
-	        android:src="@drawable/pulldown_refresh" />
+        <ImageView
+            android:id="@+id/ptr_id_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:gravity="right|center_vertical|center_horizontal"
+            android:src="@drawable/pulldown_refresh" />
 
-	    <ProgressBar
-	        android:id="@+id/ptr_id_spinner"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerInParent="true" />
+        <ProgressBar
+            android:id="@+id/ptr_id_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
         <LinearLayout
             android:id="@+id/ptr_id_textwrapper"
@@ -42,8 +42,7 @@
                 android:id="@+id/ptr_id_last_updated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
         </LinearLayout>
-    </RelativeLayout>
+    </FrameLayout>
 
 </LinearLayout>

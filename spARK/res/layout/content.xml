@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_dialog" >
+
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:weightSum="1.0" >
+
+        <TextView
+            android:id="@+id/headerTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".85"
+            android:paddingLeft="5dp"
+            android:text="Free Cheesburgers in the Union!"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight=".15"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/groupTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Campus Events"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/creationDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="17 mins ago"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+    </TableRow>
+
+    <View
+        android:id="@+id/titleSeparator"
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/red" />
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:weightSum="1.0" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:weightSum="1.0" >
+
+            <TextView
+                android:id="@+id/descTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/userInfoLinearLayout_ref"
+                android:layout_weight="1.0"
+                android:ellipsize="end"
+                android:maxLines="4"
+                android:scrollHorizontally="false"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/black" />
+
+            <include
+                android:id="@+id/userInfoLinearLayout_ref"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="5dp"
+                layout="@layout/user_badge" />
+        </RelativeLayout>
+    </TableRow>
+
+    <View
+        android:id="@+id/contentSeparator"
+        android:layout_width="fill_parent"
+        android:layout_height="2px"
+        android:background="@color/grey_bg2"
+        android:visibility="visible" />
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/container_items_bg"
+        android:baselineAligned="true"
+        android:visibility="visible"
+        android:weightSum="1" >
+
+        <RelativeLayout
+            android:id="@+id/RelativeLayout02"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="right" >
+
+            <LinearLayout
+                android:id="@+id/list_discussionRatingLinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true" >
+
+                <RadioGroup
+                    android:id="@+id/discussionScoreRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" >
+
+                    <ToggleButton
+                        android:id="@+id/likeBtn"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/btn_like"
+                        android:textOff=""
+                        android:textOn="" />
+
+                    <TextView
+                        android:id="@+id/totalScoreTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:clickable="false"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:text="+14"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@android:color/black" />
+
+                    <ToggleButton
+                        android:id="@+id/dislikeBtn"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="32dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/btn_dislike"
+                        android:textOff=""
+                        android:textOn="" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/overflowBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/ic_menu_moreoverflow_normal_holo_light"
+                android:gravity="right|center_vertical|center_horizontal" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/overflowBtn" >
+
+                <Button
+                    android:id="@+id/expandBtn"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/btn_comment"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/favoriteBtn"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/btn_star"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <include
+                android:id="@+id/list_discussionCommentLinearLayout_ref"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/list_discussionRatingLinearLayout"
+                layout="@layout/discussion_comment" />
+        </RelativeLayout>
+    </TableRow>
+
+</TableLayout>

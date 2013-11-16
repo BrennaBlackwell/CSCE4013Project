@@ -13,10 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
+import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
 import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Comment;
 import edu.uark.spARK.entities.Content;
 import edu.uark.spARK.entities.Discussion;
 import edu.uark.spARK.entities.User;
@@ -42,41 +41,6 @@ public class NewsFeed_Fragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		loadContent();
-	}
-
-	public void loadContent() {
-		//test
-		arrayListContent.add(new Discussion(new User("bpanda"), 
-				"Free Cheeseburgers in the Union!", 
-				"Burger Shack is providing free cheeseburgers at the Union!", 
-				"Campus Free Food",
-				new Date(113, 11, 10, 12, 3)));
-		arrayListContent.add(new Discussion(new User("bpanda"), 
-				"Yesterday's Game", 
-				"C'mon Razorbacks! What was that yesterday? \n\nThat's it. I give up. I'm just going to retire.", 
-				"Football",
-				new Date(113, 11, 10, 15, 30)));		
-		arrayListContent.add(new Discussion(new User("fred"), 
-				"SSBM Tournament", 
-				"Super Smash Brothers Melee tournament at the Union Student Technology room. \n\nBring your own controllers!", 
-				"Games",
-				new Date(113, 11, 6, 9, 15)));
-		arrayListContent.add(new Bulletin(new User("crazyal"), 
-				"10% Off All Posters!", 
-				"Git over to the Student union for some cr-rrazy deals! \n\nWe got all kinds of posters! \n" + 
-				"Everything from: \nBattlestar Galactica \nBreaking Bad (You're ******* right!) \n" + 
-						"Miley Cyrus twerkin! \nFamous people gettin married that you don't really care about! \n" + 
-						"And of course, food! \n   (*not actual food, posters of food)"
-				+ "\nSale ends this Pos-ThursDay!",
-				"Campus On Sale",
-				new Date(113, 11, 1, 12, 36)));
-		arrayListContent.add(new Discussion(new User("hermanp"), 
-				"Algorithms", 
-				"I know what you are, but what am I? \n\n" + 
-				"Why dont'cha make me?!",
-				"Algorithms",
-				new Date(113, 11, 4, 11, 9)));
 	}
 	
 	@Override
@@ -95,6 +59,7 @@ public class NewsFeed_Fragment extends Fragment {
 
         	FragmentManager fm = getFragmentManager();
         	FragmentTransaction ft = fm.beginTransaction();
+        	
         	ft.addToBackStack(null);
         	//animations are ordered (enter, exit, popEnter, popExit)
         	ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, 
@@ -102,9 +67,52 @@ public class NewsFeed_Fragment extends Fragment {
         	.hide(n).commit();
                                                                         }
     });
-	    mNewsFeedAdapter = new NewsFeedArrayAdapter(getActivity().getApplicationContext(), R.layout.list_discussion, arrayListContent);
+	    mNewsFeedAdapter = new NewsFeedArrayAdapter(getActivity().getApplicationContext(), R.layout.discussion_list, arrayListContent);
 	    listView.setAdapter(mNewsFeedAdapter);
+        listView.setOnRefreshListener(new OnRefreshListener() {
 
+            @Override
+            public void onRefresh() {
+                    // Your code to refresh the list contents goes here
+
+                    // for example:
+                    // If this is a webservice call, it might be asynchronous so
+                    // you would have to call listView.onRefreshComplete(); when
+                    // the webservice returns the data
+                    loadContent();
+                    
+                    // Make sure you call listView.onRefreshComplete()
+                    // when the loading is done. This can be done from here or any
+                    // other place, like on a broadcast receive from your loading
+                    // service or the onPostExecute of your AsyncTask.
+
+                    // For the sake of this sample, the code will pause here to
+                    // force a delay when invoking the refresh
+                    listView.postDelayed(new Runnable() {
+
+                            
+                            @Override
+                            public void run() {
+                                    listView.onRefreshComplete();
+                            }
+                    }, 2000);
+            }
+    });
+//        listView.setOnItemClickListener(new OnItemClickListener()
+//        {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View v, int id,
+//					long position) {
+//				System.out.println("on item clicked! " + v.getId());
+//				if (v.getId() == R.id.commentTextView)
+//					System.out.println("textview selected!");
+//				Intent i = new Intent(getActivity(), CommentActivity.class);
+//				startActivity(i);
+//				
+//			}
+//        	
+//        });
 		return view;
 	}
 	
@@ -131,6 +139,48 @@ public class NewsFeed_Fragment extends Fragment {
 	public interface OnFragmentInteractionListener {
 		// TODO: Update argument type and name
 		public void onFragmentInteraction(Uri uri);
+	}
+	
+	public void loadContent() {
+		//test
+		User u1 = new User("user1");
+		User u2 = new User("user2");
+		User u3 = new User("user3");
+		Discussion d1 = new Discussion(new User("bpanda"), 
+				"Free Cheeseburgers in the Union!", 
+				"Burger Shack is providing free cheeseburgers at the Union!", 
+				"Campus Free Food",
+				new Date(113, 11, 10, 12, 3));
+		arrayListContent.add(d1);
+		arrayListContent.add(new Discussion(new User("bpanda"), 
+				"Yesterday's Game", 
+				"C'mon Razorbacks! What was that yesterday? \n\nThat's it. I give up. I'm just going to retire.", 
+				"Football",
+				new Date(113, 11, 10, 15, 30)));		
+		arrayListContent.add(new Discussion(new User("fred"), 
+				"SSBM Tournament", 
+				"Super Smash Brothers Melee tournament at the Union Student Technology room. \n\nBring your own controllers!", 
+				"Games",
+				new Date(113, 11, 6, 9, 15)));
+		arrayListContent.add(new Bulletin(new User("crazyal"), 
+				"10% Off All Posters!", 
+				"Git over to the Student union for some cr-rrazy deals! \n\nWe got all kinds of posters! \n" + 
+				"Everything from: \nBattlestar Galactica \nBreaking Bad (You're ******* right!) \n" + 
+						"Miley Cyrus twerkin! \nFamous people gettin married that you don't really care about! \n" + 
+						"And of course, food! \n   (*not actual food, posters of food)"
+				+ "\nSale ends this Pos-ThursDay!",
+				"Campus On Sale",
+				new Date(113, 11, 1, 12, 36)));
+		arrayListContent.add(new Discussion(new User("hermanp"), 
+				"Algorithms", 
+				"I know what you are, but what am I? \n\n" + 
+				"Why dont'cha make me?!",
+				"Algorithms",
+				new Date(113, 11, 4, 11, 9)));
+		
+		//add some comments
+		d1.getCommentList().add(new Comment(u1, "ALRIGHT! FREE CHEESEBURGERS!"));
+		d1.getCommentList().add(new Comment(u2, "Yes now I can forget all about that terrible Algorithms test!"));
 	}
 	
 }

@@ -109,7 +109,7 @@ public class MainActivity extends Activity implements TabListener{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.nav_drawer, menu);
+        inflater.inflate(R.menu.main, menu);
         //SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         //configure search info, add listeners
         mMenu = menu;
