@@ -1,20 +1,26 @@
 package edu.uark.spARK.entities;
 
-import java.io.Serializable;
 
-public class User implements Serializable {
+@SuppressWarnings("serial")
+public class User extends Entity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String name = "empty";
+	private int points;
 	
-	public User(String name) {
-		this.name = name;
+	public User(int id, String title, String text) {
+		super(id, title, text);
+		this.points = 0;
 	}
 	
-	public String getName() {
-		return name;
+	public User(int id, String title, String text, int points) {
+		this(id, title, text);
+		this.points = points;
+	}
+	
+	public int getPoints() {
+		return points;
+	}
+	
+	public void setPoints(int points) {
+		this.points = points;
 	}
 }

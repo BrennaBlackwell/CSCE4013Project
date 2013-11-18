@@ -28,13 +28,13 @@ public class CommentActivity extends Activity {
 	// an arrayadapter, not really sure if this is the right way to do it
 	public void refreshDiscussion(ViewHolder holder) {
 		holder.titleTextView.setText(mDiscussion.getTitle());
-		holder.descTextView.setText(mDiscussion.getDescription());
+		holder.descTextView.setText(mDiscussion.getText());
 		holder.groupTextView.setVisibility(View.GONE);
-		holder.usernameTextView.setText(mDiscussion.getAuthor().getName());
-		holder.totalScoreTextView.setText("" + mDiscussion.getScore());
+		holder.usernameTextView.setText(mDiscussion.getCreator().getTitle());
+		holder.totalScoreTextView.setText("0"); // FIX LATER
 		holder.creationDateTextView.setVisibility(View.GONE);
-		holder.totalScoreTextView.setText("" + mDiscussion.getScore());
-		holder.commentTextView.setText(mDiscussion.getCommentList().size() + " comments");		
+		holder.totalScoreTextView.setText("0"); // FIX LATER
+		holder.commentTextView.setText(mDiscussion.getComments().size() + " comments");		
 	}
 	
 	private DiscussionCommentArrayAdapter mCommentArrayAdapter;
@@ -54,7 +54,7 @@ public class CommentActivity extends Activity {
 //		LinearLayout ll = (LinearLayout) findViewById(R.id.addCommentLinearLayout);
 //		ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) lv.getLayoutParams();
 
-		mCommentArrayAdapter = new DiscussionCommentArrayAdapter(getApplicationContext(), R.layout.comment_list, mDiscussion.getCommentList());
+		mCommentArrayAdapter = new DiscussionCommentArrayAdapter(getApplicationContext(), R.layout.comment_list, mDiscussion.getComments());
 		lv.setAdapter(mCommentArrayAdapter);
 		
 		final ViewHolder holder = new ViewHolder();
@@ -82,9 +82,9 @@ public class CommentActivity extends Activity {
 				else {
 					//post comment
 					//get user name from stored preferences or something
-					User u = new User("test");
-					Comment c = new Comment(u, s);
-					mDiscussion.getCommentList().add(c);
+					User u = new User(0, "test", null);
+					Comment c = new Comment(0, null, s, u);
+					mDiscussion.addComment(c);
 					e.setText("");
 					InputMethodManager imm = (InputMethodManager)getSystemService(
 						      Context.INPUT_METHOD_SERVICE);
@@ -98,19 +98,19 @@ public class CommentActivity extends Activity {
 		});
 
 		holder.titleTextView.setText(mDiscussion.getTitle());
-		holder.descTextView.setText(mDiscussion.getDescription());
+		holder.descTextView.setText(mDiscussion.getText());
 		holder.groupTextView.setVisibility(View.GONE);
-		holder.usernameTextView.setText(mDiscussion.getAuthor().getName());
-		holder.totalScoreTextView.setText("" + mDiscussion.getScore());
+		holder.usernameTextView.setText(mDiscussion.getCreator().getTitle());
+		holder.totalScoreTextView.setText("0"); // FIX LATER
 		holder.creationDateTextView.setVisibility(View.GONE);
-		holder.totalScoreTextView.setText("" + mDiscussion.getScore());
-		holder.commentTextView.setText(mDiscussion.getCommentList().size() + " comments");
+		holder.totalScoreTextView.setText("0"); // FIX LATER
+		holder.commentTextView.setText(mDiscussion.getComments().size() + " comments");
 
 		// Show the Up button in the action bar.
 		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
-		ab.setTitle(mDiscussion.getGroup());
-		ab.setSubtitle(mDiscussion.getDate());
+		ab.setTitle("test");
+		ab.setSubtitle(mDiscussion.getCreationDateString());
 	    ab.show();
 	}
 

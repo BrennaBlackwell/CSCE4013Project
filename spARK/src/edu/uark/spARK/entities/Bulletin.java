@@ -2,19 +2,31 @@ package edu.uark.spARK.entities;
 
 import java.util.Date;
 
-/**
- * Class created for bulletins. We will probably want to load items from the server into the bulletin object.
- * 
- */
+import android.location.Location;
 
+
+@SuppressWarnings("serial")
 public class Bulletin extends Content {
+
+	public Bulletin(int id, String title, String text) {
+		super(id, title, text);
+		
+	}
 	
-	public Bulletin(User user, String title, String content, String group) {
-		super(user, title, content, group);
+	public Bulletin(int id, String title, String text, User creator) {
+		super(id, title, text, creator);
+	}
+	
+	public Bulletin(int id, String title, String text, User creator, Location location) {
+		super(id, title, text, creator, location);
+	}
+	
+	public Bulletin(int id, String title, String text, User creator, Date creationDate) {
+		super(id, title, text, creator, creationDate);
+	}
+	
+	public Bulletin(int id, String title, String text, User creator, Date creationDate, Location location) {
+		super(id, title, text, creator, creationDate, location);
 	}
 
-	public Bulletin(User user, String title, String content, String group,
-			Date date) {
-		super(user, title, content, group, date);
-	}
 }

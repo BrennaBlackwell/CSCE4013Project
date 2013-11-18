@@ -143,44 +143,19 @@ public class NewsFeed_Fragment extends Fragment {
 	
 	public void loadContent() {
 		//test
-		User u1 = new User("user1");
-		User u2 = new User("user2");
-		User u3 = new User("user3");
-		Discussion d1 = new Discussion(new User("bpanda"), 
-				"Free Cheeseburgers in the Union!", 
-				"Burger Shack is providing free cheeseburgers at the Union!", 
-				"Campus Free Food",
-				new Date(113, 11, 10, 12, 3));
+		User u1 = new User(1, "user1", null);
+		User u2 = new User(2, "user2", null);
+		User u3 = new User(3, "user3", null);
+		User bpanda = new User(1, "bpanda", null);
+		Discussion d1 = new Discussion(0, "Free Cheeseburgers in the Union!", "Burger Shack is providing free cheeseburgers at the Union!", 
+				bpanda, new Date(113, 11, 10, 12, 3));
 		arrayListContent.add(d1);
-		arrayListContent.add(new Discussion(new User("bpanda"), 
-				"Yesterday's Game", 
-				"C'mon Razorbacks! What was that yesterday? \n\nThat's it. I give up. I'm just going to retire.", 
-				"Football",
-				new Date(113, 11, 10, 15, 30)));		
-		arrayListContent.add(new Discussion(new User("fred"), 
-				"SSBM Tournament", 
-				"Super Smash Brothers Melee tournament at the Union Student Technology room. \n\nBring your own controllers!", 
-				"Games",
-				new Date(113, 11, 6, 9, 15)));
-		arrayListContent.add(new Bulletin(new User("crazyal"), 
-				"10% Off All Posters!", 
-				"Git over to the Student union for some cr-rrazy deals! \n\nWe got all kinds of posters! \n" + 
-				"Everything from: \nBattlestar Galactica \nBreaking Bad (You're ******* right!) \n" + 
-						"Miley Cyrus twerkin! \nFamous people gettin married that you don't really care about! \n" + 
-						"And of course, food! \n   (*not actual food, posters of food)"
-				+ "\nSale ends this Pos-ThursDay!",
-				"Campus On Sale",
-				new Date(113, 11, 1, 12, 36)));
-		arrayListContent.add(new Discussion(new User("hermanp"), 
-				"Algorithms", 
-				"I know what you are, but what am I? \n\n" + 
-				"Why dont'cha make me?!",
-				"Algorithms",
-				new Date(113, 11, 4, 11, 9)));
-		
+		arrayListContent.add(new Discussion(1, "Yesterday's Game", "C'mon Razorbacks! What was that yesterday? \n\nThat's it. I give up. I'm just going to retire.", 
+				bpanda,	new Date(113, 11, 10, 15, 30)));		
+				
 		//add some comments
-		d1.getCommentList().add(new Comment(u1, "ALRIGHT! FREE CHEESEBURGERS!"));
-		d1.getCommentList().add(new Comment(u2, "Yes now I can forget all about that terrible Algorithms test!"));
+		d1.addComment(new Comment(0, null, "ALRIGHT! FREE CHEESEBURGERS!", u1));
+		d1.addComment(new Comment(1, null, "Yes now I can forget all about that terrible Algorithms test!", u2));
 	}
 	
 }

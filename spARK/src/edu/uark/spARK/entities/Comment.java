@@ -1,25 +1,31 @@
 package edu.uark.spARK.entities;
 
-import java.io.Serializable;
+import java.util.Date;
 
-public class Comment implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private User author;
-	private String comment;
+import android.location.Location;
+
+@SuppressWarnings("serial")
+public class Comment extends Content {
 	
-	public Comment(User user, String c) {
-		this.author = user;
-		this.comment = c;
+	public Comment(int id, String title, String text) {
+		super(id, title, text);
+		
 	}
 	
-	public User getAuthor() {
-		return author;
+	public Comment(int id, String title, String text, User creator) {
+		super(id, title, text, creator);
 	}
 	
-	public String getComment() {
-		return comment;
+	public Comment(int id, String title, String text, User creator, Location location) {
+		super(id, title, text, creator, location);
 	}
+	
+	public Comment(int id, String title, String text, User creator, Date creationDate) {
+		super(id, title, text, creator, creationDate);
+	}
+	
+	public Comment(int id, String title, String text, User creator, Date creationDate, Location location) {
+		super(id, title, text, creator, creationDate, location);
+	}
+	
 }

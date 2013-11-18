@@ -78,14 +78,14 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 		final Content c = (Content) mContent.get(position);
 		
 		holder.titleTextView.setText(c.getTitle());
-		holder.descTextView.setText(c.getDescription());
-		holder.groupTextView.setText(c.getGroup());
-		holder.usernameTextView.setText(c.getAuthor().getName());
-		holder.totalScoreTextView.setText("" + c.getScore());
-		holder.creationDateTextView.setText(c.getDate());
-		holder.totalScoreTextView.setText("" + c.getScore());
+		holder.descTextView.setText(c.getText());
+		holder.groupTextView.setText("test");
+		holder.usernameTextView.setText(c.getCreator().getTitle());
+		holder.totalScoreTextView.setText("0");
+		holder.creationDateTextView.setText(c.getCreationDateString());
+		holder.totalScoreTextView.setText("0");
 		if (c instanceof Discussion)	
-			holder.commentTextView.setText(((Discussion) c).getCommentList().size() + " comments");
+			holder.commentTextView.setText(((Discussion) c).getComments().size() + " comments");
 		holder.likeBtn.setTag(Integer.valueOf(position));
 		holder.dislikeBtn.setTag(position);
 		//generic idea for expanding ellipsized text
@@ -145,7 +145,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 			@Override
 			public void onClick(View v) {
 				((RadioGroup)v.getParent()).check(v.getId());	
-				getItem((Integer) v.getTag()).increaseScore();
+//				getItem((Integer) v.getTag()).increaseScore();
 				update();
 			}
 			
@@ -155,7 +155,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 			@Override
 			public void onClick(View v) {
 				((RadioGroup)v.getParent()).check(v.getId());
-				getItem((Integer) v.getTag()).decreaseScore();
+//				getItem((Integer) v.getTag()).decreaseScore();
 				update();
 			}
 			

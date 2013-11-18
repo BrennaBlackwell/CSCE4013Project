@@ -53,8 +53,8 @@ public class DiscussionCommentArrayAdapter extends ArrayAdapter {
 		}
 		final Comment c = (Comment) this.getItem(position);
 		
-		holder.commentTextView.setText(c.getComment());
-		holder.usernameTextView.setText(c.getAuthor().getName());
+		holder.commentTextView.setText(c.getText());
+		holder.usernameTextView.setText(c.getCreator().getTitle());
 
 		return convertView;
 	}

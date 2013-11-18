@@ -1,78 +1,73 @@
 package edu.uark.spARK.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 
+import android.location.Location;
 import android.text.format.DateFormat;
 
-
-/* BULLETINS/DISCUSSIONS EXTEND THIS BASE CLASS 
- * This is the easiest way to separate them by using the class name
- * */
-
-public class Content implements Serializable {
+@SuppressWarnings("serial")
+public class Content extends Entity {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8949619690322767155L;
-	int intScore = 0;
-	String title;
-	String content;
-	String group;
-	Date creationDate;
-	User author;
+	private final User creator;
+	private final Date creationDate;
+	private Location location;
 	
-	public Content(User user, String title, String content, String group) {
-		this.author = user;
-		this.title = title;
-		this.group = group;
-		this.content = content;
+	public Content(int id, String title, String text) {
+		super(id, title, text);
+		this.creator = null;
 		this.creationDate = new Date(System.currentTimeMillis());
-	}
-
-	public Content(User user, String title, String content, String group,
-			Date date) {
-		this.author = user;
-		this.title = title;
-		this.group = group;
-		this.content = content;
-		this.creationDate = date;
-	}
-
-	public String getTitle() {
-		return title;
+		this.location = null;
 	}
 	
-	public String getDescription() {
-		return content;
+	public Content(int id, String title, String text, User creator) {
+		super(id, title, text);
+		this.creator = creator;
+		this.creationDate = new Date(System.currentTimeMillis());
+		this.location = null;
 	}
 	
-	public String getGroup() {
-		return group;
+	public Content(int id, String title, String text, User creator, Location location) {
+		this(id, title, text, creator);
+		this.location = location;
 	}
 	
-	public User getAuthor() {
-		return author;
+	public Content(int id, String title, String text, User creator, Date creationDate) {
+		super(id, title, text);
+		this.creator = creator;
+		this.creationDate = creationDate;
+		this.location = null;
 	}
 	
-	public String getDate() {
+	public Content(int id, String title, String text, User creator, Date creationDate, Location location) {
+		this(id, title, text, creator, creationDate);
+		this.location = location;
+	}
+	
+	public User getCreator() {
+		return creator;
+	}
+	
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	
+	public String getCreationDateString() {
 		return (String) DateFormat.format("MM/dd/yy hh:mm aa", creationDate.getTime());
 	}
 	
-	public void changeScore(int amt) {
-		intScore += amt;
+	public Location getLocation() {
+		return location;
 	}
 	
-	public void increaseScore() {
-		intScore++;
+	public void setLocaton(Location location) {
+		this.location = location;
 	}
 	
-	public void decreaseScore() {
-		intScore--;
+	public boolean hasCreator() {
+		return (creator != null);
 	}
 	
-	public int getScore() {
-		return intScore;
+	public boolean hasLocation() {
+		return (location != null);
 	}
 }
