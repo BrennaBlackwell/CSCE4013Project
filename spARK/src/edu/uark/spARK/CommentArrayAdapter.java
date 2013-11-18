@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 //Adapter specifically for the commentactivity - needs to be implemented differently as arrayadapter is not really necessary (maybe baseadapter or something)
-public class DiscussionCommentArrayAdapter extends ArrayAdapter {
+public class CommentArrayAdapter extends ArrayAdapter {
 	
 	private static final String tag = "DiscussionCommentArrayAdapter";
 	
@@ -30,7 +30,7 @@ public class DiscussionCommentArrayAdapter extends ArrayAdapter {
 	ViewHolder holder;
 	
 	
-	public DiscussionCommentArrayAdapter(Context context, int layoutid, List<Comment> comments) {
+	public CommentArrayAdapter(Context context, int layoutid, List<Comment> comments) {
 		super(context, layoutid, comments);
 		mContext = context;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

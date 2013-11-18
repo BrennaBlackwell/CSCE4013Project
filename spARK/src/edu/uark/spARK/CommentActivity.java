@@ -38,7 +38,7 @@ public class CommentActivity extends Activity {
 		holder.commentTextView.setText(mDiscussion.getComments().size() + " comments");		
 	}
 	
-	private DiscussionCommentArrayAdapter mCommentArrayAdapter;
+	private CommentArrayAdapter mCommentArrayAdapter;
 	private Discussion mDiscussion;
 	
 	@Override
@@ -58,7 +58,7 @@ public class CommentActivity extends Activity {
 //		LinearLayout ll = (LinearLayout) findViewById(R.id.addCommentLinearLayout);
 //		ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) lv.getLayoutParams();
 
-		mCommentArrayAdapter = new DiscussionCommentArrayAdapter(getApplicationContext(), R.layout.comment_list_item, mDiscussion.getComments());
+		mCommentArrayAdapter = new CommentArrayAdapter(getApplicationContext(), R.layout.comment_list_item, mDiscussion.getComments());
 		lv.setAdapter(mCommentArrayAdapter);
 		
 		final ViewHolder holder = new ViewHolder();
