@@ -30,6 +30,8 @@ public class LogInActivity extends Activity implements AsyncResponse {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        //we should check here to see if a user has logged in already
+        
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getActionBar().hide();
         
@@ -73,7 +75,9 @@ public class LogInActivity extends Activity implements AsyncResponse {
 		//debugging so we don't have to enter user/password every time. We will have to delete this later, but it might be useful for now
 		if (v.getId() == R.id.buttonDebug) {
 			Intent MainIntent = new Intent(this, MainActivity.class);
+			MainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(MainIntent);
+			finish();
 			return;
 		}
 		
@@ -132,7 +136,9 @@ public class LogInActivity extends Activity implements AsyncResponse {
 			editor.apply();
 			
 			Intent MainIntent = new Intent(this, MainActivity.class);
+			MainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(MainIntent);
+			finish();
 		} else {
 			text_view1.setVisibility(View.VISIBLE);
 		}

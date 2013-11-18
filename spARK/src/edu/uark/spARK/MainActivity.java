@@ -2,11 +2,13 @@ package edu.uark.spARK;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.ActionBar.TabListener;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,11 +21,24 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import edu.uark.spARK.entities.Content;
+import edu.uark.spARK.entities.Discussion;
 
-
-public class MainActivity extends Activity implements TabListener{
+public class MainActivity extends Activity {
+	
+    private static final int PROFILE_FRAGMENT = 0;
+    private static final int MAPVIEW_FRAGMENT = -1;
+    private static final int CLUSTERVIEW_FRAGMENT = -2;
+    private static final int CHECKIN_FRAGMENT = 2;
+    private static final int HYBRID_FRAGMENT = 1;
+    private static final int NEWSFEED_FRAGMENT = -3;
+    private int page = -1;
+    
+    
     private DrawerLayout mDrawerLayout;
     private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mDrawerList;
@@ -34,22 +49,33 @@ public class MainActivity extends Activity implements TabListener{
     private String[] mListTitles;	//option titles
     private Menu mMenu;
 
-    private static final int PROFILE_FRAGMENT = 0;
-    private static final int MAPVIEW_FRAGMENT = -1;
-    private static final int CLUSTERVIEW_FRAGMENT = -2;
-    private static final int CHECKIN_FRAGMENT = 2;
-    private static final int COMBINEDMAPNEWS_FRAGMENT = 1;
-    private static final int NEWSFEED_FRAGMENT = -3;
-    private int page = -1;
     
-    //FRAGMENTS (need this for onclick listeners to pass click events from the main activity to the fragment)
-    static Fragment mainContentFragment;
     
+    //in order to replace the main fragment with our other fragments (Bulletin/Discussion) this is the best way to go.
+    //the mapview fragment is already in the activity_main.xml, and it's referencing our custom MapFragment
+    // the new NestedFragments doesn't work < API 17, and putting our two fragments within another fragments results in bad performance
+    //I also tried leaving the list as just a list and not a fragment, but drawing performance seems to not be as good
+    
+    //Our references to the two main fragments and map fragment
+	static ListFeed_Fragment mListDiscussionFragment;
+	static ListFeed_Fragment mListBulletinFragment;
+	static MapView_Fragment mMapViewFragment;
 
-    @Override
+	
+	//???
+//    private static ArrayList<Discussion> mDiscussionArrayList = new ArrayList<Discussion>(); 
+//	private static ListFeedArrayAdapter mDiscussionAdapter;
+//	private static ArrayList<Bulletin> mBulletinArrayList = new ArrayList<Bulletin>();
+//	private static ListFeedArrayAdapter mBulletinAdapter;
+
+	
+	
+    
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);       
+        setContentView(R.layout.activity_main);   
+        
         mTitle = mDrawerTitle = getTitle();
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -72,12 +98,6 @@ public class MainActivity extends Activity implements TabListener{
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_HOME_AS_UP);
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         bar.setDisplayShowTitleEnabled(true);
-        ActionBar.Tab tabA = bar.newTab().setText("Discussions");
-        ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
-        tabA.setTabListener(this);
-        tabB.setTabListener(this);
-        bar.addTab(tabA);
-        bar.addTab(tabB);
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -102,8 +122,41 @@ public class MainActivity extends Activity implements TabListener{
         if (savedInstanceState == null) {
             //selectItem(0);
         }
-        switchFragment(COMBINEDMAPNEWS_FRAGMENT);
-
+        
+        //mMapViewFragment = new MapView_Fragment();
+        //hybridFragment = (HybridFragment) getFragmentManager().findFragmentById(R.id.fragmentHybridFeed_ref);
+//        mListDiscussionFragment = (ListFeed_Fragment) getFragmentManager().findFragmentById(R.id.listfeed);
+        mMapViewFragment = (MapView_Fragment) getFragmentManager().findFragmentById(R.id.map);
+        //switchFragment(HYBRID_FRAGMENT);
+        mListDiscussionFragment = new ListFeed_Fragment();
+        mListBulletinFragment = new ListFeed_Fragment();
+        
+        //mMapViewFragment = new MapView_Fragment();
+        
+        ActionBar.Tab tabA = bar.newTab().setText("Discussions");
+        ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
+        tabA.setTabListener(new MyTabListener(mListDiscussionFragment));
+        tabB.setTabListener(new MyTabListener(mListBulletinFragment));
+        bar.addTab(tabA);
+        bar.addTab(tabB);
+        
+////		the code to launch the activity which brings up comments is located in getView of ListFeedArrayAdapter        
+//        mListDiscussionFragment.getListView().setOnItemClickListener(new OnItemClickListener() {
+//			
+//        	@Override
+//			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//				System.out.println("Mdiscussion: item is in position: " + position);
+//				switch(position) {
+//					default:
+//						Intent i = new Intent(MainActivity.this, CommentActivity.class);
+//						i.putExtra("Object", mListDiscussionFragment.getArrayListContent().get(position));
+//						i.putExtra("position", position);
+//						startActivityForResult(i, 1);		
+//						break;
+//					}
+//				}
+//			
+//			});
     }
 
     @Override
@@ -149,8 +202,18 @@ public class MainActivity extends Activity implements TabListener{
 
     private void selectItem(int position) {
         //Position 7 is logout, which doesn't need to switch fragments
+
         if (position != 7)
             switchFragment(position);
+    }
+    
+    private void switchFragment(Fragment fragmentName) {
+//        Bundle args = new Bundle();
+//	    args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
+//        fragment.setArguments(args);
+    
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_frame, fragmentName).commit();    	
     }
 
     private void switchFragment(int fragmentName){
@@ -158,14 +221,14 @@ public class MainActivity extends Activity implements TabListener{
     	
     	//if the desired fragment isn't the same as the already loaded page
     	if (fragmentName != page){
-	    	Fragment fragment;
+	    	android.app.Fragment fragment;
 	    	//int fragmentName is statically declared above
 	    	switch (fragmentName){
 	    		case PROFILE_FRAGMENT: //4
 	    			fragment = new Profile_Fragment();
 	    			break;
-		    	case COMBINEDMAPNEWS_FRAGMENT://1
-		    		fragment = new CombinedMapNews_Fragment();
+		    	case HYBRID_FRAGMENT://1
+		    		fragment = new HybridFragment();
 		    		break;
 		    	case CLUSTERVIEW_FRAGMENT: //2
 	    			fragment = new ClusterView_Fragment();
@@ -176,9 +239,9 @@ public class MainActivity extends Activity implements TabListener{
 		    	case MAPVIEW_FRAGMENT: //0
 		    		fragment = new MapView_Fragment();
 		    		break;
-		    	case NEWSFEED_FRAGMENT: //5
-		    		fragment = new NewsFeed_Fragment();
-		    		break;
+//		    	case NEWSFEED_FRAGMENT: //5
+//		    		fragment = new ListFeed_Fragment();
+//		    		break;
 		    	default:
 		    		//(currently blank)
 		    		fragment = new ContentFragment();
@@ -190,7 +253,7 @@ public class MainActivity extends Activity implements TabListener{
 	        fragment.setArguments(args);
         
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.fragment_frame, fragment).commit();
 
 
             //if (position == 0) {
@@ -245,7 +308,7 @@ public class MainActivity extends Activity implements TabListener{
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0) {
+    	if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
@@ -259,26 +322,69 @@ public class MainActivity extends Activity implements TabListener{
     }
 
     @Override
-    public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
-    }
-
-    @Override
-    public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
-    }
-
-    @Override
     public boolean onTouchEvent(MotionEvent event) {
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		//Load content from the server
+		
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+	}
+	
+	//TAB SWITCHER CLASS
+	class MyTabListener implements ActionBar.TabListener {
+		public Fragment fragment;
+
+		public MyTabListener(Fragment fragment) {
+		    this.fragment = fragment;
+		}
+
+		@Override
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		    //do what you want when tab is reselected, I do nothing
+		}
+
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+	          Toast.makeText(getApplicationContext(),
+	                  "Fragment switch!", Toast.LENGTH_SHORT)
+	                  .show();
+		    ft.replace(R.id.fragment_frame, fragment);
+		}
+
+		@Override
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		    ft.remove(fragment);
+		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		//make sure there are no fragments in backstack
+		if(getFragmentManager().getBackStackEntryCount() == 0) {
+	    new AlertDialog.Builder(this)
+	        .setIcon(android.R.drawable.ic_dialog_alert)
+	        .setTitle("Exit spark")
+	        .setMessage("Are you sure you want to exit?")
+	        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+	    {
+	        @Override
+	        public void onClick(DialogInterface dialog, int which) {
+	            finish();    
+	        }
+
+	    })
+	    .setNegativeButton("No", null)
+	    .show();
+	    }
+		else
+			super.onBackPressed();
+	}
 }

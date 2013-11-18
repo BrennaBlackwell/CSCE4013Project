@@ -3,6 +3,10 @@ package edu.uark.spARK;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Layout;
@@ -16,41 +20,44 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import edu.uark.spARK.entities.Content;
 import edu.uark.spARK.entities.Discussion;
 
-public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
+public class ListFeedArrayAdapter extends ArrayAdapter<Content> {
 	private static final String tag = "NewsFeedArrayAdapter";
 	
-	
+	private Fragment fragment;
 	private Context mContext;
 	private LayoutInflater mInflater;
 	private List<Content> mContent;
-	ViewHolder holder;
+	public ViewHolder holder;
 	
 	
-	public NewsFeedArrayAdapter(Context context, int layoutid, List<Content> content) {
+	public ListFeedArrayAdapter(Context context, int layoutid, List<Content> content, Fragment f) {
 		super(context, layoutid, content);
 		this.mContent = content;
 		mContext = context;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.fragment = f;
 	}
 	
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = mInflater.inflate(R.layout.discussion_list, null);
+			convertView = mInflater.inflate(R.layout.discussion_list_item, null);
 			
 			holder.mainFL = (FrameLayout) convertView.findViewById(R.id.list_discussionMainFrame);
 			holder.titleTextView = (TextView) convertView.findViewById(R.id.headerTextView);
 			holder.titleTextView.setTag(position);
 			holder.descTextView = (TextView) convertView.findViewById(R.id.descTextView);	
 			holder.commentTextView = (TextView) convertView.findViewById(R.id.commentTextView);
+			holder.commentLinearLayout = (LinearLayout) holder.commentTextView.getParent();
 			holder.groupTextView = (TextView) convertView.findViewById(R.id.groupTextView);
 			holder.usernameTextView = (TextView) convertView.findViewById(R.id.usernameTextView);
 			holder.usernameTextView.setTag(position);
@@ -86,8 +93,6 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 		holder.totalScoreTextView.setText("" + c.getScore());
 		if (c instanceof Discussion)	
 			holder.commentTextView.setText(((Discussion) c).getCommentList().size() + " comments");
-		holder.likeBtn.setTag(Integer.valueOf(position));
-		holder.dislikeBtn.setTag(position);
 		//generic idea for expanding ellipsized text
 //		holder.descTV.setOnClickListener(new OnClickListener() {
 //
@@ -140,12 +145,13 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 	            }
 	        }
 	    });	
+		
 		holder.likeBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				((RadioGroup)v.getParent()).check(v.getId());	
-				getItem((Integer) v.getTag()).increaseScore();
+				getItem((Integer) position).increaseScore();
 				update();
 			}
 			
@@ -155,22 +161,22 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 			@Override
 			public void onClick(View v) {
 				((RadioGroup)v.getParent()).check(v.getId());
-				getItem((Integer) v.getTag()).decreaseScore();
+				getItem((Integer) position).decreaseScore();
 				update();
 			}
 			
 		});
-		holder.commentTextView.setOnClickListener(new OnClickListener() {
+		holder.commentLinearLayout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				System.out.println("on item clicked! " + v.getId());
-				if (v.getId() == R.id.commentTextView)
-					System.out.println("textview selected!");
-				Intent i = new Intent(v.getContext(), CommentActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				i.putExtra("Object", c);
-				v.getContext().startActivity(i);
+				Intent i = new Intent(mContext, CommentActivity.class);
+				System.out.println("getActivity: " + mContext);
+				i.putExtra("Object", (Content) c);
+				System.out.println("Object: " + c);
+				System.out.println("position: " + position);
+				i.putExtra("position", position);
+				fragment.startActivityForResult(i, 1);		
 			}
 			
 		});
@@ -187,6 +193,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 		TextView creationDateTextView;
 		TextView totalScoreTextView;
 		TextView commentTextView;
+		LinearLayout commentLinearLayout;
 		RadioGroup scoreRadioGroup;
 		ToggleButton likeBtn;
 		ToggleButton dislikeBtn;
@@ -196,9 +203,20 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 	public void update() {
 		notifyDataSetChanged();
 	}
+
+	public ViewHolder getHolder() {
+		return holder;
+	}
 	
-	@Override
-	public Content getItem(int pos) {
-		return super.getItem(pos);
+	private class MyOnClickListener implements OnClickListener {
+
+		private ViewHolder holder;
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub		
+		}
+		
+		
+		
 	}
 }

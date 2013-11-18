@@ -15,7 +15,7 @@
             android:id="@+id/comment_discussion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/content" />
+            layout="@layout/comment_discussion_header" />
 
         <View
             android:id="@+id/contentSeparator"
@@ -33,7 +33,7 @@
             android:divider="@drawable/divider"
             android:dividerHeight="2px"
             android:drawSelectorOnTop="true"
-            tools:listitem="@layout/comment_list" >
+            tools:listitem="@layout/comment_list_item" >
 
         </ListView>
 
@@ -42,9 +42,10 @@
     <LinearLayout
         android:id="@+id/addCommentLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/ab_solid_bottom"
+        android:minHeight="48dp"
         android:orientation="horizontal"
         android:weightSum="1.0" >
 
@@ -55,13 +56,16 @@
             android:layout_margin="5dp"
             android:layout_weight="1.0"
             android:hint="Join the conversation!"
+            android:inputType="textMultiLine"
+            android:maxLines="2"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageButton
             android:id="@+id/postCommentBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/selector"
             android:src="@drawable/ic_menu_send" />

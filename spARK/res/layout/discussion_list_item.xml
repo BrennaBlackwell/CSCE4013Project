@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_discussionMainFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white_dialog" >
+    android:background="@drawable/container_bg"
+    android:descendantFocusability="blocksDescendants" >
+
+<TableLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
 
     <TableRow
         android:id="@+id/tableRow2"
@@ -206,8 +212,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/list_discussionRatingLinearLayout"
-                layout="@layout/discussion_comment" />
+                layout="@layout/discussion_num_comments_item" />
         </RelativeLayout>
     </TableRow>
 
 </TableLayout>
+
+</FrameLayout>

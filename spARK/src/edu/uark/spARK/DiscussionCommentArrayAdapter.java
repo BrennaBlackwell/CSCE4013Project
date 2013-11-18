@@ -2,7 +2,7 @@ package edu.uark.spARK;
 
 import java.util.List;
 
-import edu.uark.spARK.NewsFeedArrayAdapter.ViewHolder;
+import edu.uark.spARK.ListFeedArrayAdapter.ViewHolder;
 import edu.uark.spARK.entities.Comment;
 import edu.uark.spARK.entities.Content;
 import android.content.Context;
@@ -18,7 +18,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+//Adapter specifically for the commentactivity - needs to be implemented differently as arrayadapter is not really necessary (maybe baseadapter or something)
 public class DiscussionCommentArrayAdapter extends ArrayAdapter {
+	
 	private static final String tag = "DiscussionCommentArrayAdapter";
 	
 	
@@ -39,7 +41,7 @@ public class DiscussionCommentArrayAdapter extends ArrayAdapter {
 		// TODO Auto-generated method stub
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = mInflater.inflate(R.layout.comment_list, null);
+			convertView = mInflater.inflate(R.layout.comment_list_item, null);
 			
 			holder.commentTextView = (TextView) convertView.findViewById(R.id.commentTextView);
 			holder.usernameTextView = (TextView) convertView.findViewById(R.id.usernameTextView);

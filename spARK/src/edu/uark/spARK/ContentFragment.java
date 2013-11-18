@@ -15,7 +15,7 @@ public class ContentFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_news_feed, container, false);
+        View rootView = inflater.inflate(R.layout.list_feed, container, false);
         int i = getArguments().getInt(ARG_FRAGMENT_TYPE);
         String title = getResources().getStringArray(R.array.nav_drawer_title_array)[i];
         //

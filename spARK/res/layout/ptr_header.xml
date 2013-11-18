@@ -26,7 +26,7 @@
 
         <LinearLayout
             android:id="@+id/ptr_id_textwrapper"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="invisible" >
 
@@ -35,7 +35,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/white_dialog"
+                android:text="Refreshing..."
+                android:textColor="@color/black_overlay"
                 android:textSize="18sp" />
 
             <TextView

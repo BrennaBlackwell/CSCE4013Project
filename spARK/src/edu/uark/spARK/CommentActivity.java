@@ -3,6 +3,7 @@ package edu.uark.spARK;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -16,7 +17,7 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import edu.uark.spARK.NewsFeedArrayAdapter.ViewHolder;
+import edu.uark.spARK.ListFeedArrayAdapter.ViewHolder;
 import edu.uark.spARK.entities.Comment;
 import edu.uark.spARK.entities.Discussion;
 import edu.uark.spARK.entities.User;
@@ -38,7 +39,7 @@ public class CommentActivity extends Activity {
 	}
 	
 	private DiscussionCommentArrayAdapter mCommentArrayAdapter;
-	private NewsFeedArrayAdapter mDiscussionAdapter;
+	private ListFeedArrayAdapter mDiscussionAdapter;
 	private Discussion mDiscussion;
 	
 	@Override
@@ -49,12 +50,16 @@ public class CommentActivity extends Activity {
 		//initialize original discussion view
 		mDiscussion = (Discussion) getIntent().getSerializableExtra("Object");
 		
+		
+		//get user from preferences (in this case just a test user)
+		final User u = new User("test");
+		
 //		FrameLayout rl = (FrameLayout) findViewById(android.R.id.content);
 		final ListView lv = (ListView) findViewById(R.id.commentListView);
 //		LinearLayout ll = (LinearLayout) findViewById(R.id.addCommentLinearLayout);
 //		ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) lv.getLayoutParams();
 
-		mCommentArrayAdapter = new DiscussionCommentArrayAdapter(getApplicationContext(), R.layout.comment_list, mDiscussion.getCommentList());
+		mCommentArrayAdapter = new DiscussionCommentArrayAdapter(getApplicationContext(), R.layout.comment_list_item, mDiscussion.getCommentList());
 		lv.setAdapter(mCommentArrayAdapter);
 		
 		final ViewHolder holder = new ViewHolder();
@@ -82,7 +87,6 @@ public class CommentActivity extends Activity {
 				else {
 					//post comment
 					//get user name from stored preferences or something
-					User u = new User("test");
 					Comment c = new Comment(u, s);
 					mDiscussion.getCommentList().add(c);
 					e.setText("");
@@ -140,10 +144,17 @@ public class CommentActivity extends Activity {
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
-			NavUtils.navigateUpFromSameTask(this);
+			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
+	//Pass the result back to ListFragment
+	@Override
+	public void finish() {
+	    getIntent().putExtra("Object", mDiscussion);
+	    setResult(RESULT_OK, getIntent());
+	    super.finish();  
+	}
 }
