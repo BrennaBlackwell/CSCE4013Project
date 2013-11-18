@@ -29,10 +29,10 @@ public class HybridFragment extends Fragment {
     public static final String ARG_FRAGMENT_TYPE = "fragment_type";
 
     //Our references to the mapview fragment
-	private static ListFeed_Fragment mListFragment;
+	private static NewsFeed_Fragment mListFragment;
 	
     private ArrayList<Content> mArrayList = new ArrayList<Content>();    
-    private ListFeedArrayAdapter mAdapter;
+    private NewsFeedArrayAdapter mAdapter;
     PullToRefreshListView mListView;
 	
 	public static HybridFragment newInstance(String param1, String param2) {

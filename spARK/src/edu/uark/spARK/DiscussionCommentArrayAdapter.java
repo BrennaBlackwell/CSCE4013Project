@@ -2,7 +2,7 @@ package edu.uark.spARK;
 
 import java.util.List;
 
-import edu.uark.spARK.ListFeedArrayAdapter.ViewHolder;
+import edu.uark.spARK.NewsFeedArrayAdapter.ViewHolder;
 import edu.uark.spARK.entities.Comment;
 import edu.uark.spARK.entities.Content;
 import android.content.Context;
@@ -55,8 +55,8 @@ public class DiscussionCommentArrayAdapter extends ArrayAdapter {
 		}
 		final Comment c = (Comment) this.getItem(position);
 		
-		holder.commentTextView.setText(c.getComment());
-		holder.usernameTextView.setText(c.getAuthor().getName());
+		holder.commentTextView.setText(c.getText());
+		holder.usernameTextView.setText(c.getCreator().getTitle());
 
 		return convertView;
 	}

@@ -15,6 +15,6 @@
         android:id="@+id/listfeed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="edu.uark.spARK.ListFeed_Fragment" />
+        class="edu.uark.spARK.NewsFeed_Fragment" />
         
 </FrameLayout>

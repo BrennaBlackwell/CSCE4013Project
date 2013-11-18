@@ -27,7 +27,7 @@ public class MapView_Fragment extends MapFragment{
 	
 	// Google Map
     private GoogleMap map;	//this is the map which is instantiated in the initializeMap();
-	private ListFeed_Fragment mListFragment;
+	private NewsFeed_Fragment mListFragment;
     
     public MapView_Fragment() {
 

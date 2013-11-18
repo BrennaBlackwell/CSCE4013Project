@@ -57,8 +57,8 @@ public class MainActivity extends Activity {
     //I also tried leaving the list as just a list and not a fragment, but drawing performance seems to not be as good
     
     //Our references to the two main fragments and map fragment
-	static ListFeed_Fragment mListDiscussionFragment;
-	static ListFeed_Fragment mListBulletinFragment;
+	static NewsFeed_Fragment mListDiscussionFragment;
+	static NewsFeed_Fragment mListBulletinFragment;
 	static MapView_Fragment mMapViewFragment;
 
 	
@@ -128,8 +128,8 @@ public class MainActivity extends Activity {
 //        mListDiscussionFragment = (ListFeed_Fragment) getFragmentManager().findFragmentById(R.id.listfeed);
         mMapViewFragment = (MapView_Fragment) getFragmentManager().findFragmentById(R.id.map);
         //switchFragment(HYBRID_FRAGMENT);
-        mListDiscussionFragment = new ListFeed_Fragment();
-        mListBulletinFragment = new ListFeed_Fragment();
+        mListDiscussionFragment = new NewsFeed_Fragment();
+        mListBulletinFragment = new NewsFeed_Fragment();
         
         //mMapViewFragment = new MapView_Fragment();
         

@@ -27,7 +27,7 @@ import android.widget.ToggleButton;
 import edu.uark.spARK.entities.Content;
 import edu.uark.spARK.entities.Discussion;
 
-public class ListFeedArrayAdapter extends ArrayAdapter<Content> {
+public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 	private static final String tag = "NewsFeedArrayAdapter";
 	
 	private Fragment fragment;
@@ -37,7 +37,7 @@ public class ListFeedArrayAdapter extends ArrayAdapter<Content> {
 	public ViewHolder holder;
 	
 	
-	public ListFeedArrayAdapter(Context context, int layoutid, List<Content> content, Fragment f) {
+	public NewsFeedArrayAdapter(Context context, int layoutid, List<Content> content, Fragment f) {
 		super(context, layoutid, content);
 		this.mContent = content;
 		mContext = context;
@@ -85,15 +85,16 @@ public class ListFeedArrayAdapter extends ArrayAdapter<Content> {
 		final Content c = (Content) mContent.get(position);
 		
 		holder.titleTextView.setText(c.getTitle());
-		holder.descTextView.setText(c.getDescription());
-		holder.groupTextView.setText(c.getGroup());
-		holder.usernameTextView.setText(c.getAuthor().getName());
-		holder.totalScoreTextView.setText("" + c.getScore());
-		holder.creationDateTextView.setText(c.getDate());
-		holder.totalScoreTextView.setText("" + c.getScore());
+		holder.descTextView.setText(c.getText());
+		holder.groupTextView.setText("test");
+		holder.usernameTextView.setText(c.getCreator().getTitle());
+		holder.totalScoreTextView.setText("0");
+		holder.creationDateTextView.setText(c.getCreationDateString());
+		holder.totalScoreTextView.setText("0");
 		if (c instanceof Discussion)	
-			holder.commentTextView.setText(((Discussion) c).getCommentList().size() + " comments");
-		//generic idea for expanding ellipsized text
+			holder.commentTextView.setText(((Discussion) c).getComments().size() + " comments");
+		holder.likeBtn.setTag(Integer.valueOf(position));
+		holder.dislikeBtn.setTag(position);		//generic idea for expanding ellipsized text
 //		holder.descTV.setOnClickListener(new OnClickListener() {
 //
 //			@Override
@@ -151,7 +152,7 @@ public class ListFeedArrayAdapter extends ArrayAdapter<Content> {
 			@Override
 			public void onClick(View v) {
 				((RadioGroup)v.getParent()).check(v.getId());	
-				getItem((Integer) position).increaseScore();
+//				getItem((Integer) v.getTag()).increaseScore();
 				update();
 			}
 			
@@ -161,7 +162,7 @@ public class ListFeedArrayAdapter extends ArrayAdapter<Content> {
 			@Override
 			public void onClick(View v) {
 				((RadioGroup)v.getParent()).check(v.getId());
-				getItem((Integer) position).decreaseScore();
+//				getItem((Integer) v.getTag()).decreaseScore();
 				update();
 			}
 			
@@ -171,10 +172,7 @@ public class ListFeedArrayAdapter extends ArrayAdapter<Content> {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(mContext, CommentActivity.class);
-				System.out.println("getActivity: " + mContext);
 				i.putExtra("Object", (Content) c);
-				System.out.println("Object: " + c);
-				System.out.println("position: " + position);
 				i.putExtra("position", position);
 				fragment.startActivityForResult(i, 1);		
 			}
@@ -208,15 +206,4 @@ public class ListFeedArrayAdapter extends ArrayAdapter<Content> {
 		return holder;
 	}
 	
-	private class MyOnClickListener implements OnClickListener {
-
-		private ViewHolder holder;
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub		
-		}
-		
-		
-		
-	}
 }
