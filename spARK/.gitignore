@@ -1,3 +1,4 @@
 /bin/*
 !/bin/spARK.apk
 /gen
+/project.properties

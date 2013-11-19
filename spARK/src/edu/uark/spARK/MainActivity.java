@@ -359,12 +359,14 @@ public class MainActivity extends Activity {
 	          Toast.makeText(getApplicationContext(),
 	                  "Fragment switch!", Toast.LENGTH_SHORT)
 	                  .show();
-		    ft.replace(R.id.fragment_frame, fragment);
+	        if (tab.getPosition() == 0)  
+	        	ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right).replace(R.id.fragment_frame, fragment);
+	        else
+	        	ft.setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_left).replace(R.id.fragment_frame, fragment);
 		}
 
 		@Override
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		    ft.remove(fragment);
 		}
 	}
 	
