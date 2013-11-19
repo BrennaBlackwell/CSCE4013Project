@@ -1,5 +1,7 @@
 package edu.uark.spARK;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -208,10 +210,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse{
 					String username = discussion.getString(TAG_USER_NAME).trim();
 					String title = discussion.getString(TAG_TITLE).trim();
 					String body = discussion.getString(TAG_BODY).trim();
-					String timestamp = discussion.getString(TAG_TIMESTAMP).trim();
-					Date d_date = new Date(113, 11, Integer.parseInt(timestamp.substring(8,10)), 
-							Integer.parseInt(timestamp.substring(11,13)), 
-							Integer.parseInt(timestamp.substring(14,16)));
+					Date d_date = Timestamp.valueOf(discussion.getString(TAG_TIMESTAMP).trim());
 					    		
 					comments = discussion.getJSONArray(TAG_COMMENTS);
 					List<Comment> commentsList = new ArrayList<Comment>();
@@ -223,19 +222,16 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse{
 						String userid = comment.getString(TAG_USER_ID).trim();
 						String user = comment.getString(TAG_USER_NAME).trim();
 						String comment_body = comment.getString(TAG_BODY).trim();
-						String timeposted = discussion.getString(TAG_TIMESTAMP).trim();
-						Date c_date = new Date(113, 11, Integer.parseInt(timeposted.substring(8,10)), 
-								Integer.parseInt(timeposted.substring(11,13)), 
-								Integer.parseInt(timeposted.substring(14,16)));
+						Date c_date = Timestamp.valueOf(discussion.getString(TAG_TIMESTAMP).trim());
 						
 						//String comment_timestamp = comment.getString(TAG_TIMESTAMP).trim();
 						User u = new User(Integer.parseInt(userid), user, null);
-						Comment c = new Comment(Integer.parseInt(comment_id), null, comment_body, u, c_date, null);
+						Comment c = new Comment(Integer.parseInt(comment_id), comment_body, u, c_date);
 						
 						commentsList.add(c);
 					}
 					@SuppressWarnings("deprecation")
-					Discussion d = new Discussion(discussion_id, title, body, new User(Integer.parseInt(user_id), username, null), d_date, null, commentsList);
+					Discussion d = new Discussion(discussion_id, title, body, new User(Integer.parseInt(user_id), username, null), d_date, commentsList);
 					arrayListContent.add(d);
 				}
 			}

@@ -10,48 +10,56 @@ public class Discussion extends Content {
 	
 	private List<Comment> comments;
 	
-	public Discussion(int id, String title, String text) {
-		super(id, title, text);
-		comments = new ArrayList<Comment>();
-	}
-	
-	public Discussion(int id, String title, String text, User creator) {
-		super(id, title, text, creator);
-		comments = new ArrayList<Comment>();
-	}
-	
-	public Discussion(int id, String title, String text, User creator, Location location) {
-		super(id, title, text, creator, location);
-		comments = new ArrayList<Comment>();
-	}
-	
-	public Discussion(int id, String title, String text, User creator, Location location, List<Comment> comments) {
-		super(id, title, text, creator, location);
-		this.comments = comments;
-	}
-	
-	public Discussion(int id, String title, String text, User creator, Date creationDate) {
-		super(id, title, text, creator, creationDate);
+	public Discussion(int id, String title, String description) {
+		super(id, title, description);
 		this.comments = new ArrayList<Comment>();
 	}
 	
-	public Discussion(int id, String title, String text, User creator, Date creationDate, List<Comment> comments) {
-		super(id, title, text, creator, creationDate);
-		this.comments = comments;
-	}
-	
-	public Discussion(int id, String title, String text, User creator, Date creationDate, Location location) {
-		super(id, title, text, creator, creationDate, location);
+	public Discussion(int id, String title, String description, User creator) {
+		super(id, title, description, creator);
 		this.comments = new ArrayList<Comment>();
 	}
 	
-	public Discussion(int id, String title, String text, User creator, Date creationDate, Location location, List<Comment> comments) {
-		super(id, title, text, creator, creationDate, location);
+	public Discussion(int id, String title, String description, User creator, Location location) {
+		super(id, title, description, creator, location);
+		this.comments = new ArrayList<Comment>();
+	}
+	
+	public Discussion(int id, String title, String description, User creator, Location location, List<Comment> comments) {
+		super(id, title, description, creator, location);
 		this.comments = comments;
+	}
+	
+	public Discussion(int id, String title, String description, User creator, Date creationDate) {
+		super(id, title, description, creator, creationDate);
+		this.comments = new ArrayList<Comment>();
+	}
+	
+	public Discussion(int id, String title, String description, User creator, Date creationDate, List<Comment> comments) {
+		super(id, title, description, creator, creationDate);
+		this.comments = comments;
+	}
+	
+	public Discussion(int id, String title, String description, User creator, Date creationDate, Location location) {
+		super(id, title, description, creator, creationDate, location);
+		this.comments = new ArrayList<Comment>();
+	}
+	
+	public Discussion(int id, String title, String description, User creator, Date creationDate, Location location, List<Comment> comments) {
+		super(id, title, description, creator, creationDate, location);
+		this.comments = comments;
+	}
+	
+	public String getDescription() {
+		return getText();
 	}
 	
 	public List<Comment> getComments() {
 		return comments;
+	}
+	
+	public void setDescription(String description) {
+		setText(description);
 	}
 	
 	public void setComments(List<Comment> comments) {

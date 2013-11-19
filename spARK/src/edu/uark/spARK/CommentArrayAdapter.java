@@ -2,21 +2,10 @@ package edu.uark.spARK;
 
 import java.util.List;
 
-import edu.uark.spARK.NewsFeedArrayAdapter.ViewHolder;
-import edu.uark.spARK.entities.Comment;
-import edu.uark.spARK.entities.Content;
 import android.content.Context;
-import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.QuickContactBadge;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.view.*;
+import android.widget.*;
+import edu.uark.spARK.entities.Comment;
 
 //Adapter specifically for the commentactivity - needs to be implemented differently as arrayadapter is not really necessary (maybe baseadapter or something)
 public class CommentArrayAdapter extends ArrayAdapter {
@@ -56,7 +45,7 @@ public class CommentArrayAdapter extends ArrayAdapter {
 		final Comment c = (Comment) this.getItem(position);
 		
 		holder.commentTextView.setText(c.getText());
-		holder.usernameTextView.setText(c.getCreator().getTitle());
+		holder.usernameTextView.setText(c.getCreator().getName());
 
 		return convertView;
 	}

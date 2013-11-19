@@ -34,10 +34,9 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		holder.titleTextView.setText(mDiscussion.getTitle());
 		holder.descTextView.setText(mDiscussion.getText());
 		holder.groupTextView.setVisibility(View.GONE);
-		holder.usernameTextView.setText(mDiscussion.getCreator().getTitle());
-		holder.totalScoreTextView.setText("0"); // FIX LATER
-		holder.creationDateTextView.setVisibility(View.GONE);
-		holder.totalScoreTextView.setText("0"); // FIX LATER
+		holder.usernameTextView.setText(mDiscussion.getCreator().getName());
+		holder.creationDateTextView.setText(mDiscussion.getCreationDateString());
+		holder.totalScoreTextView.setText(String.valueOf(mDiscussion.getRating()));
 		holder.commentTextView.setText(mDiscussion.getComments().size() + " comments");		
 	}
 	
@@ -91,9 +90,9 @@ public class CommentActivity extends Activity implements AsyncResponse{
 					JSONQuery jquery = new JSONQuery(CommentActivity.this);
 					jquery.execute(ServerUtil.URL_POST_COMMENT, currentUser, Integer.toString(mDiscussion.getId()), body);
 					
-					User u = new User(0, null, currentUser);
-					Comment c = new Comment(0, null, body, u);
-					mDiscussion.getComments().add(c);
+					User u = new User(0, currentUser, null);
+					Comment c = new Comment(0, body, u);
+					mDiscussion.addComment(c);
 					e.setText("");
 					InputMethodManager imm = (InputMethodManager)getSystemService(
 						      Context.INPUT_METHOD_SERVICE);
@@ -109,10 +108,9 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		holder.titleTextView.setText(mDiscussion.getTitle());
 		holder.descTextView.setText(mDiscussion.getText());
 		holder.groupTextView.setVisibility(View.GONE);
-		holder.usernameTextView.setText(mDiscussion.getCreator().getTitle());
-		holder.totalScoreTextView.setText("0"); // FIX LATER
-		holder.creationDateTextView.setVisibility(View.GONE);
-		holder.totalScoreTextView.setText("0"); // FIX LATER
+		holder.usernameTextView.setText(mDiscussion.getCreator().getName());
+		holder.creationDateTextView.setText(mDiscussion.getCreationDateString());
+		holder.totalScoreTextView.setText(String.valueOf(mDiscussion.getRating()));
 		holder.commentTextView.setText(mDiscussion.getComments().size() + " comments");
 
 		// Show the Up button in the action bar.

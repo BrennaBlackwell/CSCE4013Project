@@ -94,9 +94,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		String content_ID = Integer.toString(c.getId());
 		JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, content_ID, "total");
-		c.setScore(Likes);
+		c.setRating(Likes);
 		
-		holder.totalScoreTextView.setText("" + c.getScore());
+		holder.totalScoreTextView.setText(String.valueOf(c.getRating()));
 		if (c instanceof Discussion)	
 			holder.commentTextView.setText(((Discussion) c).getComments().size() + " comments");
 		holder.likeBtn.setTag(Integer.valueOf(position));
@@ -168,13 +168,13 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "like");
 					
 					((RadioGroup)v.getParent()).check(v.getId());	
-					getItem((Integer) v.getTag()).increaseScore();
+					getItem((Integer) v.getTag()).incrementRating();
 					update();
 				} else {
 					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "dislike");
 					
 					((RadioGroup)v.getParent()).check(v.getId());
-					getItem((Integer) v.getTag()).decreaseScore();
+					getItem((Integer) v.getTag()).decrementRating();
 					update();
 				}
 			}
@@ -196,13 +196,13 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "dislike");
 					
 					((RadioGroup)v.getParent()).check(v.getId());
-					getItem((Integer) v.getTag()).decreaseScore();
+					getItem((Integer) v.getTag()).decrementRating();
 					update();
 				} else {
 					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "like");
 					
 					((RadioGroup)v.getParent()).check(v.getId());	
-					getItem((Integer) v.getTag()).increaseScore();
+					getItem((Integer) v.getTag()).incrementRating();
 					update();
 				}
 			}
