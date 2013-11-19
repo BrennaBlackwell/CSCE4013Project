@@ -34,7 +34,7 @@ public class LogInActivity extends Activity implements AsyncResponse {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getActionBar().hide();
         
@@ -61,33 +61,30 @@ public class LogInActivity extends Activity implements AsyncResponse {
         }, (SPLASH_TIME_OUT));
         
         new Handler().postDelayed(new Runnable() {
- 
+
             @Override
             public void run() {
-            	mLoginView.animate().alpha(1f).setDuration(450).setListener(null);
+                mLoginView.animate().alpha(1f).setDuration(450).setListener(null);
                 //Intent i = new Intent(SplashActivity.this, LogInActivity.class);
                 //startActivity(i);
-            	//findViewById(R.id.relativeLayoutLogin).setVisibility(View.VISIBLE);
+                //findViewById(R.id.relativeLayoutLogin).setVisibility(View.VISIBLE);
                 // close this activity
                 //finish();
             }
         }, SPLASH_TIME_OUT + 450);
 
-        SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
+
         EditText txtUsername = (EditText)findViewById(R.id.Username);
         EditText txtPassword = (EditText)findViewById(R.id.Password);
-
-        if (preferences.getString("currentUsername","").matches("Brenna")){
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=dQw4w9WgXcQ")));
-        }
-
-        txtUsername.setText(preferences.getString("currentUsername",""));
-        txtPassword.setText(preferences.getString("currentPassword",""));
-
+        SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
         if (preferences.getString("currentUsername","")!="" && preferences.getString("currentPassword","")!=""){
             Login(mLoginView);
         }
+        txtUsername.setText(preferences.getString("currentUsername", ""));
+        txtPassword.setText(preferences.getString("currentPassword", ""));
+
+
 
     }
     
@@ -116,13 +113,9 @@ public class LogInActivity extends Activity implements AsyncResponse {
 			toast.show();
 			return;
 		}
-        else if (Username.matches("Brenna")){
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=dQw4w9WgXcQ")));
-        }
 		else {
 			JSONQuery jquery = new JSONQuery(this);
 			jquery.execute(ServerUtil.URL_AUTHENTICATE, Username, Password);
-            finish();
 		}
 	}
 	
@@ -167,7 +160,8 @@ public class LogInActivity extends Activity implements AsyncResponse {
 				
 				Intent MainIntent = new Intent(this, MainActivity.class);
 				startActivity(MainIntent);
-			} else {
+                finish();
+            } else {
 				text_view1.setVisibility(View.VISIBLE);
 			}
 		} catch (JSONException e) {

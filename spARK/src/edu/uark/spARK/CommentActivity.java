@@ -85,12 +85,12 @@ public class CommentActivity extends Activity implements AsyncResponse{
 					//post comment
 					//get user name from stored preferences or something
 					SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-					String currentUser = preferences.getString("currentUser", "");
+					String currentUsername = preferences.getString("currentUsername", "");
 					
 					JSONQuery jquery = new JSONQuery(CommentActivity.this);
-					jquery.execute(ServerUtil.URL_POST_COMMENT, currentUser, Integer.toString(mDiscussion.getId()), body);
+					jquery.execute(ServerUtil.URL_POST_COMMENT, currentUsername, Integer.toString(mDiscussion.getId()), body);
 					
-					User u = new User(0, currentUser, null);
+					User u = new User(0, currentUsername, null);
 					Comment c = new Comment(0, body, u);
 					mDiscussion.addComment(c);
 					e.setText("");

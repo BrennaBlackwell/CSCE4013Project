@@ -211,9 +211,10 @@ public class MainActivity extends Activity {
             SharedPreferences.Editor editor = preferences.edit();
             editor.remove("currentUsername");
             editor.remove("currentPassword");
-            editor.apply();
+            //editor.apply();
             Intent backToLogin = new Intent(this, LogInActivity.class);
             startActivity(backToLogin);
+            finish();
         }
     }
     

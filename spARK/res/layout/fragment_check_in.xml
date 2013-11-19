@@ -37,7 +37,9 @@
         android:id="@+id/lv_places"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/checkin_map"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:clickable="false"
+        android:layout_alignParentEnd="false" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
