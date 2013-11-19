@@ -2,42 +2,52 @@ package edu.uark.spARK;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import android.annotation.SuppressLint;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FrameLayout;
-import android.widget.ListView;
+import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
-import edu.uark.spARK.entities.Bulletin;
 import edu.uark.spARK.entities.Comment;
 import edu.uark.spARK.entities.Content;
 import edu.uark.spARK.entities.Discussion;
 import edu.uark.spARK.entities.User;
 
-public class NewsFeed_Fragment extends Fragment {
-	
+
+public class NewsFeed_Fragment extends Fragment implements AsyncResponse{
     public static final String ARG_FRAGMENT_TYPE = "fragment_type";
-    private ArrayList<Content> arrayListContent = new ArrayList<Content>();
+    private static final String TAG_SUCCESS = "success";
+	private static final String TAG_DISCUSSIONS = "discussions";
+	private static final String TAG_COMMENTS = "comments";
+	private static final String TAG_ID = "id";
+	private static final String TAG_TITLE = "title";
+	private static final String TAG_BODY = "body";
+	private static final String TAG_TIMESTAMP = "timestamp";
+	private static final String TAG_USER_ID = "userid";
+	private static final String TAG_USER_NAME = "username";
+	
 	private NewsFeedArrayAdapter mAdapter; 
     private static PullToRefreshListView mListView;
     private static Bundle args;
+    
+    public static ArrayList<Content> arrayListContent = new ArrayList<Content>();
+    NewsFeedArrayAdapter mNewsFeedAdapter;
+    private JSONArray discussions = null;
+    private JSONArray comments = null;
     
 	public static NewsFeed_Fragment newInstance(String param1, String param2) {
 		NewsFeed_Fragment fragment = new NewsFeed_Fragment();
@@ -172,22 +182,69 @@ public class NewsFeed_Fragment extends Fragment {
 	}
 	
 	public void loadContent() {
-		//test
-		User u1 = new User(1, "user1", null);
-		User u2 = new User(2, "user2", null);
-		User u3 = new User(3, "user3", null);
-		User bpanda = new User(1, "bpanda", null);
-		Discussion d1 = new Discussion(0, "Free Cheeseburgers in the Union!", "Burger Shack is providing free cheeseburgers at the Union!", 
-				bpanda, new Date(113, 11, 10, 12, 3));
-		arrayListContent.add(d1);
-		arrayListContent.add(new Discussion(1, "Yesterday's Game", "C'mon Razorbacks! What was that yesterday? \n\nThat's it. I give up. I'm just going to retire.", 
-				bpanda,	new Date(113, 11, 10, 15, 30)));		
-				
-		//add some comments
-		d1.addComment(new Comment(0, null, "ALRIGHT! FREE CHEESEBURGERS!", u1));
-		d1.addComment(new Comment(1, null, "Yes now I can forget all about that terrible Algorithms test!", u2));
+		
+		SharedPreferences preferences = this.getActivity().getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+		String currentUser = preferences.getString("currentUser", "");
+		
+		JSONQuery jquery = new JSONQuery(this);
+		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, currentUser);
 	}
+	
+	@Override
+	public void processFinish(JSONObject result) {
+		
+		try {
+			int success = result.getInt(TAG_SUCCESS);
 
+			if (success == 1) {
+				// Get Array of discussions
+				discussions = result.getJSONArray(TAG_DISCUSSIONS);
+
+				for (int i = 0; i < discussions.length(); i++) {
+					JSONObject discussion = discussions.getJSONObject(i);
+
+					int discussion_id = Integer.parseInt(discussion.getString(TAG_ID));
+					String user_id = discussion.getString(TAG_USER_ID).trim();
+					String username = discussion.getString(TAG_USER_NAME).trim();
+					String title = discussion.getString(TAG_TITLE).trim();
+					String body = discussion.getString(TAG_BODY).trim();
+					String timestamp = discussion.getString(TAG_TIMESTAMP).trim();
+					Date d_date = new Date(113, 11, Integer.parseInt(timestamp.substring(8,10)), 
+							Integer.parseInt(timestamp.substring(11,13)), 
+							Integer.parseInt(timestamp.substring(14,16)));
+					    		
+					comments = discussion.getJSONArray(TAG_COMMENTS);
+					List<Comment> commentsList = new ArrayList<Comment>();
+					for (int j = 0; j < comments.length(); j++) {
+						List<Comment> list = new ArrayList<Comment>();
+						JSONObject comment = comments.getJSONObject(j);
+
+						String comment_id = comment.getString(TAG_ID).trim();
+						String userid = comment.getString(TAG_USER_ID).trim();
+						String user = comment.getString(TAG_USER_NAME).trim();
+						String comment_body = comment.getString(TAG_BODY).trim();
+						String timeposted = discussion.getString(TAG_TIMESTAMP).trim();
+						Date c_date = new Date(113, 11, Integer.parseInt(timeposted.substring(8,10)), 
+								Integer.parseInt(timeposted.substring(11,13)), 
+								Integer.parseInt(timeposted.substring(14,16)));
+						
+						//String comment_timestamp = comment.getString(TAG_TIMESTAMP).trim();
+						User u = new User(Integer.parseInt(userid), user, null);
+						Comment c = new Comment(Integer.parseInt(comment_id), null, comment_body, u, c_date, null);
+						
+						commentsList.add(c);
+					}
+					@SuppressWarnings("deprecation")
+					Discussion d = new Discussion(discussion_id, title, body, new User(Integer.parseInt(user_id), username, null), d_date, null, commentsList);
+					arrayListContent.add(d);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}	
+	}
 	
 	public PullToRefreshListView getListView() {
 		return mListView;

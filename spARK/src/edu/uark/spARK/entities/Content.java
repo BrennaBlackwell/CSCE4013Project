@@ -11,6 +11,7 @@ public class Content extends Entity {
 	private final User creator;
 	private final Date creationDate;
 	private Location location;
+	private int intScore = 0;
 	
 	public Content(int id, String title, String text) {
 		super(id, title, text);
@@ -69,5 +70,25 @@ public class Content extends Entity {
 	
 	public boolean hasLocation() {
 		return (location != null);
+	}
+	
+	public void changeScore(int amt) {
+		intScore += amt;
+	}
+	
+	public void increaseScore() {
+		intScore++;
+	}
+	
+	public void decreaseScore() {
+		intScore--;
+	}
+	
+	public int getScore() {
+		return intScore;
+	}
+	
+	public void setScore(int amt) {
+		this.intScore = amt;
 	}
 }

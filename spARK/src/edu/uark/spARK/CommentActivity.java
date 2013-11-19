@@ -1,11 +1,13 @@
 package edu.uark.spARK;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +19,13 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.NewsFeedArrayAdapter.ViewHolder;
 import edu.uark.spARK.entities.Comment;
 import edu.uark.spARK.entities.Discussion;
 import edu.uark.spARK.entities.User;
 
-public class CommentActivity extends Activity {
+public class CommentActivity extends Activity implements AsyncResponse{
 
 	// method to allow updating the UI whenever new content is added
 	// this is needed because main discussion in this activity isn't part of
@@ -48,10 +51,6 @@ public class CommentActivity extends Activity {
 		
 		//initialize original discussion view
 		mDiscussion = (Discussion) getIntent().getSerializableExtra("Object");
-		
-		
-		//get user from preferences (in this case just a test user)
-		final User u1 = new User(1, "test", null);
 		
 //		FrameLayout rl = (FrameLayout) findViewById(android.R.id.content);
 		final ListView lv = (ListView) findViewById(R.id.commentListView);
@@ -79,16 +78,22 @@ public class CommentActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				EditText e = (EditText) findViewById(R.id.addCommentEditText);
-				String s = e.getText().toString();
-				if (s.matches("")) 
+				String body = e.getText().toString();
+				if (body.matches("")) 
 					//prevent user from posting
 					return;
 				else {
 					//post comment
 					//get user name from stored preferences or something
-					User u = new User(0, "test", null);
-					Comment c = new Comment(0, null, s, u);
-					mDiscussion.addComment(c);
+					SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+					String currentUser = preferences.getString("currentUser", "");
+					
+					JSONQuery jquery = new JSONQuery(CommentActivity.this);
+					jquery.execute(ServerUtil.URL_POST_COMMENT, currentUser, Integer.toString(mDiscussion.getId()), body);
+					
+					User u = new User(0, null, currentUser);
+					Comment c = new Comment(0, null, body, u);
+					mDiscussion.getComments().add(c);
 					e.setText("");
 					InputMethodManager imm = (InputMethodManager)getSystemService(
 						      Context.INPUT_METHOD_SERVICE);
@@ -156,5 +161,18 @@ public class CommentActivity extends Activity {
 	    getIntent().putExtra("Object", mDiscussion);
 	    setResult(RESULT_OK, getIntent());
 	    super.finish();  
+	}
+	
+	@Override
+	public void processFinish(JSONObject result) {
+		try { 
+			// Checking for SUCCESS TAG
+			int success = result.getInt("success");
+			if (success == 1 ) {
+				// Comment posted successfully
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 }

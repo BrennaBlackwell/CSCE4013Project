@@ -1,39 +1,37 @@
 package edu.uark.spARK;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.text.Layout;
-import android.text.TextUtils;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.entities.Content;
 import edu.uark.spARK.entities.Discussion;
 
-public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
-	private static final String tag = "NewsFeedArrayAdapter";
+public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements AsyncResponse{
+	//private static final String tag = "NewsFeedArrayAdapter";
 	
 	private Fragment fragment;
 	private Context mContext;
 	private LayoutInflater mInflater;
 	private List<Content> mContent;
+	private int Likes = 0;
 	public ViewHolder holder;
 	
 	
@@ -90,7 +88,15 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 		holder.usernameTextView.setText(c.getCreator().getTitle());
 		holder.totalScoreTextView.setText("0");
 		holder.creationDateTextView.setText(c.getCreationDateString());
-		holder.totalScoreTextView.setText("0");
+		
+		SharedPreferences preferences = mContext.getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+		String currentUser = preferences.getString("currentUser", "");
+		String content_ID = Integer.toString(c.getId());
+		JSONQuery jquery = new JSONQuery(this);
+		jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, content_ID, "total");
+		c.setScore(Likes);
+		
+		holder.totalScoreTextView.setText("" + c.getScore());
 		if (c instanceof Discussion)	
 			holder.commentTextView.setText(((Discussion) c).getComments().size() + " comments");
 		holder.likeBtn.setTag(Integer.valueOf(position));
@@ -151,9 +157,26 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 
 			@Override
 			public void onClick(View v) {
-				((RadioGroup)v.getParent()).check(v.getId());	
-//				getItem((Integer) v.getTag()).increaseScore();
-				update();
+				SharedPreferences preferences = mContext.getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+				String currentUser = preferences.getString("currentUser", "");
+				
+				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
+				
+				ToggleButton button = (ToggleButton)((RadioGroup)v.getParent()).getChildAt(0);
+				
+				if (button.isChecked()) {
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "like");
+					
+					((RadioGroup)v.getParent()).check(v.getId());	
+					getItem((Integer) v.getTag()).increaseScore();
+					update();
+				} else {
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "dislike");
+					
+					((RadioGroup)v.getParent()).check(v.getId());
+					getItem((Integer) v.getTag()).decreaseScore();
+					update();
+				}
 			}
 			
 		});
@@ -161,9 +184,27 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 
 			@Override
 			public void onClick(View v) {
-				((RadioGroup)v.getParent()).check(v.getId());
-//				getItem((Integer) v.getTag()).decreaseScore();
-				update();
+				SharedPreferences preferences = mContext.getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+				String currentUser = preferences.getString("currentUser", "");
+				
+				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
+				
+				ToggleButton button = (ToggleButton)((RadioGroup)v.getParent()).getChildAt(2);
+				
+				if (button.isChecked()) {
+					
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "dislike");
+					
+					((RadioGroup)v.getParent()).check(v.getId());
+					getItem((Integer) v.getTag()).decreaseScore();
+					update();
+				} else {
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "like");
+					
+					((RadioGroup)v.getParent()).check(v.getId());	
+					getItem((Integer) v.getTag()).increaseScore();
+					update();
+				}
 			}
 			
 		});
@@ -179,6 +220,20 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> {
 			
 		});
 		return convertView;
+	}
+	
+	@Override
+	public void processFinish(JSONObject result) {
+		try { 
+			int success = result.getInt("totals_success");
+			if (success == 1) {
+				if (result.getString("like_total") != null) {
+					Likes = Integer.parseInt(result.getString("like_total"));
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//use this to load items, saving performance from not having to lookup id

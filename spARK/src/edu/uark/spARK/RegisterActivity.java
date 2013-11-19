@@ -1,5 +1,8 @@
 package edu.uark.spARK;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 
 public class RegisterActivity extends Activity implements AsyncResponse {
@@ -31,12 +34,29 @@ public class RegisterActivity extends Activity implements AsyncResponse {
 		EditText edit_text2 = (EditText)findViewById(R.id.registerEmail);		
 		EditText edit_text3 = (EditText)findViewById(R.id.registerPassword);
 		
-		String username = edit_text1.getText().toString();
-		String email = edit_text2.getText().toString();		
-		String password = edit_text3.getText().toString();
+		String Username = edit_text1.getText().toString().trim();
+		String Email = edit_text2.getText().toString().trim();		
+		String Password = edit_text3.getText().toString().trim();
 		
-		JSONQuery jquery = new JSONQuery(this);
-		jquery.execute("http://csce.uark.edu/~mmmcclel/spark/register.php", username, email, password);		
+		//make sure text has been added to the login screen
+		if (Username.matches("")) {
+			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Username", Toast.LENGTH_SHORT);
+			toast.show();
+			return;
+		}
+		else if (Email.matches("")) {
+			Toast toast = Toast.makeText(getApplicationContext(), "Please enter an Email", Toast.LENGTH_SHORT);
+			toast.show();
+			return;
+		}
+		else if (Password.matches("")) {
+			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Password", Toast.LENGTH_SHORT);
+			toast.show();
+			return;
+		} else { 		
+			JSONQuery jquery = new JSONQuery(this);
+			jquery.execute(ServerUtil.URL_REGISTER, Username, Email, Password);		
+		}
 	}
 	
 	public void Cancel(View v){
@@ -44,19 +64,24 @@ public class RegisterActivity extends Activity implements AsyncResponse {
 	}
 	
 	@Override
-	public void processFinish(String output) {
+	public void processFinish(JSONObject result) {
 		TextView text_view1 = (TextView)findViewById(R.id.userTaken);
 		
-		if (output.contains("Success")) {
-			text_view1.setVisibility(View.INVISIBLE);
-			
-			Intent LogInIntent = new Intent(this, LogInActivity.class);
-			LogInIntent.putExtra("Account_Created", "true");
-			setResult(Activity.RESULT_OK, LogInIntent);
-
-			finish();
-		} else {
-			text_view1.setVisibility(View.VISIBLE);
+		try {
+			int success = result.getInt("success");
+			if (success == 1) {
+				text_view1.setVisibility(View.INVISIBLE);
+				
+				Intent LogInIntent = new Intent(this, LogInActivity.class);
+				LogInIntent.putExtra("Account_Created", "true");
+				setResult(Activity.RESULT_OK, LogInIntent);
+	
+				finish();
+			} else {
+				text_view1.setVisibility(View.VISIBLE);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 	}
 }

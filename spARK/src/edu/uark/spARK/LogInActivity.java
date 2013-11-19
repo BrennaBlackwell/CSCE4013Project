@@ -1,5 +1,8 @@
 package edu.uark.spARK;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -30,8 +33,6 @@ public class LogInActivity extends Activity implements AsyncResponse {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        //we should check here to see if a user has logged in already
-        
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getActionBar().hide();
         
@@ -48,7 +49,7 @@ public class LogInActivity extends Activity implements AsyncResponse {
                 Point size = new Point();
                 display.getSize(size);
                 //float width = size.x;
-                float height = size.y;
+                //float height = size.y;
                 ImageView ivSplash = (ImageView) findViewById(R.id.profileImageView);
                 //float spark_X = ivSplash.getLeft();
                 float spark_Y = ivSplash.getTop();
@@ -73,34 +74,32 @@ public class LogInActivity extends Activity implements AsyncResponse {
     
 	public void Login(View v){
 		//debugging so we don't have to enter user/password every time. We will have to delete this later, but it might be useful for now
-		if (v.getId() == R.id.buttonDebug) {
-			Intent MainIntent = new Intent(this, MainActivity.class);
-			MainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(MainIntent);
-			finish();
-			return;
-		}
+//		if (v.getId() == R.id.buttonDebug) {
+//			Intent MainIntent = new Intent(this, MainActivity.class);
+//			startActivity(MainIntent);
+//			return;
+//		}
 		
 		EditText edit_text1 = (EditText)findViewById(R.id.Username);
 		EditText edit_text2 = (EditText)findViewById(R.id.Password);
 		
-		String Username = edit_text1.getText().toString();
-		String Password = edit_text2.getText().toString();		
+		String Username = edit_text1.getText().toString().trim();
+		String Password = edit_text2.getText().toString().trim();		
 		
 		//make sure text has been added to the login screen
 		if (Username.matches("")) {
-			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Username", 2);
+			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Username", Toast.LENGTH_SHORT);
 			toast.show();
 			return;
 		}
 		else if (Password.matches("")) {
-			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Password", 2);
+			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Password", Toast.LENGTH_SHORT);
 			toast.show();
 			return;
 		}
 		else {
 			JSONQuery jquery = new JSONQuery(this);
-			jquery.execute("http://csce.uark.edu/~mmmcclel/spark/authentication.php", Username, Password);
+			jquery.execute(ServerUtil.URL_AUTHENTICATE, Username, Password);
 		}
 	}
 	
@@ -120,29 +119,34 @@ public class LogInActivity extends Activity implements AsyncResponse {
 	}
 	
 	@Override
-	public void processFinish(String output) {
+	public void processFinish(JSONObject result) {
 		TextView text_view1 = (TextView)findViewById(R.id.invalidLogin);
 		TextView text_view2 = (TextView)findViewById(R.id.accountCreated);
 		text_view2.setVisibility(View.INVISIBLE);
-		if (output.contains("Success")) {
-			text_view1.setVisibility(View.INVISIBLE);
-			
-			EditText userText = (EditText)findViewById(R.id.Username);
-			String user = userText.getText().toString();
-			SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-			SharedPreferences.Editor editor = preferences.edit();
-			
-			editor.putString("currentUser", user);
-			editor.apply();
-			
-			Intent MainIntent = new Intent(this, MainActivity.class);
-			MainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(MainIntent);
-			finish();
-		} else {
-			text_view1.setVisibility(View.VISIBLE);
-		}
 		
+		try {
+			
+			int success = result.getInt("success");
+
+			if (success == 1) {
+				text_view1.setVisibility(View.INVISIBLE);
+				
+				EditText userText = (EditText)findViewById(R.id.Username);
+				String user = userText.getText().toString();
+				SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+				SharedPreferences.Editor editor = preferences.edit();
+				
+				editor.putString("currentUser", user);
+				editor.apply();
+				
+				Intent MainIntent = new Intent(this, MainActivity.class);
+				startActivity(MainIntent);
+			} else {
+				text_view1.setVisibility(View.VISIBLE);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

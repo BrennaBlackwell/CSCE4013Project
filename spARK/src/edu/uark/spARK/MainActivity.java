@@ -203,8 +203,11 @@ public class MainActivity extends Activity {
     private void selectItem(int position) {
         //Position 7 is logout, which doesn't need to switch fragments
 
-        if (position != 7)
+        if (position != 7) {
             switchFragment(position);
+        } else {
+        	finish();
+        }
     }
     
     private void switchFragment(Fragment fragmentName) {
@@ -225,7 +228,7 @@ public class MainActivity extends Activity {
 	    	//int fragmentName is statically declared above
 	    	switch (fragmentName){
 	    		case PROFILE_FRAGMENT: //4
-	    			fragment = new Profile_Fragment();
+	    			fragment = new MyProfile_Fragment();
 	    			break;
 		    	case HYBRID_FRAGMENT://1
 		    		fragment = new HybridFragment();

@@ -58,7 +58,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:ems="10"
-        android:maxLength="25" >
+        android:maxLength="25"
+        tools:ignore="TextFields" >
+
         <requestFocus />
     </EditText>
 
@@ -88,21 +90,7 @@
         android:visibility="invisible"
         tools:ignore="HardcodedText" />
 
-    <TextView
-        android:id="@+id/accountCreated"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="19dp"
-        android:gravity="center"
-        android:text="Account Created. Please Login Below"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#FF0000"
-        android:visibility="invisible"
-        tools:ignore="HardcodedText" />
-
-    <Button
+   <!--   <Button
         android:id="@+id/buttonDebug"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
@@ -112,6 +100,20 @@
         android:layout_centerVertical="true"
         android:onClick="Login"
         android:text="Skip Login (Testing only)"
-        android:textSize="12dp" />
+        android:textSize="12dp" /> -->
+
+    <TextView
+        android:id="@+id/accountCreated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/descTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:text="Account Created. Please Login Below"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#FF0000"
+        android:visibility="invisible"
+        tools:ignore="HardcodedText" />
 
 </RelativeLayout>
