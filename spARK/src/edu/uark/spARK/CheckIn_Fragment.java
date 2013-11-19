@@ -39,6 +39,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+
 public class CheckIn_Fragment extends Fragment{
 
     private String latitude;

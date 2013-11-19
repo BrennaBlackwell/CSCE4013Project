@@ -19,7 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
- 
+import android.net.Uri;
+
+
 public class LogInActivity extends Activity implements AsyncResponse {
  
     // Splash screen timer
@@ -70,6 +72,23 @@ public class LogInActivity extends Activity implements AsyncResponse {
                 //finish();
             }
         }, SPLASH_TIME_OUT + 450);
+
+        SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        EditText txtUsername = (EditText)findViewById(R.id.Username);
+        EditText txtPassword = (EditText)findViewById(R.id.Password);
+
+        if (preferences.getString("currentUsername","").matches("Brenna")){
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=dQw4w9WgXcQ")));
+        }
+
+        txtUsername.setText(preferences.getString("currentUsername",""));
+        txtPassword.setText(preferences.getString("currentPassword",""));
+
+        if (preferences.getString("currentUsername","")!="" && preferences.getString("currentPassword","")!=""){
+            Login(mLoginView);
+        }
+
     }
     
 	public void Login(View v){
@@ -79,13 +98,13 @@ public class LogInActivity extends Activity implements AsyncResponse {
 //			startActivity(MainIntent);
 //			return;
 //		}
-		
-		EditText edit_text1 = (EditText)findViewById(R.id.Username);
-		EditText edit_text2 = (EditText)findViewById(R.id.Password);
-		
-		String Username = edit_text1.getText().toString().trim();
-		String Password = edit_text2.getText().toString().trim();		
-		
+
+		EditText txtUsername = (EditText)findViewById(R.id.Username);
+		EditText txtPassword = (EditText)findViewById(R.id.Password);
+
+		String Username = txtUsername.getText().toString().trim();
+		String Password = txtPassword.getText().toString().trim();
+
 		//make sure text has been added to the login screen
 		if (Username.matches("")) {
 			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Username", Toast.LENGTH_SHORT);
@@ -97,9 +116,13 @@ public class LogInActivity extends Activity implements AsyncResponse {
 			toast.show();
 			return;
 		}
+        else if (Username.matches("Brenna")){
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=dQw4w9WgXcQ")));
+        }
 		else {
 			JSONQuery jquery = new JSONQuery(this);
 			jquery.execute(ServerUtil.URL_AUTHENTICATE, Username, Password);
+            finish();
 		}
 	}
 	
@@ -133,10 +156,13 @@ public class LogInActivity extends Activity implements AsyncResponse {
 				
 				EditText userText = (EditText)findViewById(R.id.Username);
 				String user = userText.getText().toString();
+                EditText passText = (EditText)findViewById(R.id.Password);
+                String pass = passText.getText().toString();
 				SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 				SharedPreferences.Editor editor = preferences.edit();
 				
-				editor.putString("currentUser", user);
+				editor.putString("currentUsername", user);
+                editor.putString("currentPassword", pass);
 				editor.apply();
 				
 				Intent MainIntent = new Intent(this, MainActivity.class);

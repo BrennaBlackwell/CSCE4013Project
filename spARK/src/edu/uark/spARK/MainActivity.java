@@ -10,6 +10,7 @@ import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -206,7 +207,13 @@ public class MainActivity extends Activity {
         if (position != 7) {
             switchFragment(position);
         } else {
-        	finish();
+            SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.remove("currentUsername");
+            editor.remove("currentPassword");
+            editor.apply();
+            Intent backToLogin = new Intent(this, LogInActivity.class);
+            startActivity(backToLogin);
         }
     }
     
