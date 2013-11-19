@@ -98,7 +98,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		
 		holder.totalScoreTextView.setText(String.valueOf(c.getRating()));
 		if (c instanceof Discussion)	
-			holder.commentTextView.setText(((Discussion) c).getComments().size() + " comments");
+			holder.commentTextView.setText(((Discussion) c).getNumComments() + " comments");
 		holder.likeBtn.setTag(Integer.valueOf(position));
 		holder.dislikeBtn.setTag(position);		//generic idea for expanding ellipsized text
 //		holder.descTV.setOnClickListener(new OnClickListener() {

@@ -74,4 +74,8 @@ public class Discussion extends Content {
 		return comments.remove(comment);
 	}
 	
+	public int getNumComments() {
+		return comments.size();
+	}
+	
 }
