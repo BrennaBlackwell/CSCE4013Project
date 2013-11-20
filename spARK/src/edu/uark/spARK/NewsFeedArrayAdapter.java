@@ -31,8 +31,8 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	private Context mContext;
 	private LayoutInflater mInflater;
 	private List<Content> mContent;
-	private int Likes = 0;
 	public ViewHolder holder;
+	private int pos = 0;
 	
 	
 	public NewsFeedArrayAdapter(Context context, int layoutid, List<Content> content, Fragment f) {
@@ -91,16 +91,20 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		
 		SharedPreferences preferences = mContext.getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 		String currentUser = preferences.getString("currentUser", "");
+		
+		pos = position;
 		String content_ID = Integer.toString(c.getId());
+		
 		JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, content_ID, "total");
-		c.setRating(Likes);
+		
 		
 		holder.totalScoreTextView.setText(String.valueOf(c.getRating()));
 		if (c instanceof Discussion)	
 			holder.commentTextView.setText(((Discussion) c).getNumComments() + " comments");
-		holder.likeBtn.setTag(Integer.valueOf(position));
+		holder.likeBtn.setTag(position);
 		holder.dislikeBtn.setTag(position);		//generic idea for expanding ellipsized text
+		
 //		holder.descTV.setOnClickListener(new OnClickListener() {
 //
 //			@Override
@@ -154,7 +158,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	    });	
 		
 		holder.likeBtn.setOnClickListener(new OnClickListener() {
-
+			
 			@Override
 			public void onClick(View v) {
 				SharedPreferences preferences = mContext.getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
@@ -171,7 +175,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 					getItem((Integer) v.getTag()).incrementRating();
 					update();
 				} else {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "dislike");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "unlike");
 					
 					((RadioGroup)v.getParent()).check(v.getId());
 					getItem((Integer) v.getTag()).decrementRating();
@@ -192,14 +196,13 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				ToggleButton button = (ToggleButton)((RadioGroup)v.getParent()).getChildAt(2);
 				
 				if (button.isChecked()) {
-					
 					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "dislike");
 					
 					((RadioGroup)v.getParent()).check(v.getId());
 					getItem((Integer) v.getTag()).decrementRating();
 					update();
 				} else {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "like");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "undislike");
 					
 					((RadioGroup)v.getParent()).check(v.getId());	
 					getItem((Integer) v.getTag()).incrementRating();
@@ -225,10 +228,26 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	@Override
 	public void processFinish(JSONObject result) {
 		try { 
-			int success = result.getInt("totals_success");
+			int success = result.getInt("likes_success");
 			if (success == 1) {
+				Content c = (Content) mContent.get(pos);
 				if (result.getString("like_total") != null) {
-					Likes = Integer.parseInt(result.getString("like_total"));
+					int Likes = Integer.parseInt(result.getString("like_total"));
+					c.setRating(Likes);
+				} else if (result.getString("user_likes") != null || result.getString("user_dislikes") != null) {
+					holder = new ViewHolder();
+					if (result.getString("user_likes") == "1") {
+						holder.likeBtn.setTag(pos);
+						holder.likeBtn.setChecked(true);
+					} else if (result.getString("user_dislikes") == "1") {
+						holder.dislikeBtn.setTag(pos);
+						holder.dislikeBtn.setChecked(true);
+					} else {
+						holder.likeBtn.setTag(pos);
+						holder.likeBtn.setChecked(false);
+						holder.dislikeBtn.setTag(pos);
+						holder.dislikeBtn.setChecked(false);
+					}
 				}
 			}
 		} catch (JSONException e) {
