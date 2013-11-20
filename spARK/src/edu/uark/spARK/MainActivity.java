@@ -32,11 +32,8 @@ import edu.uark.spARK.entities.Discussion;
 public class MainActivity extends Activity {
 	
     private static final int PROFILE_FRAGMENT = 0;
-    private static final int MAPVIEW_FRAGMENT = -1;
-    private static final int CLUSTERVIEW_FRAGMENT = -2;
+    private static final int NEWSFEED_FRAGMENT = 1;
     private static final int CHECKIN_FRAGMENT = 2;
-    private static final int HYBRID_FRAGMENT = 1;
-    private static final int NEWSFEED_FRAGMENT = -3;
     private int page = -1;
     
     
@@ -209,9 +206,9 @@ public class MainActivity extends Activity {
         } else {
             SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.remove("currentUsername");
+            //editor.remove("currentUsername");
             editor.remove("currentPassword");
-            //editor.apply();
+            editor.apply();
             Intent backToLogin = new Intent(this, LogInActivity.class);
             startActivity(backToLogin);
             finish();
@@ -229,41 +226,35 @@ public class MainActivity extends Activity {
 
     private void switchFragment(int fragmentName){
         // update the main content by replacing fragments
-    	
-    	//if the desired fragment isn't the same as the already loaded page
+        FragmentManager fragmentManager = getFragmentManager();
+        //if the desired fragment isn't the same as the already loaded page
     	if (fragmentName != page){
 	    	android.app.Fragment fragment;
 	    	//int fragmentName is statically declared above
 	    	switch (fragmentName){
 	    		case PROFILE_FRAGMENT: //4
 	    			fragment = new MyProfile_Fragment();
+                    //fragmentManager.beginTransaction().remove(mMapViewFragment).commit();
 	    			break;
-		    	case HYBRID_FRAGMENT://1
-		    		fragment = new HybridFragment();
-		    		break;
-		    	case CLUSTERVIEW_FRAGMENT: //2
-	    			fragment = new ClusterView_Fragment();
+		    	case NEWSFEED_FRAGMENT://1
+		    		fragment = new NewsFeed_Fragment();
+                    //fragmentManager.beginTransaction().remove(mMapViewFragment).commit();
 		    		break;
 		    	case CHECKIN_FRAGMENT: //2
 	    			fragment = new CheckIn_Fragment();
+                    //fragmentManager.beginTransaction().remove(mMapViewFragment).commit();
 		    		break;
-		    	case MAPVIEW_FRAGMENT: //0
-		    		fragment = new MapView_Fragment();
-		    		break;
-//		    	case NEWSFEED_FRAGMENT: //5
-//		    		fragment = new ListFeed_Fragment();
-//		    		break;
 		    	default:
 		    		//(currently blank)
 		    		fragment = new ContentFragment();
+                    //fragmentManager.beginTransaction().remove(mMapViewFragment).commit();
 		    		break;
 	    	}
 	
 	        Bundle args = new Bundle();
 		    args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
 	        fragment.setArguments(args);
-        
-            FragmentManager fragmentManager = getFragmentManager();
+
             fragmentManager.beginTransaction().replace(R.id.fragment_frame, fragment).commit();
 
 
