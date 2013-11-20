@@ -26,7 +26,7 @@ public class MyProfile_Fragment extends Fragment implements AsyncResponse {
 		String currentUsername = preferences.getString("currentUsername", "");
 		
 		View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
-		TextView textview = (TextView)profileView.findViewById(R.id.userID);
+		TextView textview = (TextView)profileView.findViewById(R.id.userName);
 		textview.setText(currentUsername);
 		
     	return profileView;

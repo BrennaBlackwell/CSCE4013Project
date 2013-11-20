@@ -18,11 +18,11 @@
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/userID"
+        android:id="@+id/userRank"
         android:layout_width="158dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/userRank"
+        android:layout_below="@+id/userName"
         android:layout_marginTop="16dp"
         android:text="Name"
         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -33,11 +33,11 @@
         android:layout_width="158dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/userID"
+        android:layout_below="@+id/userRank"
         android:progress="40" />
 
     <TextView
-        android:id="@+id/userRank"
+        android:id="@+id/userName"
         android:layout_width="158dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -83,7 +83,7 @@
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/userName"
+        android:layout_alignTop="@+id/userPic"
         android:layout_margin="10dp"
         android:src="@drawable/profile_icon"
         tools:ignore="ContentDescription" />
