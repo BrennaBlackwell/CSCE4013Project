@@ -50,9 +50,10 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		
 		//initialize original discussion view
 		mDiscussion = (Discussion) getIntent().getSerializableExtra("Object");
-		
 //		FrameLayout rl = (FrameLayout) findViewById(android.R.id.content);
 		final ListView lv = (ListView) findViewById(R.id.commentListView);
+		View header = getLayoutInflater().inflate(R.layout.comment_discussion_header, null);
+		lv.addHeaderView(header);
 //		LinearLayout ll = (LinearLayout) findViewById(R.id.addCommentLinearLayout);
 //		ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) lv.getLayoutParams();
 

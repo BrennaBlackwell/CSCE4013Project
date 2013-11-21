@@ -125,6 +125,8 @@ public class MainActivity extends Activity {
         mMapViewFragment = new MapView_Fragment();
         mListDiscussionFragment = new NewsFeed_Fragment();
         mListBulletinFragment = new NewsFeed_Fragment();
+        getFragmentManager().beginTransaction().add(R.id.map_frame, mMapViewFragment).commit();
+        
         ActionBar.Tab tabA = bar.newTab().setText("Discussions");
         ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
         tabA.setTabListener(new MyTabListener(mListDiscussionFragment));
@@ -132,7 +134,6 @@ public class MainActivity extends Activity {
         bar.addTab(tabA);
         bar.addTab(tabB);
 
-        getFragmentManager().beginTransaction().add(R.id.map_frame, mMapViewFragment).commit();
     }
 
     @Override
@@ -376,6 +377,13 @@ public class MainActivity extends Activity {
 	          Toast.makeText(getApplicationContext(),
 	                  "Fragment switch!", Toast.LENGTH_SHORT)
 	                  .show();
+			    if (fragment != null) {
+			        // Detach the fragment, because another one is being attached
+			    	if (tab.getPosition() == 0)
+			    		ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right).replace(R.id.fragment_frame, fragment);
+			    	else
+			    		ft.setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_left).replace(R.id.fragment_frame, fragment);
+			    }
 //	          switch (tab.getPosition()) {
 //	          case 0:
 //		        	if (fragment == null) {
@@ -395,13 +403,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		    if (fragment != null) {
-		        // Detach the fragment, because another one is being attached
-		    	if (tab.getPosition() == 0)
-		    		ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right).replace(R.id.fragment_frame, fragment);
-		    	else
-		    		ft.setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_left).replace(R.id.fragment_frame, fragment);
-		    }
+
 		}
 	}
 	
