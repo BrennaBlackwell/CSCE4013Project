@@ -18,10 +18,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
 import edu.uark.spARK.entities.Comment;
@@ -91,6 +94,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse{
 		View v = inflater.inflate(R.layout.list_feed, container, false);
 //		mListView = new PullToRefreshListView(container.getContext());
 		mListView = (PullToRefreshListView) v.findViewById(R.id.pullToRefreshListView);
+		
 //		mListView = new PullToRefreshListView(inflater.getContext());
 //		mListView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	    //set mapHeader clicklistener so the listview can be hidden
