@@ -67,7 +67,7 @@ public class CheckIn_Fragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
     	View rootView = inflater.inflate(R.layout.fragment_check_in, container, false);
-        getChildFragmentManager().beginTransaction().add(R.id.checkin_map_frame, new MapFragment()).commit();
+        getFragmentManager().beginTransaction().add(R.id.checkin_map_frame, new MapFragment()).commit();
         myContext = container.getContext();
 
         LocationManager locationManager = (LocationManager) myContext.getSystemService(
