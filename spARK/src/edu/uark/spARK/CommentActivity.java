@@ -56,12 +56,13 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		final ListView lv = (ListView) findViewById(R.id.commentListView);
 		View header = getLayoutInflater().inflate(R.layout.comment_discussion_header, null);
 		lv.addHeaderView(header);
+		
 //		LinearLayout ll = (LinearLayout) findViewById(R.id.addCommentLinearLayout);
 //		ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) lv.getLayoutParams();
 
 		mCommentArrayAdapter = new CommentArrayAdapter(this, R.layout.comment_list_item, mDiscussion.getComments());
 		lv.setAdapter(mCommentArrayAdapter);
-		
+
 		final ViewHolder holder = new ViewHolder();
 		holder.titleTextView = (TextView) findViewById(R.id.headerTextView);
 		holder.descTextView = (TextView) findViewById(R.id.descTextView);	

@@ -87,7 +87,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		holder.titleTextView.setText(c.getTitle());
 		holder.descTextView.setText(c.getText());
 		holder.descTextView.setMovementMethod(LinkMovementMethod.getInstance());
-		Linkify.addLinks(holder.commentTextView, Linkify.ALL);
+		Linkify.addLinks(holder.descTextView, Linkify.ALL);
 		holder.groupTextView.setText("test");
 		holder.usernameTextView.setText(c.getCreator().getTitle());
 		holder.totalScoreTextView.setText("0");

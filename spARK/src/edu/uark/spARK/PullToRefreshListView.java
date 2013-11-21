@@ -272,10 +272,9 @@ public class PullToRefreshListView extends ListView{
         reverseFlipAnimation.setFillAfter(true);
 
 	    mapHeader = new View(c);
-	    mapHeader.setBackgroundColor(Color.TRANSPARENT);
 	    
-	    TextView footerView =  new TextView(c);
-	    footerView.setBackgroundColor(Color.RED);
+//	    TextView footerView =  new TextView(c);
+//	    footerView.setBackgroundColor(Color.RED);
 	    
 	    final float scale = getContext().getResources().getDisplayMetrics().density;
 	    int pixels = (int) (100 * scale + 0.5f);
@@ -304,8 +303,9 @@ public class PullToRefreshListView extends ListView{
         
         addHeaderView(headerContainer);
 	    addHeaderView(mapHeader);
-	    addFooterView(footerView);
-	    footerView.setText("Loading more data...");
+	    mapHeader.setBackgroundColor(Color.TRANSPARENT);
+//	    addFooterView(footerView);
+//	    footerView.setText("Loading more data...");
         
         setState(State.PULL_TO_REFRESH);
         scrollbarEnabled = isVerticalScrollBarEnabled();

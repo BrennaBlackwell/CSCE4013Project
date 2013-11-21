@@ -18,10 +18,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
 import edu.uark.spARK.entities.Comment;
@@ -30,7 +34,7 @@ import edu.uark.spARK.entities.Discussion;
 import edu.uark.spARK.entities.User;
 
 
-public class NewsFeed_Fragment extends Fragment implements AsyncResponse{
+public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     public static final String ARG_FRAGMENT_TYPE = "fragment_type";
     private static final String TAG_SUCCESS = "success";
 	private static final String TAG_DISCUSSIONS = "discussions";
@@ -47,7 +51,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse{
     private static Bundle args;
     
     public static ArrayList<Content> arrayListContent = new ArrayList<Content>();
-    NewsFeedArrayAdapter mNewsFeedAdapter;
     private JSONArray discussions = null;
     private JSONArray comments = null;
     
@@ -91,6 +94,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse{
 		View v = inflater.inflate(R.layout.list_feed, container, false);
 //		mListView = new PullToRefreshListView(container.getContext());
 		mListView = (PullToRefreshListView) v.findViewById(R.id.pullToRefreshListView);
+		
 //		mListView = new PullToRefreshListView(inflater.getContext());
 //		mListView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	    //set mapHeader clicklistener so the listview can be hidden
@@ -138,22 +142,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse{
                     }, 2000);
             }
     });
-//        mListView.setOnItemClickListener(new OnItemClickListener()
-//        {
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View v, int id,
-//					long position) {
-//				Intent i = new Intent((MainActivity) getActivity(), CommentActivity.class);
-//				System.out.println("getActivity: " + getActivity());
-//				i.putExtra("Object", (Content) arrayListContent.get(id));
-//				System.out.println("Object: " + arrayListContent.get(id));
-//				System.out.println("position: " + id);
-//				i.putExtra("position", id);
-//				startActivityForResult(i, 1);						
-//			}
-//        	
-//        });
+        
 		return v;
 
 	}
@@ -194,7 +183,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse{
 	
 	@Override
 	public void processFinish(JSONObject result) {
-		
+		arrayListContent.clear();
 		try {
 			int success = result.getInt(TAG_SUCCESS);
 

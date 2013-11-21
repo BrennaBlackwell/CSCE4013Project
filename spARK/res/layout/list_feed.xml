@@ -13,7 +13,10 @@
               android:layout_height="match_parent"
               android:divider="@null"
               android:dividerHeight="0dp"
-              android:scrollbars="none" >
+              android:scrollbars="none"
+              android:overScrollFooter="@null" 
+              android:cacheColorHint="@android:color/transparent"
+              android:background="@android:color/transparent">
 
     	</edu.uark.spARK.PullToRefreshListView>
 
