@@ -65,7 +65,8 @@ public class CheckIn_Fragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_check_in, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
+    	View rootView = inflater.inflate(R.layout.fragment_check_in, container, false);
         getChildFragmentManager().beginTransaction().add(R.id.checkin_map_frame, new MapFragment()).commit();
         myContext = container.getContext();
 
@@ -301,29 +302,31 @@ public class CheckIn_Fragment extends Fragment{
     }
 
     private class PlaceAdapter extends ArrayAdapter<Place> {
-        public Context context;
+        public Context mContext;
+        
         public int layoutResourceId;
         public ArrayList<Place> places;
+
+		private LayoutInflater mInflater;
 
         public PlaceAdapter(Context context, int layoutResourceId, ArrayList<Place> places) {
             super(context, layoutResourceId, places);
             this.layoutResourceId = layoutResourceId;
+    		mContext = context;
+    		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.places = places;
         }
 
         @Override
         public View getView(int rowIndex, View convertView, ViewGroup parent) {
-            View row = convertView;
-            if(null == row) {
-                LayoutInflater layout = (LayoutInflater)getActivity().getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE
-                );
-                row = layout.inflate(R.layout.placerow, null);
+        	//super.getView(rowIndex, convertView, parent);
+            if(convertView == null) {
+            	convertView = mInflater.inflate(R.layout.placerow, null);
             }
             Place place = places.get(rowIndex);
             if(null != place) {
-                TextView name = (TextView) row.findViewById(R.id.placerow_name);
-                TextView vicinity = (TextView) row.findViewById(
+                TextView name = (TextView) convertView.findViewById(R.id.placerow_name);
+                TextView vicinity = (TextView) convertView.findViewById(
                         R.id.placerow_vicinity);
                 if(null != name) {
                     name.setText(place.getName());
@@ -332,7 +335,7 @@ public class CheckIn_Fragment extends Fragment{
                     vicinity.setText(place.getVicinity());
                 }
             }
-            return row;
+            return convertView;
         }
     }
 

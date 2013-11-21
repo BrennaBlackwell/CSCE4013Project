@@ -12,6 +12,29 @@
 <!--         android:layout_alignParentLeft="true" -->
 <!--         android:layout_alignParentTop="true" /> -->
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1.0" >
+
+        <FrameLayout
+            android:id="@+id/checkin_map_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".5" >
+        </FrameLayout>
+
+        <ListView
+            android:id="@+id/lv_places"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="false"
+            android:layout_weight=".5"
+            android:clickable="false" >
+        </ListView>
+    </LinearLayout>
+
     <Button
         android:id="@+id/scanButton"
         android:layout_width="wrap_content"
@@ -39,29 +62,5 @@
         android:id="@+id/updateButton"
         android:layout_above="@+id/txtScanResult"
         android:layout_alignParentLeft="true" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" 
-        android:weightSum="1.0">
-
-        <FrameLayout
-            android:id="@+id/checkin_map_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".5" >
-        </FrameLayout>
-
-        <ListView
-            android:id="@+id/lv_places"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="false"
-            android:layout_weight=".5"
-            android:clickable="false" >
-        </ListView>
-
-    </LinearLayout>
 
 </RelativeLayout>
