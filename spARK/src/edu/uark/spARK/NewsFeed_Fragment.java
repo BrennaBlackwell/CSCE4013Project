@@ -89,7 +89,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		//View v = super.onCreateView(inflater, container, savedInstanceState);
 		
 		View v = inflater.inflate(R.layout.list_feed, container, false);
 //		mListView = new PullToRefreshListView(container.getContext());
