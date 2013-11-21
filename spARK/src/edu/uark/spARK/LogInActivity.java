@@ -110,11 +110,6 @@ public class LogInActivity extends Activity implements AsyncResponse {
             Username = txtUsername.getText().toString().trim();
             Password = txtPassword.getText().toString().trim();
         }
-        SharedPreferences.Editor editor = preferences.edit();
-
-        editor.putString("currentUsername", Username);
-        editor.putString("currentPassword", Password);
-        editor.apply();
 
 		//make sure text has been added to the login screen
 		if (Username.matches("")) {
@@ -166,6 +161,10 @@ public class LogInActivity extends Activity implements AsyncResponse {
                 EditText passText = (EditText)findViewById(R.id.Password);
                 String pass = passText.getText().toString();
 
+                SharedPreferences.Editor editor = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE).edit();
+                editor.putString("currentUsername", user);
+                editor.putString("currentPassword", pass);
+                editor.apply();
 
 				
 				Intent MainIntent = new Intent(this, MainActivity.class);
