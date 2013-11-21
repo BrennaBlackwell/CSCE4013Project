@@ -27,6 +27,7 @@ public class MapView_Fragment extends MapFragment{
 	
 	// Google Map
     private GoogleMap map;	//this is the map which is instantiated in the initializeMap();
+    private View v;
     
     public MapView_Fragment() {
 
@@ -81,9 +82,16 @@ public class MapView_Fragment extends MapFragment{
 	public void onResume() {
         super.onResume();
     }
+    
+    @Override
+    public void onPause() {
+    	super.onPause();
+
+    }
         
     @Override
     public void onDestroyView() {
+    	
         super.onDestroyView();
 //        MapFragment m = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 //        

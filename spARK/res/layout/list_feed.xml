@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<edu.uark.spARK.FragmentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_layout"
     android:layout_width="match_parent"
@@ -12,8 +12,9 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:divider="@null"
-              android:dividerHeight="0dp" >
+              android:dividerHeight="0dp" 
+              android:scrollbars="none">
 
     	</edu.uark.spARK.PullToRefreshListView>
 
-</FrameLayout>
+</edu.uark.spARK.FragmentFrameLayout>

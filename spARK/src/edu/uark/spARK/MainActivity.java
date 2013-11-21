@@ -32,11 +32,11 @@ import edu.uark.spARK.entities.Discussion;
 public class MainActivity extends Activity {
 	
     private static final int PROFILE_FRAGMENT = 0;
+    private static final int NEWSFEED_FRAGMENT = 1;
     private static final int MAPVIEW_FRAGMENT = -1;
     private static final int CLUSTERVIEW_FRAGMENT = -2;
     private static final int CHECKIN_FRAGMENT = 2;
-    private static final int HYBRID_FRAGMENT = 1;
-    private static final int NEWSFEED_FRAGMENT = -3;
+
     private int page = -1;
     
     
@@ -124,40 +124,17 @@ public class MainActivity extends Activity {
             //selectItem(0);
         }
         
-        //mMapViewFragment = new MapView_Fragment();
-        //hybridFragment = (HybridFragment) getFragmentManager().findFragmentById(R.id.fragmentHybridFeed_ref);
-//        mListDiscussionFragment = (ListFeed_Fragment) getFragmentManager().findFragmentById(R.id.listfeed);
-        mMapViewFragment = (MapView_Fragment) getFragmentManager().findFragmentById(R.id.map);
-        //switchFragment(HYBRID_FRAGMENT);
+        mMapViewFragment = new MapView_Fragment();
         mListDiscussionFragment = new NewsFeed_Fragment();
         mListBulletinFragment = new NewsFeed_Fragment();
-        
-        //mMapViewFragment = new MapView_Fragment();
-        
         ActionBar.Tab tabA = bar.newTab().setText("Discussions");
         ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
         tabA.setTabListener(new MyTabListener(mListDiscussionFragment));
         tabB.setTabListener(new MyTabListener(mListBulletinFragment));
         bar.addTab(tabA);
         bar.addTab(tabB);
-        
-////		the code to launch the activity which brings up comments is located in getView of ListFeedArrayAdapter        
-//        mListDiscussionFragment.getListView().setOnItemClickListener(new OnItemClickListener() {
-//			
-//        	@Override
-//			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//				System.out.println("Mdiscussion: item is in position: " + position);
-//				switch(position) {
-//					default:
-//						Intent i = new Intent(MainActivity.this, CommentActivity.class);
-//						i.putExtra("Object", mListDiscussionFragment.getArrayListContent().get(position));
-//						i.putExtra("position", position);
-//						startActivityForResult(i, 1);		
-//						break;
-//					}
-//				}
-//			
-//			});
+
+        getFragmentManager().beginTransaction().add(R.id.map_frame, mMapViewFragment).commit();
     }
 
     @Override
@@ -198,88 +175,122 @@ public class MainActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
+            mDrawerList.setItemChecked(position, true);
+            mDrawerLayout.closeDrawer(mDrawerList);
+
         }
     }
 
     private void selectItem(int position) {
-        //Position 7 is logout, which doesn't need to switch fragments
+    	
+        FragmentManager fragmentManager = getFragmentManager();
 
-        if (position != 7) {
-            switchFragment(position);
-        } else {
+        switch(position) {
+    	
+    	case 0:
+            fragmentManager.beginTransaction().detach(mMapViewFragment)
+            .replace(R.id.fragment_frame, new MyProfile_Fragment()).commit();
+            break;
+    	case 1:
+    		//mListDiscussion by default, I'll try to fix this to the last selected content
+            fragmentManager.beginTransaction().attach(mMapViewFragment)
+            .replace(R.id.fragment_frame, mListDiscussionFragment).commit();
+            break;
+        case 2:
+            fragmentManager.beginTransaction().detach(mMapViewFragment)
+            .replace(R.id.fragment_frame, new CheckIn_Fragment()).commit(); 
+            break;
+        case 3:
+        	//groups
+            fragmentManager.beginTransaction().detach(mMapViewFragment)
+            .replace(R.id.fragment_frame, new Fragment()).commit();
+            break;
+        case 4:
+        	//bookmarks
+            fragmentManager.beginTransaction().detach(mMapViewFragment)
+            .replace(R.id.fragment_frame, new Fragment()).commit();
+            break;
+        case 5:
+        	//settings we could make another activity/fragment/whatever
+        	break;
+        case 6:
+        	//dialog
+        	break;
+        case 7:
             SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.remove("currentUsername");
             editor.remove("currentPassword");
-            //editor.apply();
+            editor.commit();
             Intent backToLogin = new Intent(this, LogInActivity.class);
             startActivity(backToLogin);
-            finish();
+            finish();        	   
+        default:
+        	//nothing should happen here
+        	break;
         }
+        	
     }
     
-    private void switchFragment(Fragment fragmentName) {
+//    private void switchFragment(Fragment fragmentName) {
 //        Bundle args = new Bundle();
 //	    args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
 //        fragment.setArguments(args);
-    
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_frame, fragmentName).commit();    	
-    }
+//    
+//        FragmentManager fragmentManager = getFragmentManager();
+//        fragmentManager.beginTransaction().replace(R.id.fragment_frame, switchFragment())
+//        .remove(mMapViewFragment)
+//        .commit();    	
+//    }
 
-    private void switchFragment(int fragmentName){
-        // update the main content by replacing fragments
-    	
-    	//if the desired fragment isn't the same as the already loaded page
-    	if (fragmentName != page){
-	    	android.app.Fragment fragment;
-	    	//int fragmentName is statically declared above
-	    	switch (fragmentName){
-	    		case PROFILE_FRAGMENT: //4
-	    			fragment = new MyProfile_Fragment();
-	    			break;
-		    	case HYBRID_FRAGMENT://1
-		    		fragment = new HybridFragment();
-		    		break;
-		    	case CLUSTERVIEW_FRAGMENT: //2
-	    			fragment = new ClusterView_Fragment();
-		    		break;
-		    	case CHECKIN_FRAGMENT: //2
-	    			fragment = new CheckIn_Fragment();
-		    		break;
-		    	case MAPVIEW_FRAGMENT: //0
-		    		fragment = new MapView_Fragment();
-		    		break;
-//		    	case NEWSFEED_FRAGMENT: //5
-//		    		fragment = new ListFeed_Fragment();
+//    private void switchFragment(int fragmentName){
+//        // update the main content by replacing fragments
+//    	
+//    	//if the desired fragment isn't the same as the already loaded page
+//    	if (fragmentName != page){
+//	    	Fragment fragment;
+//	    	//int fragmentName is statically declared above
+//	    	switch (fragmentName){
+//	    		case PROFILE_FRAGMENT: //0
+//	    			fragment = new MyProfile_Fragment();
+//	    			break;
+//		    	case NEWSFEED_FRAGMENT://1
+//		    		fragment = new HybridFragment();
 //		    		break;
-		    	default:
-		    		//(currently blank)
-		    		fragment = new ContentFragment();
-		    		break;
-	    	}
-	
-	        Bundle args = new Bundle();
-		    args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
-	        fragment.setArguments(args);
-        
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fragment_frame, fragment).commit();
-
-
-            //if (position == 0) {
-            //	setContentView(R.layout.user_profile);
-            //}
-
-            // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(fragmentName, true);
-            //setTitle(mListTitles[position]);
-
-            page = fragmentName;
-
-        }
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
+//		    	case CLUSTERVIEW_FRAGMENT: //2
+//	    			fragment = new ClusterView_Fragment();
+//		    		break;
+//		    	case CHECKIN_FRAGMENT: //2
+//	    			fragment = new CheckIn_Fragment();
+//		    		break;
+//		    	case MAPVIEW_FRAGMENT: //0
+//		    		fragment = new MapView_Fragment();
+//		    		break;
+////		    	case NEWSFEED_FRAGMENT: //5
+////		    		fragment = new ListFeed_Fragment();
+////		    		break;
+//		    	default:
+//		    		//(currently blank)
+//		    		fragment = new ContentFragment();
+//		    		break;
+//	    	}
+//	
+//	        Bundle args = new Bundle();
+//		    args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
+//	        fragment.setArguments(args);
+//        
+//            FragmentManager fragmentManager = getFragmentManager();
+//            
+//            return fragmentManager.beginTransaction().replace(R.id.fragment_frame, fragment)
+//
+//            mDrawerList.setItemChecked(fragmentName, true);
+//            //setTitle(mListTitles[position]);
+//
+//            page = fragmentName;
+//
+//        }
+//        mDrawerLayout.closeDrawer(mDrawerList);
+//    }
 
     @Override
     public void setTitle(CharSequence title) {
@@ -367,14 +378,32 @@ public class MainActivity extends Activity {
 	          Toast.makeText(getApplicationContext(),
 	                  "Fragment switch!", Toast.LENGTH_SHORT)
 	                  .show();
-	        if (tab.getPosition() == 0)  
-	        	ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right).replace(R.id.fragment_frame, fragment);
-	        else
-	        	ft.setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_left).replace(R.id.fragment_frame, fragment);
-		}
+//	          switch (tab.getPosition()) {
+//	          case 0:
+//		        	if (fragment == null) {
+//		        		fragment = new NewsFeed_Fragment();
+//		        		ft.add(R.id.fragment_frame, fragment);
+//		        	}
+//	        	  break;
+//	          case 1:
+//		        	if (fragment == null) {
+//		        		fragment = new NewsFeed_Fragment();
+//		        		ft.add(R.id.fragment_frame, fragment);
+//		        	}	
+//	        	  break;
+//	          }
+
+	        }
 
 		@Override
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		    if (fragment != null) {
+		        // Detach the fragment, because another one is being attached
+		    	if (tab.getPosition() == 0)
+		    		ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right).replace(R.id.fragment_frame, fragment);
+		    	else
+		    		ft.setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_left).replace(R.id.fragment_frame, fragment);
+		    }
 		}
 	}
 	
