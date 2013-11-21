@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,13 +52,14 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		
 		//initialize original discussion view
 		mDiscussion = (Discussion) getIntent().getSerializableExtra("Object");
-		
 //		FrameLayout rl = (FrameLayout) findViewById(android.R.id.content);
 		final ListView lv = (ListView) findViewById(R.id.commentListView);
+		View header = getLayoutInflater().inflate(R.layout.comment_discussion_header, null);
+		lv.addHeaderView(header);
 //		LinearLayout ll = (LinearLayout) findViewById(R.id.addCommentLinearLayout);
 //		ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) lv.getLayoutParams();
 
-		mCommentArrayAdapter = new CommentArrayAdapter(getApplicationContext(), R.layout.comment_list_item, mDiscussion.getComments());
+		mCommentArrayAdapter = new CommentArrayAdapter(this, R.layout.comment_list_item, mDiscussion.getComments());
 		lv.setAdapter(mCommentArrayAdapter);
 		
 		final ViewHolder holder = new ViewHolder();
@@ -107,6 +110,8 @@ public class CommentActivity extends Activity implements AsyncResponse{
 
 		holder.titleTextView.setText(mDiscussion.getTitle());
 		holder.descTextView.setText(mDiscussion.getText());
+		holder.descTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		Linkify.addLinks(holder.descTextView, Linkify.ALL);
 		holder.groupTextView.setVisibility(View.GONE);
 		holder.usernameTextView.setText(mDiscussion.getCreator().getName());
 		holder.creationDateTextView.setText(mDiscussion.getCreationDateString());

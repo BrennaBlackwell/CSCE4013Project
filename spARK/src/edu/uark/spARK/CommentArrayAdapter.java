@@ -3,6 +3,8 @@ package edu.uark.spARK;
 import java.util.List;
 
 import android.content.Context;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.*;
 import android.widget.*;
 import edu.uark.spARK.entities.Comment;
@@ -45,6 +47,8 @@ public class CommentArrayAdapter extends ArrayAdapter {
 		final Comment c = (Comment) this.getItem(position);
 		
 		holder.commentTextView.setText(c.getText());
+		holder.commentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		Linkify.addLinks(holder.commentTextView, Linkify.ALL);
 		holder.usernameTextView.setText(c.getCreator().getName());
 
 		return convertView;

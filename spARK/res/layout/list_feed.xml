@@ -10,10 +10,10 @@
           <edu.uark.spARK.PullToRefreshListView
               android:id="@+id/pullToRefreshListView"
               android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+              android:layout_height="match_parent"
               android:divider="@null"
-              android:dividerHeight="0dp" 
-              android:scrollbars="none">
+              android:dividerHeight="0dp"
+              android:scrollbars="none" >
 
     	</edu.uark.spARK.PullToRefreshListView>
 

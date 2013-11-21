@@ -22,7 +22,8 @@
             android:layout_weight="1.0"
             android:text="Allright here is some text hopefully it will just expand downwards"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp" />
+            android:textSize="14sp" 
+            android:linksClickable="true"/>
 
         <include
             android:id="@+id/userInfoLinearLayout_ref"
