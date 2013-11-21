@@ -33,8 +33,6 @@ public class MainActivity extends Activity {
 	
     private static final int PROFILE_FRAGMENT = 0;
     private static final int NEWSFEED_FRAGMENT = 1;
-    private static final int MAPVIEW_FRAGMENT = -1;
-    private static final int CLUSTERVIEW_FRAGMENT = -2;
     private static final int CHECKIN_FRAGMENT = 2;
 
     private int page = -1;
@@ -177,14 +175,14 @@ public class MainActivity extends Activity {
             selectItem(position);
             mDrawerList.setItemChecked(position, true);
             mDrawerLayout.closeDrawer(mDrawerList);
-
+            view.setSelected(true);
         }
     }
 
     private void selectItem(int position) {
     	
         FragmentManager fragmentManager = getFragmentManager();
-
+    	
         switch(position) {
     	
     	case 0:
@@ -219,7 +217,7 @@ public class MainActivity extends Activity {
         case 7:
             SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.remove("currentUsername");
+            //editor.remove("currentUsername");
             editor.remove("currentPassword");
             editor.commit();
             Intent backToLogin = new Intent(this, LogInActivity.class);

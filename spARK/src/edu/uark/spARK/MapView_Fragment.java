@@ -94,7 +94,7 @@ public class MapView_Fragment extends MapFragment{
     	
         super.onDestroyView();
 //        MapFragment m = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-//        
+//
 //        if (m != null)
 //        	getFragmentManager().beginTransaction().remove(m).commit();
 //

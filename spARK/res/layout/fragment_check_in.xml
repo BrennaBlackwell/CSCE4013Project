@@ -2,15 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CheckIn_Fragment" >
- 
-    <fragment
-        android:id="@+id/checkin_map"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        class="com.google.android.gms.maps.MapFragment"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+    tools:context=".CheckIn_Fragment" 
+    >
+<!--     <fragment -->
+<!--         android:id="@+id/checkin_map" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="200dp" -->
+<!--         class="com.google.android.gms.maps.MapFragment" -->
+<!--         android:layout_alignParentLeft="true" -->
+<!--         android:layout_alignParentTop="true" /> -->
 
     <Button
         android:id="@+id/scanButton"
@@ -31,16 +31,6 @@
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lv_places"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/checkin_map"
-        android:layout_alignParentBottom="true"
-        android:clickable="false"
-        android:layout_alignParentEnd="false" />
-
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
@@ -49,5 +39,29 @@
         android:id="@+id/updateButton"
         android:layout_above="@+id/txtScanResult"
         android:layout_alignParentLeft="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" 
+        android:weightSum="1.0">
+
+        <FrameLayout
+            android:id="@+id/checkin_map_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".5" >
+        </FrameLayout>
+
+        <ListView
+            android:id="@+id/lv_places"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="false"
+            android:layout_weight=".5"
+            android:clickable="false" >
+        </ListView>
+
+    </LinearLayout>
 
 </RelativeLayout>

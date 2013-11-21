@@ -27,6 +27,7 @@ public class LogInActivity extends Activity implements AsyncResponse {
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 1000;
     private View mLoginView;
+    private boolean autologin = false;
     //
 
     
@@ -34,6 +35,13 @@ public class LogInActivity extends Activity implements AsyncResponse {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+
+
+        if (preferences.getString("currentUsername", "")!="" && preferences.getString("currentPassword","")!=""){
+            autologin = true;
+            Login(mLoginView);
+        }
 
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getActionBar().hide();
@@ -75,16 +83,8 @@ public class LogInActivity extends Activity implements AsyncResponse {
 
 
         EditText txtUsername = (EditText)findViewById(R.id.Username);
-        EditText txtPassword = (EditText)findViewById(R.id.Password);
-        SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        if (preferences.getString("currentUsername","")!="" && preferences.getString("currentPassword","")!=""){
-            Login(mLoginView);
-        }
+
         txtUsername.setText(preferences.getString("currentUsername", ""));
-        txtPassword.setText(preferences.getString("currentPassword", ""));
-
-
 
     }
     
@@ -96,11 +96,25 @@ public class LogInActivity extends Activity implements AsyncResponse {
 //			return;
 //		}
 
-		EditText txtUsername = (EditText)findViewById(R.id.Username);
-		EditText txtPassword = (EditText)findViewById(R.id.Password);
+        String Username;
+        String Password;
+        SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 
-		String Username = txtUsername.getText().toString().trim();
-		String Password = txtPassword.getText().toString().trim();
+        if (preferences.getString("currentUsername","")!="" && preferences.getString("currentPassword","")!=""){
+            Username = preferences.getString("currentUsername","");
+            Password = preferences.getString("currentPassword","");
+        }
+        else{
+            EditText txtUsername = (EditText)findViewById(R.id.Username);
+            EditText txtPassword = (EditText)findViewById(R.id.Password);
+            Username = txtUsername.getText().toString().trim();
+            Password = txtPassword.getText().toString().trim();
+        }
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString("currentUsername", Username);
+        editor.putString("currentPassword", Password);
+        editor.apply();
 
 		//make sure text has been added to the login screen
 		if (Username.matches("")) {
@@ -151,12 +165,8 @@ public class LogInActivity extends Activity implements AsyncResponse {
 				String user = userText.getText().toString();
                 EditText passText = (EditText)findViewById(R.id.Password);
                 String pass = passText.getText().toString();
-				SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-				SharedPreferences.Editor editor = preferences.edit();
-				
-				editor.putString("currentUsername", user);
-                editor.putString("currentPassword", pass);
-				editor.apply();
+
+
 				
 				Intent MainIntent = new Intent(this, MainActivity.class);
 				startActivity(MainIntent);

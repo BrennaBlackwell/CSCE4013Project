@@ -21,6 +21,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.google.android.gms.maps.MapFragment;
+
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -40,6 +43,7 @@ import android.widget.TextView;
 
 
 
+@SuppressLint("NewApi")
 public class CheckIn_Fragment extends Fragment{
 
     private String latitude;
@@ -62,7 +66,7 @@ public class CheckIn_Fragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_check_in, container, false);
-
+        getChildFragmentManager().beginTransaction().add(R.id.checkin_map_frame, new MapFragment()).commit();
         myContext = container.getContext();
 
         LocationManager locationManager = (LocationManager) myContext.getSystemService(
@@ -97,10 +101,6 @@ public class CheckIn_Fragment extends Fragment{
 
     @Override
     public void onDestroyView() {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.remove(getFragmentManager().findFragmentById(R.id.checkin_map));
-        transaction.commit();
-
         super.onDestroyView();
     }
 
