@@ -45,6 +45,10 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	private static final String TAG_TIMESTAMP = "timestamp";
 	private static final String TAG_USER_ID = "userid";
 	private static final String TAG_USER_NAME = "username";
+	private static final String TAG_RATING_TOTAL = "rating_total";
+	private static final String TAG_RATING_TOTAL_FLAG = "rating_total_flag";
+	private static final String TAG_USER_RATING = "user_rating";
+	private static final String TAG_USER_RATING_FLAG = "user_rating_flag";
 	
 	private NewsFeedArrayAdapter mAdapter; 
     private static PullToRefreshListView mListView;
@@ -174,7 +178,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	public void loadContent() {
 		
 		SharedPreferences preferences = this.getActivity().getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-		String currentUser = preferences.getString("currentUser", "");
+		String currentUser = preferences.getString("currentUsername", "");
 		
 		JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, currentUser);
@@ -199,7 +203,20 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					String title = discussion.getString(TAG_TITLE).trim();
 					String body = discussion.getString(TAG_BODY).trim();
 					Date d_date = Timestamp.valueOf(discussion.getString(TAG_TIMESTAMP).trim());
-					    		
+					    
+					int totalRating = 0;
+					int userRating = 0;
+					if (discussion.getInt(TAG_RATING_TOTAL_FLAG) == 1) {
+						if (discussion.getString(TAG_RATING_TOTAL) != null) {
+							totalRating = Integer.parseInt(discussion.getString(TAG_RATING_TOTAL));
+						} 
+					}
+					if (discussion.getInt(TAG_USER_RATING_FLAG) == 1) {
+						if (discussion.getString(TAG_USER_RATING) != null) {
+							userRating = discussion.getInt(TAG_USER_RATING);
+						}
+					}
+					
 					comments = discussion.getJSONArray(TAG_COMMENTS);
 					List<Comment> commentsList = new ArrayList<Comment>();
 					for (int j = 0; j < comments.length(); j++) {
@@ -220,6 +237,8 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					}
 					@SuppressWarnings("deprecation")
 					Discussion d = new Discussion(discussion_id, title, body, new User(Integer.parseInt(user_id), username, null), d_date, commentsList);
+					d.setTotalRating(totalRating);
+					d.setUserRating(userRating);
 					arrayListContent.add(d);
 				}
 			}
@@ -245,6 +264,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	public void setArrayListContent(ArrayList<Content> arrayListContent) {
 		this.arrayListContent = arrayListContent;
 	}
+	
 	
 //    @Override
 //    public void onListItemClick(ListView l, View v, int position, long id) {

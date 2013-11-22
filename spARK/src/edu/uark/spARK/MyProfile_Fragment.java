@@ -25,13 +25,17 @@ public class MyProfile_Fragment extends Fragment implements AsyncResponse {
     	SharedPreferences preferences = this.getActivity().getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 		String currentUsername = preferences.getString("currentUsername", "");
 		
-		View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
+		View profileView = inflater.inflate(R.layout.fragment_myprofile, container, false);
 		TextView textview = (TextView)profileView.findViewById(R.id.userName);
 		textview.setText(currentUsername);
 		
     	return profileView;
     }
 
+    public void EditAccount(View v){
+    	
+    }
+    
 	@Override
 	public void processFinish(JSONObject result) {
 		// TODO Auto-generated method stub

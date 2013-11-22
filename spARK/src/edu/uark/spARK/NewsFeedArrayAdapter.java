@@ -2,7 +2,6 @@ package edu.uark.spARK;
 
 import java.util.List;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -10,6 +9,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.app.FragmentActivity;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.QuickContactBadge;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -34,7 +35,6 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	private LayoutInflater mInflater;
 	private List<Content> mContent;
 	public ViewHolder holder;
-	private int pos = 0;
 	
 	
 	public NewsFeedArrayAdapter(Context context, int layoutid, List<Content> content, Fragment f) {
@@ -47,7 +47,6 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.discussion_list_item, null);
@@ -59,6 +58,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.commentTextView = (TextView) convertView.findViewById(R.id.commentTextView);
 			holder.commentLinearLayout = (LinearLayout) holder.commentTextView.getParent();
 			holder.groupTextView = (TextView) convertView.findViewById(R.id.groupTextView);
+			holder.userProfileIcon = (QuickContactBadge) convertView.findViewById(R.id.userQuickContactBadge);
 			holder.usernameTextView = (TextView) convertView.findViewById(R.id.usernameTextView);
 			holder.usernameTextView.setTag(position);
 //			holder.usernameTV.setOnClickListener(new OnClickListener() {
@@ -90,25 +90,21 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		Linkify.addLinks(holder.descTextView, Linkify.ALL);
 		holder.groupTextView.setText("test");
 		holder.usernameTextView.setText(c.getCreator().getTitle());
-		holder.totalScoreTextView.setText("0");
 		holder.creationDateTextView.setText(c.getCreationDateString());
-		
-		SharedPreferences preferences = mContext.getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-		String currentUser = preferences.getString("currentUser", "");
-		
-		pos = position;
-		String content_ID = Integer.toString(c.getId());
-		
-		JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, content_ID, "total");
-		
-		
-		holder.totalScoreTextView.setText(String.valueOf(c.getRating()));
+		holder.totalScoreTextView.setText(String.valueOf(c.getTotalRating()));
 		if (c instanceof Discussion)	
 			holder.commentTextView.setText(((Discussion) c).getNumComments() + " comments");
 		holder.likeBtn.setTag(position);
-		holder.dislikeBtn.setTag(position);		//generic idea for expanding ellipsized text
-		
+		holder.dislikeBtn.setTag(position);	
+		if (c.getUserRating() == 1) {
+			holder.likeBtn.setChecked(true);
+		} else if (c.getUserRating() == -1) {
+			holder.dislikeBtn.setChecked(true);
+		} else {
+			holder.likeBtn.setChecked(false);
+			holder.dislikeBtn.setChecked(false);
+		}
+		//generic idea for expanding ellipsized text
 //		holder.descTV.setOnClickListener(new OnClickListener() {
 //
 //			@Override
@@ -166,7 +162,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			@Override
 			public void onClick(View v) {
 				SharedPreferences preferences = mContext.getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-				String currentUser = preferences.getString("currentUser", "");
+				String currentUser = preferences.getString("currentUsername", "");
 				
 				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
 				
@@ -179,7 +175,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 					getItem((Integer) v.getTag()).incrementRating();
 					update();
 				} else {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "unlike");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "delete");
 					
 					((RadioGroup)v.getParent()).check(v.getId());
 					getItem((Integer) v.getTag()).decrementRating();
@@ -193,7 +189,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			@Override
 			public void onClick(View v) {
 				SharedPreferences preferences = mContext.getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-				String currentUser = preferences.getString("currentUser", "");
+				String currentUser = preferences.getString("currentUsername", "");
 				
 				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
 				
@@ -206,7 +202,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 					getItem((Integer) v.getTag()).decrementRating();
 					update();
 				} else {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "undislike");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "delete");
 					
 					((RadioGroup)v.getParent()).check(v.getId());	
 					getItem((Integer) v.getTag()).incrementRating();
@@ -226,37 +222,23 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			}
 			
 		});
+		holder.userProfileIcon.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (getContext() instanceof FragmentActivity) {
+				    // Need to get this working
+					fragment.getFragmentManager().beginTransaction().add(fragment.getView().getId(), new Profile_Fragment()).commit();
+				}
+			}
+			
+		});
 		return convertView;
 	}
 	
 	@Override
 	public void processFinish(JSONObject result) {
-		try { 
-			int success = result.getInt("likes_success");
-			if (success == 1) {
-				Content c = (Content) mContent.get(pos);
-				if (result.getString("like_total") != null) {
-					int Likes = Integer.parseInt(result.getString("like_total"));
-					c.setRating(Likes);
-				} else if (result.getString("user_likes") != null || result.getString("user_dislikes") != null) {
-					holder = new ViewHolder();
-					if (result.getString("user_likes") == "1") {
-						holder.likeBtn.setTag(pos);
-						holder.likeBtn.setChecked(true);
-					} else if (result.getString("user_dislikes") == "1") {
-						holder.dislikeBtn.setTag(pos);
-						holder.dislikeBtn.setChecked(true);
-					} else {
-						holder.likeBtn.setTag(pos);
-						holder.likeBtn.setChecked(false);
-						holder.dislikeBtn.setTag(pos);
-						holder.dislikeBtn.setChecked(false);
-					}
-				}
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+	//	results = result;
 	}
 	
 	//use this to load items, saving performance from not having to lookup id
@@ -265,6 +247,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		TextView titleTextView;
 		TextView descTextView;
 		TextView groupTextView;
+		QuickContactBadge userProfileIcon;
 		TextView usernameTextView;
 		TextView creationDateTextView;
 		TextView totalScoreTextView;

@@ -38,10 +38,10 @@ public class LogInActivity extends Activity implements AsyncResponse {
         SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 
 
-        if (preferences.getString("currentUsername", "")!="" && preferences.getString("currentPassword","")!=""){
-            autologin = true;
-            Login(mLoginView);
-        }
+//        if (preferences.getString("currentUsername", "")!="" && preferences.getString("currentPassword","")!=""){
+//            autologin = true;
+//            Login(mLoginView);
+//        }
 
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getActionBar().hide();
@@ -100,16 +100,16 @@ public class LogInActivity extends Activity implements AsyncResponse {
         String Password;
         SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 
-        if (preferences.getString("currentUsername","")!="" && preferences.getString("currentPassword","")!=""){
-            Username = preferences.getString("currentUsername","");
-            Password = preferences.getString("currentPassword","");
-        }
-        else{
+//        if (preferences.getString("currentUsername","")!="" && preferences.getString("currentPassword","")!=""){
+//            Username = preferences.getString("currentUsername","");
+//            Password = preferences.getString("currentPassword","");
+//        }
+        
             EditText txtUsername = (EditText)findViewById(R.id.Username);
             EditText txtPassword = (EditText)findViewById(R.id.Password);
             Username = txtUsername.getText().toString().trim();
             Password = txtPassword.getText().toString().trim();
-        }
+        
 
 		//make sure text has been added to the login screen
 		if (Username.matches("")) {
