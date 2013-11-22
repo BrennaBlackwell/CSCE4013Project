@@ -38,7 +38,7 @@
             android:name="edu.uark.spARK.LogInActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,23 +54,25 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBHBeFyTDyZtMyVfVJ9huAPudFrZAWCFxA" >
-        </meta-data>
+            android:value="AIzaSyBHBeFyTDyZtMyVfVJ9huAPudFrZAWCFxA" />
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="4030500" >
-        </meta-data>
+            android:value="4030500" />
 
         <activity android:name="edu.uark.spARK.RegisterActivity" >
         </activity>
         <activity
             android:name="edu.uark.spARK.CommentActivity"
             android:label="@string/title_activity_comment"
-            android:parentActivityName="edu.uark.spARK.MainActivity" 
-            android:windowSoftInputMode="stateHidden">
+            android:parentActivityName="edu.uark.spARK.MainActivity"
+            android:windowSoftInputMode="stateHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.uark.spARK.MainActivity" />
+        </activity>
+        <activity
+            android:name="edu.uark.spARK.CreateContentActivity"
+            android:label="@string/title_activity_create_content" >
         </activity>
     </application>
 

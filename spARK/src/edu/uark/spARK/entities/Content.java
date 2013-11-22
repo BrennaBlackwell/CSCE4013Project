@@ -11,7 +11,8 @@ public class Content extends Entity {
 	private final User creator;
 	private final Date creationDate;
 	private Location location;
-	private int rating;
+	private int totalRating;
+	private int userRating;
 	
 	public Content(int id, String title, String text) {
 		super(id, title, text);
@@ -72,27 +73,37 @@ public class Content extends Entity {
 		return (location != null);
 	}
 	
-	public int getRating() {
-		return rating;
+	public int getTotalRating() {
+		return totalRating;
 	}
 	
-	public void setRating(int rating) {
-		this.rating = rating;
+	public int getUserRating() {
+		return userRating;
+	}
+	
+	public void setTotalRating(int rating) {
+		this.totalRating = rating;
+	}
+	
+	public void setUserRating(int rating) {
+		this.userRating = rating;
 	}
 	
 	public void incrementRating() {
-		this.rating++;
+		this.totalRating++;
+		this.userRating++;
 	}
 	
 	public void decrementRating() {
-		this.rating--;
+		this.totalRating--;
+		this.userRating--;
 	}
 	
 	public void addToRating(int amount) {
-		this.rating += amount;
+		this.totalRating += amount;
 	}
 	
 	public void subtractFromRating(int amount) {
-		this.rating -= amount;
+		this.totalRating -= amount;
 	}
 }

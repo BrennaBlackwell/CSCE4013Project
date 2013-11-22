@@ -2,15 +2,14 @@ package edu.uark.spARK;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
-import android.content.SharedPreferences;
 
 
 public class Profile_Fragment extends Fragment implements AsyncResponse {
@@ -28,11 +27,17 @@ public class Profile_Fragment extends Fragment implements AsyncResponse {
         SharedPreferences preferences = getActivity().getSharedPreferences("MyPreferences", getActivity().MODE_PRIVATE);
 
         textview.setText(preferences.getString("currentUsername","User"));
-
-
     	return profileView;
     }
 
+	public void BlockAccount(View v){
+	    	
+	}
+	
+	public void ReportAccount(View v){
+		
+	}
+    
 	@Override
 	public void processFinish(JSONObject result) {
 		// TODO Auto-generated method stub

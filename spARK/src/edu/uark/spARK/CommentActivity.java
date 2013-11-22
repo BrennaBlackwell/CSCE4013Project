@@ -38,7 +38,7 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		holder.groupTextView.setVisibility(View.GONE);
 		holder.usernameTextView.setText(mDiscussion.getCreator().getName());
 		holder.creationDateTextView.setText(mDiscussion.getCreationDateString());
-		holder.totalScoreTextView.setText(String.valueOf(mDiscussion.getRating()));
+		holder.totalScoreTextView.setText(String.valueOf(mDiscussion.getTotalRating()));
 		holder.commentTextView.setText(mDiscussion.getNumComments() + " comments");		
 	}
 	
@@ -116,7 +116,7 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		holder.groupTextView.setVisibility(View.GONE);
 		holder.usernameTextView.setText(mDiscussion.getCreator().getName());
 		holder.creationDateTextView.setText(mDiscussion.getCreationDateString());
-		holder.totalScoreTextView.setText(String.valueOf(mDiscussion.getRating()));
+		holder.totalScoreTextView.setText(String.valueOf(mDiscussion.getTotalRating()));
 		holder.commentTextView.setText(mDiscussion.getNumComments() + " comments");
 
 		// Show the Up button in the action bar.

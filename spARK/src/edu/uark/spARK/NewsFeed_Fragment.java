@@ -4,10 +4,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.*;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.*;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -28,10 +27,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
-import edu.uark.spARK.entities.Comment;
-import edu.uark.spARK.entities.Content;
-import edu.uark.spARK.entities.Discussion;
-import edu.uark.spARK.entities.User;
+import edu.uark.spARK.entities.*;
 
 
 public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
@@ -45,20 +41,23 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	private static final String TAG_TIMESTAMP = "timestamp";
 	private static final String TAG_USER_ID = "userid";
 	private static final String TAG_USER_NAME = "username";
+	private static final String TAG_RATING_TOTAL = "rating_total";
+	private static final String TAG_RATING_TOTAL_FLAG = "rating_total_flag";
+	private static final String TAG_USER_RATING = "user_rating";
+	private static final String TAG_USER_RATING_FLAG = "user_rating_flag";
 	
 	private SelectiveViewPager mPager;
 	private NewsFeedArrayAdapter mAdapter; 
     private static PullToRefreshListView mListView;
-    private static Bundle args;
     
-    public static ArrayList<Content> arrayListContent = new ArrayList<Content>();
+    public ArrayList<Content> arrayListContent = new ArrayList<Content>();
     private JSONArray discussions = null;
     private JSONArray comments = null;
 
     
 	public static NewsFeed_Fragment newInstance(String param1, String param2) {
 		NewsFeed_Fragment fragment = new NewsFeed_Fragment();
-		args = new Bundle();
+		Bundle args = new Bundle();
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -101,7 +100,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		//super.onCreateView(inflater, container, savedInstanceState);
+		super.onCreateView(inflater, container, savedInstanceState);
 		
 		View v = inflater.inflate(R.layout.list_feed, container, false);
 //		mListView = new PullToRefreshListView(container.getContext());
@@ -227,11 +226,23 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					String title = discussion.getString(TAG_TITLE).trim();
 					String body = discussion.getString(TAG_BODY).trim();
 					Date d_date = Timestamp.valueOf(discussion.getString(TAG_TIMESTAMP).trim());
-					    		
+					    
+					int totalRating = 0;
+					int userRating = 0;
+					if (discussion.getInt(TAG_RATING_TOTAL_FLAG) == 1) {
+						if (discussion.getString(TAG_RATING_TOTAL) != null) {
+							totalRating = Integer.parseInt(discussion.getString(TAG_RATING_TOTAL));
+						} 
+					}
+					if (discussion.getInt(TAG_USER_RATING_FLAG) == 1) {
+						if (discussion.getString(TAG_USER_RATING) != null) {
+							userRating = discussion.getInt(TAG_USER_RATING);
+						}
+					}
+					
 					comments = discussion.getJSONArray(TAG_COMMENTS);
 					List<Comment> commentsList = new ArrayList<Comment>();
 					for (int j = 0; j < comments.length(); j++) {
-						List<Comment> list = new ArrayList<Comment>();
 						JSONObject comment = comments.getJSONObject(j);
 
 						String comment_id = comment.getString(TAG_ID).trim();
@@ -246,8 +257,10 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 						
 						commentsList.add(c);
 					}
-					@SuppressWarnings("deprecation")
+					
 					Discussion d = new Discussion(discussion_id, title, body, new User(Integer.parseInt(user_id), username, null), d_date, commentsList);
+					d.setTotalRating(totalRating);
+					d.setUserRating(userRating);
 					arrayListContent.add(d);
 				}
 				mAdapter.notifyDataSetChanged();
@@ -276,6 +289,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	public void setArrayListContent(ArrayList<Content> arrayListContent) {
 		this.arrayListContent = arrayListContent;
 	}
+	
 	
 //    @Override
 //    public void onListItemClick(ListView l, View v, int position, long id) {

@@ -18,7 +18,6 @@ public class SelectiveViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-    	System.out.println("on touch");
         if (this.paging) {
             return super.onTouchEvent(event);
         }

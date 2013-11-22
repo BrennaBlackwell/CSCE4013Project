@@ -147,7 +147,7 @@ public class LogInActivity extends Activity implements AsyncResponse {
                 editor.putString("currentUsername", username);
                 editor.putString("currentPassword", password);
                 editor.putBoolean("autoLogin", true);
-                editor.commit();
+                editor.apply();
 				
 				Intent MainIntent = new Intent(this, MainActivity.class);
 				startActivity(MainIntent);
