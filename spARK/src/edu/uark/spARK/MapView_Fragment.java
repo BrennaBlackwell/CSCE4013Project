@@ -1,14 +1,15 @@
 package edu.uark.spARK;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,7 +23,7 @@ itself will take care of alot of the map problems we've been having
 */
 
 @SuppressLint("NewApi")
-public class MapView_Fragment extends MapFragment{
+public class MapView_Fragment extends MapFragment {
 
 	
 	// Google Map
@@ -39,7 +40,7 @@ public class MapView_Fragment extends MapFragment{
     }
     
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
     	View v = super.onCreateView(inflater, container, savedInstanceState);
 //    	View view = inflater.inflate(R.layout.fragment_map_view, container, false);
 //         if (v.findViewById(R.id.FrameLayout1) == null)
@@ -54,9 +55,7 @@ public class MapView_Fragment extends MapFragment{
             e.printStackTrace();
         }
     	return v;
-
-    }
-    
+    }       	
 
     /**
      * function to load map. If map is not created it will create it for you
@@ -98,7 +97,6 @@ public class MapView_Fragment extends MapFragment{
 //        if (m != null)
 //        	getFragmentManager().beginTransaction().remove(m).commit();
 //
-
     }
     
 }

@@ -23,7 +23,7 @@ public class Profile_Fragment extends Fragment implements AsyncResponse {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		View profileView = (TextView)inflater.inflate(R.layout.fragment_profile, container, false);
+		View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 		TextView textview = (TextView)profileView.findViewById(R.id.userName);
         SharedPreferences preferences = getActivity().getSharedPreferences("MyPreferences", getActivity().MODE_PRIVATE);
 

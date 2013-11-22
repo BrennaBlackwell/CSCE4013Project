@@ -1,33 +1,37 @@
 package edu.uark.spARK;
 
+import java.util.List;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.uark.spARK.entities.Content;
-import edu.uark.spARK.entities.Discussion;
 
 public class MainActivity extends Activity {
 	
@@ -49,25 +53,13 @@ public class MainActivity extends Activity {
     private Menu mMenu;
 
     
-    
-    //in order to replace the main fragment with our other fragments (Bulletin/Discussion) this is the best way to go.
-    //the mapview fragment is already in the activity_main.xml, and it's referencing our custom MapFragment
-    // the new NestedFragments doesn't work < API 17, and putting our two fragments within another fragments results in bad performance
-    //I also tried leaving the list as just a list and not a fragment, but drawing performance seems to not be as good
-    
     //Our references to the two main fragments and map fragment
 	static NewsFeed_Fragment mListDiscussionFragment;
 	static NewsFeed_Fragment mListBulletinFragment;
 	static MapView_Fragment mMapViewFragment;
-
 	
-	//???
-//    private static ArrayList<Discussion> mDiscussionArrayList = new ArrayList<Discussion>(); 
-//	private static ListFeedArrayAdapter mDiscussionAdapter;
-//	private static ArrayList<Bulletin> mBulletinArrayList = new ArrayList<Bulletin>();
-//	private static ListFeedArrayAdapter mBulletinAdapter;
-
-	
+	MyAdapter mAdapter;
+	SelectiveViewPager mPager;
 	
     
 	@Override
@@ -81,8 +73,6 @@ public class MainActivity extends Activity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
         // set a new custom arrayadapter
         mNavListArrayAdapter = new NavListArrayAdapter(getApplicationContext(), R.layout.drawer_list_item);
         // set up the drawer's list view with items and click listener
@@ -121,20 +111,68 @@ public class MainActivity extends Activity {
         if (savedInstanceState == null) {
             //selectItem(0);
         }
-        
-        mMapViewFragment = new MapView_Fragment();
-        mListDiscussionFragment = new NewsFeed_Fragment();
-        mListBulletinFragment = new NewsFeed_Fragment();
-        getFragmentManager().beginTransaction().add(R.id.map_frame, mMapViewFragment).commit();
-        
-        ActionBar.Tab tabA = bar.newTab().setText("Discussions");
-        ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
-        tabA.setTabListener(new MyTabListener(mListDiscussionFragment));
-        tabB.setTabListener(new MyTabListener(mListBulletinFragment));
-        bar.addTab(tabA);
-        bar.addTab(tabB);
 
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+        mMapViewFragment = new MapView_Fragment();
+        getFragmentManager().beginTransaction().add(R.id.map_frame, mMapViewFragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.fragment_frame, new Fragment());
+        
+        mPager = (SelectiveViewPager) findViewById(R.id.pager);
+
+        mAdapter = new MyAdapter(getFragmentManager());
+        mPager.setAdapter(mAdapter);
+        
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+
+			@Override
+			public void onTabReselected(Tab tab, FragmentTransaction ft) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onTabSelected(Tab tab, FragmentTransaction ft) {
+				
+				mPager.setCurrentItem(tab.getPosition());
+		          Toast.makeText(getApplicationContext(),
+		                  "Fragment switch at position " + tab.getPosition() + "!", Toast.LENGTH_SHORT)
+		                  .show();
+			}
+
+			@Override
+			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+				// TODO Auto-generated method stub
+			}
+        	
+        };
+        
+      ActionBar.Tab tabA = bar.newTab().setText("Discussions");
+      ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
+      tabA.setTabListener(tabListener);
+      tabB.setTabListener(tabListener);
+      bar.addTab(tabA);
+      bar.addTab(tabB); 
+ 
     }
+	
+    public static class MyAdapter extends FragmentPagerAdapter {
+       
+    	
+    	public MyAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+        	return 2;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+        	return new NewsFeed_Fragment();
+        }
+
+    }  	
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -173,7 +211,7 @@ public class MainActivity extends Activity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+        	selectItem(position);
             mDrawerList.setItemChecked(position, true);
             mDrawerLayout.closeDrawer(mDrawerList);
             view.setSelected(true);
@@ -186,28 +224,33 @@ public class MainActivity extends Activity {
     	
         switch(position) {
     	
-    	case 0:
+    	case 0:  		
             fragmentManager.beginTransaction().detach(mMapViewFragment)
-            .replace(R.id.fragment_frame, new MyProfile_Fragment()).commit();
+            .replace(R.id.fragment_frame, new Profile_Fragment()).commit();
+            mPager.setVisibility(View.GONE);
             break;
     	case 1:
-    		//mListDiscussion by default, I'll try to fix this to the last selected content
             fragmentManager.beginTransaction().attach(mMapViewFragment)
-            .replace(R.id.fragment_frame, mListDiscussionFragment).commit();
+            .replace(R.id.fragment_frame, new Fragment()).commit();
+            mPager.setVisibility(View.VISIBLE);
             break;
         case 2:
             fragmentManager.beginTransaction().detach(mMapViewFragment)
             .replace(R.id.fragment_frame, new CheckIn_Fragment()).commit(); 
+            mPager.setVisibility(View.GONE);
             break;
+            
         case 3:
         	//groups
             fragmentManager.beginTransaction().detach(mMapViewFragment)
             .replace(R.id.fragment_frame, new Fragment()).commit();
+            mPager.setVisibility(View.GONE);
             break;
         case 4:
         	//bookmarks
             fragmentManager.beginTransaction().detach(mMapViewFragment)
             .replace(R.id.fragment_frame, new Fragment()).commit();
+            mPager.setVisibility(View.GONE);
             break;
         case 5:
         	//settings we could make another activity/fragment/whatever
@@ -220,6 +263,7 @@ public class MainActivity extends Activity {
             SharedPreferences.Editor editor = preferences.edit();
             //editor.remove("currentUsername");
             editor.remove("currentPassword");
+            editor.remove("autoLogin");
             editor.commit();
             Intent backToLogin = new Intent(this, LogInActivity.class);
             startActivity(backToLogin);
@@ -360,52 +404,6 @@ public class MainActivity extends Activity {
 	}
 	
 	//TAB SWITCHER CLASS
-	class MyTabListener implements ActionBar.TabListener {
-		public Fragment fragment;
-
-		public MyTabListener(Fragment fragment) {
-		    this.fragment = fragment;
-		}
-
-		@Override
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		    //do what you want when tab is reselected, I do nothing
-		}
-
-		@Override
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-	          Toast.makeText(getApplicationContext(),
-	                  "Fragment switch!", Toast.LENGTH_SHORT)
-	                  .show();
-			    if (fragment != null) {
-			        // Detach the fragment, because another one is being attached
-			    	if (tab.getPosition() == 0)
-			    		ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right).replace(R.id.fragment_frame, fragment);
-			    	else
-			    		ft.setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_left).replace(R.id.fragment_frame, fragment);
-			    }
-//	          switch (tab.getPosition()) {
-//	          case 0:
-//		        	if (fragment == null) {
-//		        		fragment = new NewsFeed_Fragment();
-//		        		ft.add(R.id.fragment_frame, fragment);
-//		        	}
-//	        	  break;
-//	          case 1:
-//		        	if (fragment == null) {
-//		        		fragment = new NewsFeed_Fragment();
-//		        		ft.add(R.id.fragment_frame, fragment);
-//		        	}	
-//	        	  break;
-//	          }
-
-	        }
-
-		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-
-		}
-	}
 	
 	@Override
 	public void onBackPressed() {

@@ -1,7 +1,6 @@
 package edu.uark.spARK;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,19 +12,20 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
+import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
 import edu.uark.spARK.entities.Comment;
@@ -46,6 +46,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	private static final String TAG_USER_ID = "userid";
 	private static final String TAG_USER_NAME = "username";
 	
+	private SelectiveViewPager mPager;
 	private NewsFeedArrayAdapter mAdapter; 
     private static PullToRefreshListView mListView;
     private static Bundle args;
@@ -53,6 +54,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     public static ArrayList<Content> arrayListContent = new ArrayList<Content>();
     private JSONArray discussions = null;
     private JSONArray comments = null;
+
     
 	public static NewsFeed_Fragment newInstance(String param1, String param2) {
 		NewsFeed_Fragment fragment = new NewsFeed_Fragment();
@@ -61,6 +63,17 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		return fragment;
 	}
 	
+    static NewsFeed_Fragment newInstance(int num) {
+    	NewsFeed_Fragment f = new NewsFeed_Fragment();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putInt("num", num);
+        f.setArguments(args);
+
+        return f;
+    }
+    
 	public NewsFeed_Fragment() {
 		
 	}
@@ -88,60 +101,75 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
+		//super.onCreateView(inflater, container, savedInstanceState);
 		
 		View v = inflater.inflate(R.layout.list_feed, container, false);
 //		mListView = new PullToRefreshListView(container.getContext());
-		mListView = (PullToRefreshListView) v.findViewById(R.id.pullToRefreshListView);
+        mPager = (SelectiveViewPager) getActivity().findViewById(R.id.pager);
+        getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
+
+			@Override
+			public void onBackStackChanged() {
+				if (getFragmentManager().getBackStackEntryCount() == 0)
+					mPager.setPaging(true);
+				
+			}
+        	
+        });
 		
+		mListView = (PullToRefreshListView) v.findViewById(R.id.pullToRefreshListView);
+	    
+		
+		mListView.mapHeader.setOnClickListener(new OnClickListener() {
+
+			@Override
+	        public void onClick(View v) {
+	        	//set focus to the map fragment
+	        	MapView_Fragment f = (MapView_Fragment) getFragmentManager().findFragmentById(R.id.map);
+	        	FragmentManager fm = getFragmentManager();
+	        	FragmentTransaction ft = fm.beginTransaction();
+	        	
+	        	ft.addToBackStack(null);
+	        	//animations are ordered (enter, exit, popEnter, popExit)
+	        	ft.setCustomAnimations(R.animator.slide_up, R.animator.slide_down, 
+	        			R.animator.slide_up, R.animator.slide_down)
+	        			.hide(NewsFeed_Fragment.this).commit();
+	        	mPager.setPaging(false);
+	        }
+	    });
+	        mListView.setOnRefreshListener(new OnRefreshListener() {
+
+	            @Override
+	            public void onRefresh() {
+	                    // Your code to refresh the list contents goes here
+
+	                    // for example:
+	                    // If this is a webservice call, it might be asynchronous so
+	                    // you would have to call listView.onRefreshComplete(); when
+	                    // the webservice returns the data
+	                    loadContent();
+	                    
+	                    // Make sure you call listView.onRefreshComplete()
+	                    // when the loading is done. This can be done from here or any
+	                    // other place, like on a broadcast receive from your loading
+	                    // service or the onPostExecute of your AsyncTask.
+
+	                    // For the sake of this sample, the code will pause here to
+	                    // force a delay when invoking the refresh
+//	                    mListView.postDelayed(new Runnable() {
+//	                    	
+//	                            
+//	                            @Override
+//	                            public void run() {
+//	                                    mListView.onRefreshComplete();
+//	                            }
+//	                    }, 2000);
+	            }
+	    });
 //		mListView = new PullToRefreshListView(inflater.getContext());
 //		mListView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	    //set mapHeader clicklistener so the listview can be hidden
-	    mListView.mapHeader.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-        	//set focus to the map fragment
-        	MapView_Fragment f = (MapView_Fragment) getFragmentManager().findFragmentById(R.id.map);
-        	FragmentManager fm = getFragmentManager();
-        	FragmentTransaction ft = fm.beginTransaction();
-        	
-        	ft.addToBackStack(null);
-        	//animations are ordered (enter, exit, popEnter, popExit)
-        	ft.setCustomAnimations(R.animator.slide_up, R.animator.slide_down, 
-        			R.animator.slide_up, R.animator.slide_down)
-        	.hide(getFragmentManager().findFragmentById(R.id.fragment_frame)).commit();                                                                      
-        }
-    });
-        mListView.setOnRefreshListener(new OnRefreshListener() {
 
-            @Override
-            public void onRefresh() {
-                    // Your code to refresh the list contents goes here
-
-                    // for example:
-                    // If this is a webservice call, it might be asynchronous so
-                    // you would have to call listView.onRefreshComplete(); when
-                    // the webservice returns the data
-                    loadContent();
-                    
-                    // Make sure you call listView.onRefreshComplete()
-                    // when the loading is done. This can be done from here or any
-                    // other place, like on a broadcast receive from your loading
-                    // service or the onPostExecute of your AsyncTask.
-
-                    // For the sake of this sample, the code will pause here to
-                    // force a delay when invoking the refresh
-                    mListView.postDelayed(new Runnable() {
-
-                            
-                            @Override
-                            public void run() {
-                                    mListView.onRefreshComplete();
-                            }
-                    }, 2000);
-            }
-    });
-        
 		return v;
 
 	}
@@ -174,8 +202,8 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	public void loadContent() {
 		
 		SharedPreferences preferences = this.getActivity().getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-		String currentUser = preferences.getString("currentUser", "");
-		
+		String currentUser = preferences.getString("currentUsername", "");
+
 		JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, currentUser);
 	}
@@ -222,12 +250,15 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					Discussion d = new Discussion(discussion_id, title, body, new User(Integer.parseInt(user_id), username, null), d_date, commentsList);
 					arrayListContent.add(d);
 				}
+				mAdapter.notifyDataSetChanged();
+				mListView.onRefreshComplete();
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}	
+		
 	}
 	
 	public PullToRefreshListView getListView() {
@@ -278,6 +309,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			 }
         } else if (resultCode == Activity.RESULT_CANCELED) {
             // Handle cancel
+        	
         }
 	}
 }

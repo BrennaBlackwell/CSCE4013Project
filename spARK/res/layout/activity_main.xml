@@ -1,44 +1,47 @@
-<android.support.v4.widget.DrawerLayout         
+     <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"  
+        android:id="@+id/activity_main_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+
+<android.support.v4.widget.DrawerLayout         
+
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!-- The main content view -->
     <!--  Our current fragment goes within the frame layout -->
+     <FrameLayout
+        android:id="@+id/fragment_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >   
+        </FrameLayout> 
+
+ 	
         <FrameLayout   
         android:id="@+id/map_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent" > 
-<!-- 	     <fragment -->
-<!-- 	        android:id="@+id/map" -->
-<!-- 	        android:layout_width="match_parent" -->
-<!-- 	        android:layout_height="match_parent" -->
-<!-- 	        class="edu.uark.spARK.MapView_Fragment" /> -->
-     </FrameLayout>
+        </FrameLayout>
         
-    <FrameLayout   
-        android:id="@+id/fragment_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" > 
-                 
-<!-- 	<android.support.v4.view.ViewPager -->
-<!-- 	    xmlns:android="http://schemas.android.com/apk/res/android" -->
-<!-- 	    android:id="@+id/pager" -->
-<!-- 	    android:layout_width="match_parent" -->
-<!-- 	    android:layout_height="match_parent" /> -->
-<!--         <include -->
-<!--         android:id="@+id/fragmentHybridFeed_ref" -->
-<!--         android:layout_width="fill_parent" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_gravity="bottom" -->
-<!--         layout="@layout/fragment_hybrid_feed" /> -->
-
-    
-<!--             <fragment -->
-<!--         android:id="@+id/listfeed" -->
+           <edu.uark.spARK.SelectiveViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                        </edu.uark.spARK.SelectiveViewPager>  
+                       
+            
+<!--                 <android.support.v4.view.PagerTitleStrip -->
+<!--         android:id="@+id/pager_title_strip" -->
 <!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="match_parent" -->
-<!--         class="edu.uark.spARK.ListFeed_Fragment" />     -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_gravity="top" -->
+<!--         android:background="#33b5e5" -->
+<!--         android:textColor="#fff" -->
+<!--         android:paddingTop="4dp" -->
+<!--         android:paddingBottom="4dp" /> -->
+
 
             
 		<ImageView
@@ -67,9 +70,9 @@
                 android:rotation="180"/>
  		</SlidingDrawer>
  		-->
-    </FrameLayout>
+
     
-    <!-- The navigation drawer -->
+        <!-- The navigation drawer -->
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
@@ -79,12 +82,13 @@
     	android:dividerHeight="2dp"
         android:background="@android:color/white"/>
 
- 	<fragment
-        android:id="@+id/right_drawer"
-        android:name="edu.uark.spARK.ClusterView_Fragment"
-	    android:layout_gravity="end"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent" />
+<!--  	<fragment -->
+<!--         android:id="@+id/right_drawer" -->
+<!--         android:name="edu.uark.spARK.ClusterView_Fragment" -->
+<!-- 	    android:layout_gravity="end" -->
+<!-- 	    android:layout_width="match_parent" -->
+<!-- 	    android:layout_height="match_parent" /> -->
  	
 
 </android.support.v4.widget.DrawerLayout>
+</FrameLayout>      

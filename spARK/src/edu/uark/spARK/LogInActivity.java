@@ -24,11 +24,13 @@ import android.net.Uri;
 
 public class LogInActivity extends Activity implements AsyncResponse {
  
+	private static String username;
+	private static String password;
+	
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 1000;
     private View mLoginView;
-    private boolean autologin = false;
-    //
+
 
     
     @SuppressLint("NewApi")
@@ -37,20 +39,21 @@ public class LogInActivity extends Activity implements AsyncResponse {
         super.onCreate(savedInstanceState);
         SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 
-
-        if (preferences.getString("currentUsername", "")!="" && preferences.getString("currentPassword","")!=""){
-            autologin = true;
-            Login(mLoginView);
-        }
-
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getActionBar().hide();
-        
         setContentView(R.layout.splash);
+        
+        if (preferences.getBoolean("autoLogin", false)){
+            //Login(mLoginView);
+			Intent MainIntent = new Intent(this, MainActivity.class);
+			startActivity(MainIntent);
+            finish();
+        }
+
+
+        
     	mLoginView = findViewById(R.id.includeLogin);
     	mLoginView.setAlpha(0f);
-    	findViewById(R.id.likeButton).getBackground().setColorFilter(new LightingColorFilter(0xFFFF0000, 0xFFFF0000));
-        findViewById(R.id.button2).getBackground().setColorFilter(new LightingColorFilter(0xFFFF0000, 0xFFFF0000));
         new Handler().postDelayed(new Runnable() {
        	 
             @Override
@@ -81,55 +84,32 @@ public class LogInActivity extends Activity implements AsyncResponse {
             }
         }, SPLASH_TIME_OUT + 450);
 
-
         EditText txtUsername = (EditText)findViewById(R.id.Username);
-
         txtUsername.setText(preferences.getString("currentUsername", ""));
-
     }
     
 	public void Login(View v){
-		//debugging so we don't have to enter user/password every time. We will have to delete this later, but it might be useful for now
-//		if (v.getId() == R.id.buttonDebug) {
-//			Intent MainIntent = new Intent(this, MainActivity.class);
-//			startActivity(MainIntent);
-//			return;
-//		}
 
-        String Username;
-        String Password;
-        SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-
-        if (preferences.getString("currentUsername","")!="" && preferences.getString("currentPassword","")!=""){
-            Username = preferences.getString("currentUsername","");
-            Password = preferences.getString("currentPassword","");
-        }
-        else{
-            EditText txtUsername = (EditText)findViewById(R.id.Username);
-            EditText txtPassword = (EditText)findViewById(R.id.Password);
-            Username = txtUsername.getText().toString().trim();
-            Password = txtPassword.getText().toString().trim();
-        }
-        SharedPreferences.Editor editor = preferences.edit();
-
-        editor.putString("currentUsername", Username);
-        editor.putString("currentPassword", Password);
-        editor.apply();
+        EditText txtUsername = (EditText)findViewById(R.id.Username);
+        EditText txtPassword = (EditText)findViewById(R.id.Password);
+        username = txtUsername.getText().toString().trim();
+        password = txtPassword.getText().toString().trim();
 
 		//make sure text has been added to the login screen
-		if (Username.matches("")) {
+		if (username.matches("")) {
 			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Username", Toast.LENGTH_SHORT);
 			toast.show();
 			return;
 		}
-		else if (Password.matches("")) {
+		else if (password.matches("")) {
 			Toast toast = Toast.makeText(getApplicationContext(), "Please enter a Password", Toast.LENGTH_SHORT);
 			toast.show();
 			return;
 		}
-		else {
+		else {		
 			JSONQuery jquery = new JSONQuery(this);
-			jquery.execute(ServerUtil.URL_AUTHENTICATE, Username, Password);
+			jquery.execute(ServerUtil.URL_AUTHENTICATE, username, password);
+			
 		}
 	}
 	
@@ -160,13 +140,14 @@ public class LogInActivity extends Activity implements AsyncResponse {
 
 			if (success == 1) {
 				text_view1.setVisibility(View.INVISIBLE);
-				
-				EditText userText = (EditText)findViewById(R.id.Username);
-				String user = userText.getText().toString();
-                EditText passText = (EditText)findViewById(R.id.Password);
-                String pass = passText.getText().toString();
 
-
+                SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                
+                editor.putString("currentUsername", username);
+                editor.putString("currentPassword", password);
+                editor.putBoolean("autoLogin", true);
+                editor.commit();
 				
 				Intent MainIntent = new Intent(this, MainActivity.class);
 				startActivity(MainIntent);
