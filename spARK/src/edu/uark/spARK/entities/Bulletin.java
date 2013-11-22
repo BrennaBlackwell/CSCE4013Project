@@ -10,7 +10,6 @@ public class Bulletin extends Content {
 
 	public Bulletin(int id, String title, String text) {
 		super(id, title, text);
-		
 	}
 	
 	public Bulletin(int id, String title, String text, User creator) {

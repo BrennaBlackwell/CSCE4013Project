@@ -1,37 +1,20 @@
 package edu.uark.spARK;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.*;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.*;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
-import edu.uark.spARK.entities.Comment;
-import edu.uark.spARK.entities.Content;
-import edu.uark.spARK.entities.Discussion;
-import edu.uark.spARK.entities.User;
+import edu.uark.spARK.entities.*;
 
 
 public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
@@ -51,16 +34,15 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	private static final String TAG_USER_RATING_FLAG = "user_rating_flag";
 	
 	private NewsFeedArrayAdapter mAdapter; 
-    private static PullToRefreshListView mListView;
-    private static Bundle args;
+    private PullToRefreshListView mListView;
     
-    public static ArrayList<Content> arrayListContent = new ArrayList<Content>();
+    public ArrayList<Content> arrayListContent = new ArrayList<Content>();
     private JSONArray discussions = null;
     private JSONArray comments = null;
     
 	public static NewsFeed_Fragment newInstance(String param1, String param2) {
 		NewsFeed_Fragment fragment = new NewsFeed_Fragment();
-		args = new Bundle();
+		Bundle args = new Bundle();
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -105,7 +87,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
         @Override
         public void onClick(View v) {
         	//set focus to the map fragment
-        	MapView_Fragment f = (MapView_Fragment) getFragmentManager().findFragmentById(R.id.map);
         	FragmentManager fm = getFragmentManager();
         	FragmentTransaction ft = fm.beginTransaction();
         	
@@ -220,7 +201,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					comments = discussion.getJSONArray(TAG_COMMENTS);
 					List<Comment> commentsList = new ArrayList<Comment>();
 					for (int j = 0; j < comments.length(); j++) {
-						List<Comment> list = new ArrayList<Comment>();
 						JSONObject comment = comments.getJSONObject(j);
 
 						String comment_id = comment.getString(TAG_ID).trim();
@@ -235,7 +215,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 						
 						commentsList.add(c);
 					}
-					@SuppressWarnings("deprecation")
+					
 					Discussion d = new Discussion(discussion_id, title, body, new User(Integer.parseInt(user_id), username, null), d_date, commentsList);
 					d.setTotalRating(totalRating);
 					d.setUserRating(userRating);

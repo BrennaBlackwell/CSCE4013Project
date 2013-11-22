@@ -1,18 +1,10 @@
 package edu.uark.spARK;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.Toast;
+import android.view.*;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -27,7 +19,7 @@ public class MapView_Fragment extends MapFragment{
 	
 	// Google Map
     private GoogleMap map;	//this is the map which is instantiated in the initializeMap();
-    private View v;
+//    private View v;
     
     public MapView_Fragment() {
 
@@ -64,6 +56,7 @@ public class MapView_Fragment extends MapFragment{
     private void initializeMap() {
     		map = getMap();
             map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            map.setMyLocationEnabled(true);
             //this causes an error message in Logcat
             //map.setMyLocationEnabled(true);
             CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(36.065853, -94.173818)).zoom(18).build();

@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".NewGroupFragment" >
+
+    <EditText
+        android:id="@+id/new_group_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:ems="10"
+        android:hint="@string/title"
+        android:inputType="textShortMessage"
+        android:singleLine="true" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/new_group_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_open_closed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radio_open"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Open"
+            tools:ignore="HardcodedText" />
+
+        <RadioButton
+            android:id="@+id/radio_closed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Closed"
+            tools:ignore="HardcodedText" />
+    </RadioGroup>
+    
+     <RadioGroup
+         android:id="@+id/radio_group_visible_hidden"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="@dimen/activity_vertical_margin"
+         android:layout_marginRight="@dimen/activity_vertical_margin"
+         android:orientation="horizontal" >
+
+         <RadioButton
+             android:id="@+id/radio_visible"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_weight="1"
+             android:checked="true"
+             android:text="Visible"
+             tools:ignore="HardcodedText" />
+
+         <RadioButton
+             android:id="@+id/radio_hidden"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_weight="1"
+             android:text="Hidden"
+             tools:ignore="HardcodedText" />
+     </RadioGroup>
+
+    <Button
+        android:id="@+id/new_group_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:text="@string/submit" />
+
+    <Button
+        android:id="@+id/new_group_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:text="@android:string/cancel" />
+
+</LinearLayout>

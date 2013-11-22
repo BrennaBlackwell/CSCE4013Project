@@ -1,39 +1,23 @@
 package edu.uark.spARK;
 
-import android.app.ActionBar;
+import android.app.*;
 import android.app.ActionBar.Tab;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentManager.OnBackStackChangedListener;
-import android.app.FragmentTransaction;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import edu.uark.spARK.entities.Content;
-import edu.uark.spARK.entities.Discussion;
+import android.view.*;
+import android.widget.*;
+import edu.uark.spARK.entities.*;
 
 public class MainActivity extends Activity {
 	
     private static final int PROFILE_FRAGMENT = 0;
     private static final int NEWSFEED_FRAGMENT = 1;
     private static final int CHECKIN_FRAGMENT = 2;
+    private static final int CREATE_CONTENT_ACTIVITY = 3;
 
     private int page = -1;
     
@@ -133,7 +117,7 @@ public class MainActivity extends Activity {
         tabB.setTabListener(new MyTabListener(mListBulletinFragment));
         bar.addTab(tabA);
         bar.addTab(tabB);
-
+        
     }
 
     @Override
@@ -150,7 +134,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -164,6 +148,13 @@ public class MainActivity extends Activity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
+        case R.id.post:
+        	Intent intent = new Intent(getApplicationContext(), CreateContentActivity.class);
+        	intent.putExtra("contentType", getActionBar().getSelectedTab().getText());
+        	intent.putExtra("user", getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE).getString("currentUsername", ""));
+        	intent.putExtra("rank", "Total N00B!"); // TODO: Get user info from database on login and store in global User variable
+        	startActivityForResult(intent, CREATE_CONTENT_ACTIVITY);
+        	break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -183,7 +174,7 @@ public class MainActivity extends Activity {
     private void selectItem(int position) {
     	
         FragmentManager fragmentManager = getFragmentManager();
-    	
+        
         switch(position) {
     	
     	case 0:
@@ -211,9 +202,11 @@ public class MainActivity extends Activity {
             break;
         case 5:
         	//settings we could make another activity/fragment/whatever
+        	fragmentManager.beginTransaction().detach(mMapViewFragment).commit();
         	break;
         case 6:
         	//dialog
+        	fragmentManager.beginTransaction().detach(mMapViewFragment).commit();
         	break;
         case 7:
             SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
@@ -332,13 +325,24 @@ public class MainActivity extends Activity {
     	if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                //String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
                 // Handle successful scan
                 TextView txtScanResult = (TextView)findViewById(R.id.txtScanResult);
                 txtScanResult.setText(contents);
             } else if (resultCode == RESULT_CANCELED) {
                 // Handle cancel
             }
+        } else if (requestCode == CREATE_CONTENT_ACTIVITY && resultCode == RESULT_OK) {
+        	if(intent.hasExtra("bulletin")) {
+        		Bulletin bulletin = (Bulletin) intent.getSerializableExtra("bulletin");
+        		mListBulletinFragment.arrayListContent.add(0, bulletin);
+        	} else if (intent.hasExtra("discussion")) {
+        		Discussion discussion = (Discussion) intent.getSerializableExtra("discussion");
+        		mListDiscussionFragment.arrayListContent.add(0, discussion);
+        	} else if (intent.hasExtra("group")) {
+//        		Group group = (Group) intent.getSerializableExtra("group");
+//        		TODO: Implement groups list/page
+        	}
         }
     }
 
@@ -374,9 +378,9 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-	          Toast.makeText(getApplicationContext(),
-	                  "Fragment switch!", Toast.LENGTH_SHORT)
-	                  .show();
+//	          Toast.makeText(getApplicationContext(),
+//	                  "Fragment switch!", Toast.LENGTH_SHORT)
+//	                  .show();
 			    if (fragment != null) {
 			        // Detach the fragment, because another one is being attached
 			    	if (tab.getPosition() == 0)
@@ -429,4 +433,5 @@ public class MainActivity extends Activity {
 		else
 			super.onBackPressed();
 	}
+
 }

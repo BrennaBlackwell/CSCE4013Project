@@ -92,8 +92,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		holder.usernameTextView.setText(c.getCreator().getTitle());
 		holder.creationDateTextView.setText(c.getCreationDateString());
 		holder.totalScoreTextView.setText(String.valueOf(c.getTotalRating()));
-		if (c instanceof Discussion)	
+		if (c instanceof Discussion) {
 			holder.commentTextView.setText(((Discussion) c).getNumComments() + " comments");
+		}
 		holder.likeBtn.setTag(position);
 		holder.dislikeBtn.setTag(position);	
 		if (c.getUserRating() == 1) {
