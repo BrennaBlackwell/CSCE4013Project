@@ -199,7 +199,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	}
 	
 	public void loadContent() {
-		
+		// Need to get what tab position I am on inside this method
 		SharedPreferences preferences = this.getActivity().getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 		String currentUser = preferences.getString("currentUsername", "");
 

@@ -1,19 +1,39 @@
 package edu.uark.spARK;
 
-import edu.uark.spARK.entities.*;
-import android.app.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+import edu.uark.spARK.JSONQuery.AsyncResponse;
+import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.Group;
+import edu.uark.spARK.entities.User;
 
-public class CreateContentActivity extends FragmentActivity implements OnNavigationListener {
+@SuppressLint("ValidFragment")
+public class CreateContentActivity extends FragmentActivity implements OnNavigationListener, AsyncResponse {
 	
 	private String[] options = new String[]{ "BULLETIN", "DISCUSSION", "GROUP" };
-	
+	private Spinner discussionGroups, bulletinGroups;
 //	SectionsPagerAdapter mSectionsPagerAdapter;
 //	ViewPager mViewPager;
 
@@ -126,13 +146,20 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 						return; // do not add blank input to list
 					}
 					
-					String text = ((TextView)findViewById(R.id.new_bulletin_text)).getText().toString();
-					if(text == null || text.trim().isEmpty()){
+					String desc = ((TextView)findViewById(R.id.new_bulletin_text)).getText().toString();
+					if(desc == null || desc.trim().isEmpty()){
 						return; // do not add blank input to list
 					}
 					User user = new User(0, intent.getStringExtra("user"), intent.getStringExtra("rank"));
-					intent.putExtra("bulletin", new Bulletin(0, title, text, user));
-					setResult(RESULT_OK, intent);
+					
+					// Error occurring here.. Commented out
+					
+					//intent.putExtra("bulletin", new Bulletin(0, title, text, user));
+					//setResult(RESULT_OK, intent);
+					
+					JSONQuery jquery = new JSONQuery(CreateContentActivity.this);
+					jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Bulletin", user.getTitle(), title, desc);
+					
 					finish();
 				}
 			});
@@ -170,8 +197,15 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 						return; // do not add blank input to list
 					}
 					User user = new User(0, intent.getStringExtra("user"), intent.getStringExtra("rank"));
-					intent.putExtra("discussion", new Discussion(0, title, desc, user));
-					setResult(RESULT_OK, intent);
+					
+					// Error occurring here.. Commented out
+					
+//					intent.putExtra("discussion", new Discussion(0, title, desc, user));
+//					setResult(RESULT_OK, intent);
+					
+					JSONQuery jquery = new JSONQuery(CreateContentActivity.this);
+					jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Discussion", user.getTitle(), title, desc);
+					
 					finish();
 				}
 			});
@@ -185,7 +219,6 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			
 			return view;
 		}
-
 	}
 	
 	
@@ -210,9 +243,23 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					}
 					
 					User user = new User(0, intent.getStringExtra("user"), intent.getStringExtra("rank"));
-					intent.putExtra("group", new Group(0, title, desc, user,
-							findViewById(R.id.radio_open).isSelected(), findViewById(R.id.radio_visible).isSelected()));
+					Group g = new Group(0, title, desc, user,
+							findViewById(R.id.radio_open).isSelected(), findViewById(R.id.radio_visible).isSelected());
+					intent.putExtra("group", g);
 					setResult(RESULT_OK, intent);
+					
+					String privacy = "Open";
+					String visibility = "Visible";
+					if (!g.isOpen()){
+						privacy = "Closed";
+					}
+					if (!g.isVisible()) {
+						visibility = "Hidden";
+					}
+					
+					JSONQuery jquery = new JSONQuery(CreateContentActivity.this);
+					jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", user.getTitle(), title, desc, privacy, visibility);		
+					
 					finish();
 				}
 			});
@@ -227,6 +274,65 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			return view;
 		}
 		
+	}
+	
+	
+	// Need to implement Group Drop Down selection boxes so Discussions and Bulletins can be included 
+	// inside a Group on their creation. Create dummy values at first and I can fill them in later
+	public void populateBulletinGroupDropDown() {
+		 
+		bulletinGroups = (Spinner) findViewById(R.id.bulletin_group_selection);
+		List<String> list = new ArrayList<String>();
+		
+		// Eventual JQuery Call will go here to populate lists
+//		SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+//		String currentUser = preferences.getString("currentUsername", "");
+//
+//		JSONQuery jquery = new JSONQuery(this);
+//		jquery.execute(ServerUtil.SOME_URL, currentUser);
+		
+		list.add("list 1");
+		list.add("list 2");
+		list.add("list 3");
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+			android.R.layout.simple_spinner_item, list);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		bulletinGroups.setAdapter(dataAdapter);
+	  }
+	
+	public void populateDiscussionGroupDropDown() {
+		 
+		discussionGroups = (Spinner) findViewById(R.id.discussion_group_selection);
+		List<String> list = new ArrayList<String>();
+		
+		// Eventual JQuery Call will go here to populate lists
+//		SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+//		String currentUser = preferences.getString("currentUsername", "");
+//
+//		JSONQuery jquery = new JSONQuery(this);
+//		jquery.execute(ServerUtil.SOME_URL, currentUser);
+		
+		
+		list.add("list 1");
+		list.add("list 2");
+		list.add("list 3");
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+			android.R.layout.simple_spinner_item, list);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		discussionGroups.setAdapter(dataAdapter);
+	  }
+
+	@Override
+	public void processFinish(JSONObject result) {
+		try { 
+			// Checking for SUCCESS TAG
+			int success = result.getInt("success");
+			if (success == 1) {
+				// Content Successfully Created Message Here
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

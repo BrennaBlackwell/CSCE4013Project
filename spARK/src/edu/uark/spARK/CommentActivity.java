@@ -172,7 +172,7 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		try { 
 			// Checking for SUCCESS TAG
 			int success = result.getInt("success");
-			if (success == 1 ) {
+			if (success == 1) {
 				// Comment posted successfully
 			}
 		} catch (JSONException e) {

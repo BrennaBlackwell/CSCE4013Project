@@ -15,5 +15,8 @@ public class ServerUtil {
 	public static final String URL_POST_COMMENT = SERVER_ADDR + "postcomment.php";
 	
 	public static final String URL_LIKE_DISLIKE = SERVER_ADDR + "rating.php";
+	
+	public static final String URL_CREATE_CONTENT = SERVER_ADDR + "createcontent.php";
+
  
 }

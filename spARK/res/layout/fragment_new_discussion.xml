@@ -32,6 +32,14 @@
         android:ems="10"
         android:inputType="textMultiLine" />
 
+    <Spinner
+        android:id="@+id/discussion_group_selection"
+        android:layout_width="290dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown" />
+    
     <Button
         android:id="@+id/new_discussion_submit"
         android:layout_width="match_parent"

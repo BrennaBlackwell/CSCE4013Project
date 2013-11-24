@@ -31,6 +31,14 @@
         android:inputType="textMultiLine" >
     </EditText>
 
+    <Spinner
+        android:id="@+id/bulletin_group_selection"
+        android:layout_width="290dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown" />
+
     <Button
         android:id="@+id/new_bulletin_submit"
         android:layout_width="match_parent"

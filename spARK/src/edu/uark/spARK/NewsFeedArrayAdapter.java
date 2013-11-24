@@ -99,7 +99,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		holder.dislikeBtn.setTag(position);	
 		if (c.getUserRating() == 1) {
 			holder.likeBtn.setChecked(true);
+			holder.dislikeBtn.setChecked(false);
 		} else if (c.getUserRating() == -1) {
+			holder.likeBtn.setChecked(false);
 			holder.dislikeBtn.setChecked(true);
 		} else {
 			holder.likeBtn.setChecked(false);
@@ -152,7 +154,11 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	            for (int j = 0; j < radioGroup.getChildCount(); j++) {
 	            	if (radioGroup.getChildAt(j).isEnabled()) {
 	            		final ToggleButton view = (ToggleButton) radioGroup.getChildAt(j);
-	            		view.setChecked(view.getId() == i);
+	            		if (view.getId() == i) {
+	            			view.setChecked(true);
+	            		} else {
+	            			view.setChecked(false);
+	            		}
 	            	}
 	            }
 	        }
