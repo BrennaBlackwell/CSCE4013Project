@@ -25,41 +25,48 @@
         android:layout_below="@+id/Password"
         android:text="Password" 
         tools:ignore="HardcodedText" />
-    
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="Login"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/button2"
+        android:layout_alignLeft="@+id/button2" />
+
     <Button
         android:id="@+id/button2"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/likeButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/likeButton"
-        android:layout_marginBottom="44dp"
         android:onClick="CreateAccount"
         android:text="Create An Account" 
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        android:layout_below="@+id/likeButton"
+        android:layout_alignLeft="@+id/likeButton"
+        android:layout_alignRight="@+id/likeButton" />
 
     <Button
         android:id="@+id/likeButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button2"
-        android:layout_alignLeft="@+id/invalidLogin"
-        android:layout_alignRight="@+id/Password"
-        android:layout_marginBottom="14dp"
         android:onClick="Login"
         android:text="Log In" 
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        android:layout_below="@+id/accountCreated"
+        android:layout_alignLeft="@+id/invalidLogin"
+        android:layout_alignRight="@+id/invalidLogin" />
 
     <EditText
         android:id="@+id/Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="125dp"
         android:ems="10"
         android:maxLength="25"
-        tools:ignore="TextFields" >
+        tools:ignore="TextFields"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
 
         <requestFocus />
     </EditText>

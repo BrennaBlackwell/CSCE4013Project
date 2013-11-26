@@ -1,19 +1,12 @@
 package edu.uark.spARK;
 
-import java.util.List;
-
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Discussion;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,10 +15,7 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,6 +26,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Discussion;
+
 public class MainActivity extends Activity {
 	
     private static final int PROFILE_FRAGMENT = 0;
@@ -44,8 +37,8 @@ public class MainActivity extends Activity {
     private static final int CREATE_CONTENT_ACTIVITY = 3;
 
     private int page = -1;
-    
-    
+
+
     private DrawerLayout mDrawerLayout;
     private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mDrawerList;
@@ -69,7 +62,7 @@ public class MainActivity extends Activity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);       
-        setContentView(R.layout.activity_main);   
+        setContentView(R.layout.activity_main);
         
         mTitle = mDrawerTitle = getTitle();
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
@@ -276,7 +269,7 @@ public class MainActivity extends Activity {
             editor.remove("currentPassword");
             editor.remove("autoLogin");
             editor.commit();
-            Intent backToLogin = new Intent(this, LogInActivity.class);
+            Intent backToLogin = new Intent(this, LogInActivity.class).putExtra("Logout", true);
             startActivity(backToLogin);
             finish();        	   
         default:
