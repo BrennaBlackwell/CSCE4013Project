@@ -108,8 +108,14 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     }
         
     @Override
-    public void onDestroyView() { 	
+    public void onDestroyView() {
+    	
         super.onDestroyView();
+//        MapFragment m = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+//
+//        if (m != null)
+//        	getFragmentManager().beginTransaction().remove(m).commit();
+//
     }
 
     @Override

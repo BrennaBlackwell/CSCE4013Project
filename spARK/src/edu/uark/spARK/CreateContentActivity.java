@@ -66,7 +66,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		*/
 	    String contentType = getIntent().getStringExtra("contentType");
 	    for(int i=0; i < options.length; i++) {
-	    	if(contentType.equalsIgnoreCase(options[i])) {
+	    	if(contentType.equalsIgnoreCase(options[i] + "S")) {
 	    		actionBar.setSelectedNavigationItem(i);
 	    		break;
 	    	}
