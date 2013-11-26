@@ -237,8 +237,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				    // Need to get this working
 					fragment.getFragmentManager().beginTransaction().add(fragment.getView().getId(), new Profile_Fragment()).commit();
 				}
-			}
-			
+			}			
 		});
 		return convertView;
 	}

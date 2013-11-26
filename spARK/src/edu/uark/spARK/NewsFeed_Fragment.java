@@ -4,40 +4,42 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.*;
 
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
-import edu.uark.spARK.entities.*;
+import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Comment;
+import edu.uark.spARK.entities.Content;
+import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.User;
 
 
 public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     public static final String ARG_FRAGMENT_TYPE = "fragment_type";
     private static final String TAG_SUCCESS = "success";
-	private static final String TAG_DISCUSSIONS = "discussions";
+	private static final String TAG_CONTENTS = "contents";
 	private static final String TAG_COMMENTS = "comments";
 	private static final String TAG_ID = "id";
 	private static final String TAG_TITLE = "title";
 	private static final String TAG_BODY = "body";
+	private static final String TAG_TYPE = "type";
 	private static final String TAG_TIMESTAMP = "timestamp";
 	private static final String TAG_USER_ID = "userid";
 	private static final String TAG_USER_NAME = "username";
@@ -51,7 +53,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     private static PullToRefreshListView mListView;
     
     public ArrayList<Content> arrayListContent = new ArrayList<Content>();
-    private JSONArray discussions = null;
+    private JSONArray contents = null;
     private JSONArray comments = null;
 
     
@@ -170,7 +172,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	    //set mapHeader clicklistener so the listview can be hidden
 
 		return v;
-
 	}
 	
 	    
@@ -199,12 +200,20 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	}
 	
 	public void loadContent() {
-		// Need to get what tab position I am on inside this method
+		String contentType = "Discussion";
+		int tab_position = getActivity().getActionBar().getSelectedTab().getPosition();
+		
+		if (tab_position == 0) {
+			contentType = "Discussion";
+		} else if (tab_position == 1) {
+			contentType = "Bulletin";
+		}
+		
 		SharedPreferences preferences = this.getActivity().getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 		String currentUser = preferences.getString("currentUsername", "");
 
 		JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, currentUser);
+		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, currentUser, contentType);
 	}
 	
 	@Override
@@ -215,56 +224,64 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 
 			if (success == 1) {
 				// Get Array of discussions
-				discussions = result.getJSONArray(TAG_DISCUSSIONS);
+				contents = result.getJSONArray(TAG_CONTENTS);
 
-				for (int i = 0; i < discussions.length(); i++) {
-					JSONObject discussion = discussions.getJSONObject(i);
+				for (int i = 0; i < contents.length(); i++) {
+					JSONObject content = contents.getJSONObject(i);
 
-					int discussion_id = Integer.parseInt(discussion.getString(TAG_ID));
-					String user_id = discussion.getString(TAG_USER_ID).trim();
-					String username = discussion.getString(TAG_USER_NAME).trim();
-					String title = discussion.getString(TAG_TITLE).trim();
-					String body = discussion.getString(TAG_BODY).trim();
-					Date d_date = Timestamp.valueOf(discussion.getString(TAG_TIMESTAMP).trim());
+					int contentID = Integer.parseInt(content.getString(TAG_ID));
+					int contentUserID = Integer.parseInt(content.getString(TAG_USER_ID).trim());
+					String contentUsername = content.getString(TAG_USER_NAME).trim();
+					String contentTitle = content.getString(TAG_TITLE).trim();
+					String contentBody = content.getString(TAG_BODY).trim();
+					String contentType = content.getString(TAG_TYPE).trim(); 
+					Date contentTimestamp = Timestamp.valueOf(content.getString(TAG_TIMESTAMP).trim());
 					    
 					int totalRating = 0;
 					int userRating = 0;
-					if (discussion.getInt(TAG_RATING_TOTAL_FLAG) == 1) {
-						if (discussion.getString(TAG_RATING_TOTAL) != null) {
-							totalRating = Integer.parseInt(discussion.getString(TAG_RATING_TOTAL));
+					if (content.getInt(TAG_RATING_TOTAL_FLAG) == 1) {
+						if (content.getString(TAG_RATING_TOTAL) != null) {
+							totalRating = Integer.parseInt(content.getString(TAG_RATING_TOTAL));
 						} 
 					}
-					if (discussion.getInt(TAG_USER_RATING_FLAG) == 1) {
-						if (discussion.getString(TAG_USER_RATING) != null) {
-							userRating = discussion.getInt(TAG_USER_RATING);
+					if (content.getInt(TAG_USER_RATING_FLAG) == 1) {
+						if (content.getString(TAG_USER_RATING) != null) {
+							userRating = content.getInt(TAG_USER_RATING);
 						}
 					}
 					
-					comments = discussion.getJSONArray(TAG_COMMENTS);
-					List<Comment> commentsList = new ArrayList<Comment>();
-					for (int j = 0; j < comments.length(); j++) {
-						JSONObject comment = comments.getJSONObject(j);
-
-						String comment_id = comment.getString(TAG_ID).trim();
-						String userid = comment.getString(TAG_USER_ID).trim();
-						String user = comment.getString(TAG_USER_NAME).trim();
-						String comment_body = comment.getString(TAG_BODY).trim();
-						Date c_date = Timestamp.valueOf(discussion.getString(TAG_TIMESTAMP).trim());
+					if (contentType.equals("Bulletin")) {
+						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, null), contentTimestamp);
+						b.setTotalRating(totalRating);
+						b.setUserRating(userRating);
+						arrayListContent.add(b);
+					} else if (contentType.equals("Discussion")) {
+						comments = content.getJSONArray(TAG_COMMENTS);
+						List<Comment> commentsList = new ArrayList<Comment>();
+						for (int j = 0; j < comments.length(); j++) {
+							JSONObject comment = comments.getJSONObject(j);
+	
+							int commentID = Integer.parseInt(comment.getString(TAG_ID).trim());
+							int commentUserID = Integer.parseInt(comment.getString(TAG_USER_ID).trim());
+							String commentUsername = comment.getString(TAG_USER_NAME).trim();
+							String commentBody = comment.getString(TAG_BODY).trim();
+							Date commentTimestamp = Timestamp.valueOf(content.getString(TAG_TIMESTAMP).trim());
+							
+							//String comment_timestamp = comment.getString(TAG_TIMESTAMP).trim();
+							User user = new User(commentUserID, commentUsername, null);
+							Comment c = new Comment(commentID, commentBody, user, commentTimestamp);
+							
+							commentsList.add(c);
+						}
 						
-						//String comment_timestamp = comment.getString(TAG_TIMESTAMP).trim();
-						User u = new User(Integer.parseInt(userid), user, null);
-						Comment c = new Comment(Integer.parseInt(comment_id), comment_body, u, c_date);
-						
-						commentsList.add(c);
+						Discussion d = new Discussion(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, null), contentTimestamp, commentsList);
+						d.setTotalRating(totalRating);
+						d.setUserRating(userRating);
+						arrayListContent.add(d);
 					}
-					
-					Discussion d = new Discussion(discussion_id, title, body, new User(Integer.parseInt(user_id), username, null), d_date, commentsList);
-					d.setTotalRating(totalRating);
-					d.setUserRating(userRating);
-					arrayListContent.add(d);
+					mAdapter.notifyDataSetChanged();
+					mListView.onRefreshComplete();
 				}
-				mAdapter.notifyDataSetChanged();
-				mListView.onRefreshComplete();
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
