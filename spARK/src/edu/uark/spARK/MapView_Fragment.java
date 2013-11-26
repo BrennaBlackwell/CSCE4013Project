@@ -2,16 +2,18 @@ package edu.uark.spARK;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
-import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -25,16 +27,34 @@ public class MapView_Fragment extends MapFragment {
 
 	
 	// Google Map
+    private LocationManager locationManager;
     private GoogleMap map;	//this is the map which is instantiated in the initializeMap();
+    private Criteria criteria = new Criteria();
+
 //    private View v;
     
     public MapView_Fragment() {
 
     }
- 
+
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+//        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+//        criteria.setPowerRequirement(Criteria.POWER_LOW);
+//        criteria.setAltitudeRequired(false);
+//        criteria.setBearingRequired(false);
+//        criteria.setSpeedRequired(false);
+//        criteria.setCostAllowed(true);
+
+        // String provider = LocationManager.GPS_PROVIDER;
+//        String provider = locationManager.getBestProvider(criteria, true);
+//        Location loc = locationManager.getLastKnownLocation(provider);
+
+        // updateWithNewLocation(loc);
     }
     
     @Override
@@ -79,12 +99,20 @@ public class MapView_Fragment extends MapFragment {
     @Override
 	public void onResume() {
         super.onResume();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setSpeedRequired(false);
+        criteria.setCostAllowed(true);
+        String provider = locationManager.getBestProvider(criteria, true);
+        locationManager.requestLocationUpdates(provider, 2000, 10, locationListener);
     }
     
     @Override
     public void onPause() {
     	super.onPause();
-
+        locationManager.removeUpdates(locationListener);
     }
         
     @Override
@@ -97,5 +125,32 @@ public class MapView_Fragment extends MapFragment {
 //        	getFragmentManager().beginTransaction().remove(m).commit();
 //
     }
+
+    private final LocationListener locationListener = new LocationListener() {
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            //updateWithNewLocation(location);
+        }
+    };
     
 }
+
