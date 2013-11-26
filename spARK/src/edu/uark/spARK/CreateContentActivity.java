@@ -1,31 +1,22 @@
 package edu.uark.spARK;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
+import android.app.*;
 import android.app.ActionBar.OnNavigationListener;
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
+import android.widget.AdapterView.OnItemSelectedListener;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Discussion;
 import edu.uark.spARK.entities.Group;
 import edu.uark.spARK.entities.User;
 
@@ -33,7 +24,6 @@ import edu.uark.spARK.entities.User;
 public class CreateContentActivity extends FragmentActivity implements OnNavigationListener, AsyncResponse {
 	
 	private String[] options = new String[]{ "BULLETIN", "DISCUSSION", "GROUP" };
-	private Spinner discussionGroups, bulletinGroups;
 //	SectionsPagerAdapter mSectionsPagerAdapter;
 //	ViewPager mViewPager;
 
@@ -137,6 +127,27 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = inflater.inflate(R.layout.fragment_new_bulletin, container, false);
 			
+			Spinner groups = (Spinner) view.findViewById(R.id.bulletin_group_selection);
+			List<String> list = Arrays.asList(new String[]{"List 1", "List 2", "List 3"});
+			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, list);
+			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			groups.setAdapter(dataAdapter);
+			groups.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+				@Override
+				public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
+			
 			final Intent intent = getIntent();
 			view.findViewById(R.id.new_bulletin_submit).setOnClickListener(new OnClickListener() {
 				@Override
@@ -182,6 +193,27 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = inflater.inflate(R.layout.fragment_new_discussion, container, false);
+			
+			Spinner groups = (Spinner) view.findViewById(R.id.discussion_group_selection);
+			List<String> list = Arrays.asList(new String[]{"List 1", "List 2", "List 3"});
+			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, list);
+			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			groups.setAdapter(dataAdapter);
+			groups.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+				@Override
+				public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			
 			final Intent intent = getIntent();
 			view.findViewById(R.id.new_discussion_submit).setOnClickListener(new OnClickListener() {
@@ -248,17 +280,9 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					intent.putExtra("group", g);
 					setResult(RESULT_OK, intent);
 					
-					String privacy = "Open";
-					String visibility = "Visible";
-					if (!g.isOpen()){
-						privacy = "Closed";
-					}
-					if (!g.isVisible()) {
-						visibility = "Hidden";
-					}
-					
+					// TODO: Move JQuery to MainActivity
 					JSONQuery jquery = new JSONQuery(CreateContentActivity.this);
-					jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", user.getTitle(), title, desc, privacy, visibility);		
+					jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", user.getTitle(), title, desc, g.isOpen() ? "Open" : "Closed", g.isVisible() ? "Visible" : "Hidden");		
 					
 					finish();
 				}
@@ -275,52 +299,6 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		}
 		
 	}
-	
-	
-	// Need to implement Group Drop Down selection boxes so Discussions and Bulletins can be included 
-	// inside a Group on their creation. Create dummy values at first and I can fill them in later
-	public void populateBulletinGroupDropDown() {
-		 
-		bulletinGroups = (Spinner) findViewById(R.id.bulletin_group_selection);
-		List<String> list = new ArrayList<String>();
-		
-		// Eventual JQuery Call will go here to populate lists
-//		SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-//		String currentUser = preferences.getString("currentUsername", "");
-//
-//		JSONQuery jquery = new JSONQuery(this);
-//		jquery.execute(ServerUtil.SOME_URL, currentUser);
-		
-		list.add("list 1");
-		list.add("list 2");
-		list.add("list 3");
-		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-			android.R.layout.simple_spinner_item, list);
-		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		bulletinGroups.setAdapter(dataAdapter);
-	  }
-	
-	public void populateDiscussionGroupDropDown() {
-		 
-		discussionGroups = (Spinner) findViewById(R.id.discussion_group_selection);
-		List<String> list = new ArrayList<String>();
-		
-		// Eventual JQuery Call will go here to populate lists
-//		SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-//		String currentUser = preferences.getString("currentUsername", "");
-//
-//		JSONQuery jquery = new JSONQuery(this);
-//		jquery.execute(ServerUtil.SOME_URL, currentUser);
-		
-		
-		list.add("list 1");
-		list.add("list 2");
-		list.add("list 3");
-		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-			android.R.layout.simple_spinner_item, list);
-		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		discussionGroups.setAdapter(dataAdapter);
-	  }
 
 	@Override
 	public void processFinish(JSONObject result) {
