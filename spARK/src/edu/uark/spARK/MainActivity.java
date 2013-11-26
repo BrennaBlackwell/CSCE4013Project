@@ -26,8 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.*;
 
 public class MainActivity extends Activity {
 	
@@ -129,11 +128,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onTabSelected(Tab tab, FragmentTransaction ft) {
-				
 				mPager.setCurrentItem(tab.getPosition());
-		          Toast.makeText(getApplicationContext(),
-		                  "Fragment switch at position " + tab.getPosition() + "!", Toast.LENGTH_SHORT)
-		                  .show();
 			}
 
 			@Override
@@ -396,7 +391,9 @@ public class MainActivity extends Activity {
         		mListDiscussionFragment.arrayListContent.add(0, discussion);
         	} else if (intent.hasExtra("group")) {
 //        		Group group = (Group) intent.getSerializableExtra("group");
-//        		TODO: Implement groups list/page
+//				JSONQuery jquery = new JSONQuery();
+//				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", group.getCreator().getTitle(), 
+//						group.getTitle(), group.getDescription(), group.isOpen() ? "Open" : "Closed", group.isVisible() ? "Visible" : "Hidden");		
         	}
         }
     }
