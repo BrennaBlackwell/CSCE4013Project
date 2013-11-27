@@ -180,7 +180,11 @@ public class MainActivity extends Activity implements AsyncResponse{
 
         @Override
         public Fragment getItem(int position) {
-        	return new NewsFeed_Fragment();
+        	//select either bulletin/discussion fragment
+        	if (position == 0)
+        		return mListDiscussionFragment;
+        	else
+        		return mListBulletinFragment;
         }
 
     }  	
