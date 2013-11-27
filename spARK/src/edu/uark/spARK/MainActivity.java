@@ -1,5 +1,12 @@
 package edu.uark.spARK;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -24,11 +31,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+import edu.uark.spARK.JSONQuery.AsyncResponse;
+import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.Group;
 
-import edu.uark.spARK.entities.*;
-
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements AsyncResponse{
+	
+	public static int UserID;
+	public static String Username;
+	public static List<Group> myGroups = new ArrayList();
 	
     private static final int PROFILE_FRAGMENT = 0;
     private static final int NEWSFEED_FRAGMENT = 1;
@@ -48,10 +60,11 @@ public class MainActivity extends Activity {
     private String[] mListTitles;	//option titles
     private Menu mMenu;
 
+    private JSONArray MyContents = null;
     
     //Our references to the two main fragments and map fragment
-	static NewsFeed_Fragment mListDiscussionFragment;
-	static NewsFeed_Fragment mListBulletinFragment;
+	static NewsFeed_Fragment mListDiscussionFragment = new NewsFeed_Fragment();
+	static NewsFeed_Fragment mListBulletinFragment = new NewsFeed_Fragment();
 	static MapView_Fragment mMapViewFragment;
 	
 	MyAdapter mAdapter;
@@ -62,6 +75,12 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);       
         setContentView(R.layout.activity_main);
+        
+        SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+        Username = preferences.getString("currentUsername", "");
+
+        JSONQuery jquery = new JSONQuery(this);
+		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, Username);
         
         mTitle = mDrawerTitle = getTitle();
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
@@ -385,19 +404,60 @@ public class MainActivity extends Activity {
         } else if (requestCode == CREATE_CONTENT_ACTIVITY && resultCode == RESULT_OK) {
         	if(intent.hasExtra("bulletin")) {
         		Bulletin bulletin = (Bulletin) intent.getSerializableExtra("bulletin");
+        		int groupSelected = intent.getIntExtra("groupSelected", 0);
         		mListBulletinFragment.arrayListContent.add(0, bulletin);
+        		
+        		JSONQuery jquery = new JSONQuery(this);
+				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Bulletin", Integer.toString(UserID), bulletin.getTitle(), bulletin.getText(), Integer.toString(groupSelected));
         	} else if (intent.hasExtra("discussion")) {
         		Discussion discussion = (Discussion) intent.getSerializableExtra("discussion");
+        		int groupSelected = intent.getIntExtra("groupSelected", 0);
         		mListDiscussionFragment.arrayListContent.add(0, discussion);
+        		
+        		JSONQuery jquery = new JSONQuery(this);
+				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Discussion", Integer.toString(UserID), discussion.getTitle(), discussion.getText(), Integer.toString(groupSelected));
         	} else if (intent.hasExtra("group")) {
-//        		Group group = (Group) intent.getSerializableExtra("group");
-//				JSONQuery jquery = new JSONQuery();
-//				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", group.getCreator().getTitle(), 
-//						group.getTitle(), group.getDescription(), group.isOpen() ? "Open" : "Closed", group.isVisible() ? "Visible" : "Hidden");		
+        		Group group = (Group) intent.getSerializableExtra("group");
+				//JSONQuery jquery = new JSONQuery(this);
+				//jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", group.getCreator().getTitle(), group.getTitle(), group.getDescription(), (group.isOpen() ? "Open" : "Closed"), (group.isVisible() ? "Visible" : "Hidden"));		
         	}
         }
     }
 
+    @Override
+	public void processFinish(JSONObject result) {
+		try { 
+			int success = result.getInt(ServerUtil.TAG_SUCCESS);
+			if (success == 1) {
+				MyContents = result.getJSONArray(ServerUtil.TAG_GROUPS);
+				UserID = result.getInt(ServerUtil.TAG_USER_ID);
+				
+				for (int i = 0; i < MyContents.length(); i++) {
+					JSONObject content = MyContents.getJSONObject(i);
+
+					int groupID = Integer.parseInt(content.getString(ServerUtil.TAG_ID));
+					String groupName = content.getString(ServerUtil.TAG_TITLE).trim();
+					String groupDesc = content.getString(ServerUtil.TAG_BODY).trim();
+					String groupPrivacy = content.getString(ServerUtil.TAG_PRIVACY).trim();
+					String groupVisibility = content.getString(ServerUtil.TAG_VISIBILITY).trim();
+					boolean open = true;
+					boolean visible = true; 
+					if (groupPrivacy.contains("Closed")) {
+						open = false;
+					}
+					if (groupVisibility.contains("Hidden")) {
+						visible = false;
+					}
+					
+					Group g = new Group(groupID, groupName, groupDesc, open, visible);
+					myGroups.add(g);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+    
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return true;

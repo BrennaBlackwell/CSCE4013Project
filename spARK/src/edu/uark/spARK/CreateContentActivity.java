@@ -1,27 +1,33 @@
 package edu.uark.spARK;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
-import android.app.*;
+import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import edu.uark.spARK.JSONQuery.AsyncResponse;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Discussion;
 import edu.uark.spARK.entities.Group;
 import edu.uark.spARK.entities.User;
 
 @SuppressLint("ValidFragment")
-public class CreateContentActivity extends FragmentActivity implements OnNavigationListener, AsyncResponse {
+public class CreateContentActivity extends FragmentActivity implements OnNavigationListener {
 	
 	private String[] options = new String[]{ "BULLETIN", "DISCUSSION", "GROUP" };
 //	SectionsPagerAdapter mSectionsPagerAdapter;
@@ -127,8 +133,15 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = inflater.inflate(R.layout.fragment_new_bulletin, container, false);
 			
-			Spinner groups = (Spinner) view.findViewById(R.id.bulletin_group_selection);
-			List<String> list = Arrays.asList(new String[]{"List 1", "List 2", "List 3"});
+			final Spinner groups = (Spinner) view.findViewById(R.id.bulletin_group_selection);
+			List<String> list = new ArrayList<String>();
+			String listItem = "Public";
+			list.add(listItem);
+			for (int i=0; i<MainActivity.myGroups.size(); i++) {
+				listItem = MainActivity.myGroups.get(i).getTitle();
+				list.add(listItem);
+			}
+			
 			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, list);
 			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			groups.setAdapter(dataAdapter);
@@ -162,14 +175,16 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 						return; // do not add blank input to list
 					}
 					User user = new User(0, intent.getStringExtra("user"), intent.getStringExtra("rank"));
+					int position = groups.getSelectedItemPosition();
 					
-					// Error occurring here.. Commented out
+					int itemSelected = 0;
+					if (position != 0) {
+						itemSelected = MainActivity.myGroups.get(position-1).getId();
+					}
 					
-					//intent.putExtra("bulletin", new Bulletin(0, title, text, user));
-					//setResult(RESULT_OK, intent);
-					
-					JSONQuery jquery = new JSONQuery(CreateContentActivity.this);
-					jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Bulletin", user.getTitle(), title, desc);
+					intent.putExtra("bulletin", new Bulletin(0, title, desc, user));
+					intent.putExtra("groupSelected", itemSelected);
+					setResult(RESULT_OK, intent);
 					
 					finish();
 				}
@@ -194,8 +209,16 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = inflater.inflate(R.layout.fragment_new_discussion, container, false);
 			
-			Spinner groups = (Spinner) view.findViewById(R.id.discussion_group_selection);
-			List<String> list = Arrays.asList(new String[]{"List 1", "List 2", "List 3"});
+			final Spinner groups = (Spinner) view.findViewById(R.id.discussion_group_selection);
+			List<String> list = new ArrayList<String>();
+			String listItem = "Public";
+			
+			list.add(listItem);
+			for (int i=0; i<MainActivity.myGroups.size(); i++) {
+				listItem = MainActivity.myGroups.get(i).getTitle();
+				list.add(listItem);
+			}
+			
 			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, list);
 			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			groups.setAdapter(dataAdapter);
@@ -229,14 +252,16 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 						return; // do not add blank input to list
 					}
 					User user = new User(0, intent.getStringExtra("user"), intent.getStringExtra("rank"));
+					int position = groups.getSelectedItemPosition();
+
+					int itemSelected = 0;
+					if (position != 0) {
+						itemSelected = MainActivity.myGroups.get(position-1).getId();
+					}
 					
-					// Error occurring here.. Commented out
-					
-//					intent.putExtra("discussion", new Discussion(0, title, desc, user));
-//					setResult(RESULT_OK, intent);
-					
-					JSONQuery jquery = new JSONQuery(CreateContentActivity.this);
-					jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Discussion", user.getTitle(), title, desc);
+					intent.putExtra("discussion", new Discussion(0, title, desc, user));
+					intent.putExtra("groupSelected", itemSelected);
+					setResult(RESULT_OK, intent);
 					
 					finish();
 				}
@@ -275,14 +300,9 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					}
 					
 					User user = new User(0, intent.getStringExtra("user"), intent.getStringExtra("rank"));
-					Group g = new Group(0, title, desc, user,
-							findViewById(R.id.radio_open).isSelected(), findViewById(R.id.radio_visible).isSelected());
+					Group g = new Group(0, title, desc, user, findViewById(R.id.radio_open).isSelected(), findViewById(R.id.radio_visible).isSelected());
 					intent.putExtra("group", g);
 					setResult(RESULT_OK, intent);
-					
-					// TODO: Move JQuery to MainActivity
-					JSONQuery jquery = new JSONQuery(CreateContentActivity.this);
-					jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", user.getTitle(), title, desc, g.isOpen() ? "Open" : "Closed", g.isVisible() ? "Visible" : "Hidden");		
 					
 					finish();
 				}
@@ -299,18 +319,4 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		}
 		
 	}
-
-	@Override
-	public void processFinish(JSONObject result) {
-		try { 
-			// Checking for SUCCESS TAG
-			int success = result.getInt("success");
-			if (success == 1) {
-				// Content Successfully Created Message Here
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
 }

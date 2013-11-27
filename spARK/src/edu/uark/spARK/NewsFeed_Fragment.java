@@ -15,7 +15,6 @@ import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,20 +32,7 @@ import edu.uark.spARK.entities.User;
 
 public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     public static final String ARG_FRAGMENT_TYPE = "fragment_type";
-    private static final String TAG_SUCCESS = "success";
-	private static final String TAG_CONTENTS = "contents";
-	private static final String TAG_COMMENTS = "comments";
-	private static final String TAG_ID = "id";
-	private static final String TAG_TITLE = "title";
-	private static final String TAG_BODY = "body";
-	private static final String TAG_TYPE = "type";
-	private static final String TAG_TIMESTAMP = "timestamp";
-	private static final String TAG_USER_ID = "userid";
-	private static final String TAG_USER_NAME = "username";
-	private static final String TAG_RATING_TOTAL = "rating_total";
-	private static final String TAG_RATING_TOTAL_FLAG = "rating_total_flag";
-	private static final String TAG_USER_RATING = "user_rating";
-	private static final String TAG_USER_RATING_FLAG = "user_rating_flag";
+    
 	
 	private SelectiveViewPager mPager;
 	private NewsFeedArrayAdapter mAdapter; 
@@ -209,44 +195,42 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			contentType = "Bulletin";
 		}
 		
-		SharedPreferences preferences = this.getActivity().getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-		String currentUser = preferences.getString("currentUsername", "");
-
+		
 		JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, currentUser, contentType);
+		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.Username, contentType);
 	}
 	
 	@Override
 	public void processFinish(JSONObject result) {
 		arrayListContent.clear();
 		try {
-			int success = result.getInt(TAG_SUCCESS);
+			int success = result.getInt(ServerUtil.TAG_SUCCESS);
 
 			if (success == 1) {
 				// Get Array of discussions
-				contents = result.getJSONArray(TAG_CONTENTS);
+				contents = result.getJSONArray(ServerUtil.TAG_CONTENTS);
 
 				for (int i = 0; i < contents.length(); i++) {
 					JSONObject content = contents.getJSONObject(i);
 
-					int contentID = Integer.parseInt(content.getString(TAG_ID));
-					int contentUserID = Integer.parseInt(content.getString(TAG_USER_ID).trim());
-					String contentUsername = content.getString(TAG_USER_NAME).trim();
-					String contentTitle = content.getString(TAG_TITLE).trim();
-					String contentBody = content.getString(TAG_BODY).trim();
-					String contentType = content.getString(TAG_TYPE).trim(); 
-					Date contentTimestamp = Timestamp.valueOf(content.getString(TAG_TIMESTAMP).trim());
+					int contentID = Integer.parseInt(content.getString(ServerUtil.TAG_ID));
+					int contentUserID = Integer.parseInt(content.getString(ServerUtil.TAG_USER_ID).trim());
+					String contentUsername = content.getString(ServerUtil.TAG_USER_NAME).trim();
+					String contentTitle = content.getString(ServerUtil.TAG_TITLE).trim();
+					String contentBody = content.getString(ServerUtil.TAG_BODY).trim();
+					String contentType = content.getString(ServerUtil.TAG_TYPE).trim(); 
+					Date contentTimestamp = Timestamp.valueOf(content.getString(ServerUtil.TAG_TIMESTAMP).trim());
 					    
 					int totalRating = 0;
 					int userRating = 0;
-					if (content.getInt(TAG_RATING_TOTAL_FLAG) == 1) {
-						if (content.getString(TAG_RATING_TOTAL) != null) {
-							totalRating = Integer.parseInt(content.getString(TAG_RATING_TOTAL));
+					if (content.getInt(ServerUtil.TAG_RATING_TOTAL_FLAG) == 1) {
+						if (content.getString(ServerUtil.TAG_RATING_TOTAL) != null) {
+							totalRating = Integer.parseInt(content.getString(ServerUtil.TAG_RATING_TOTAL));
 						} 
 					}
-					if (content.getInt(TAG_USER_RATING_FLAG) == 1) {
-						if (content.getString(TAG_USER_RATING) != null) {
-							userRating = content.getInt(TAG_USER_RATING);
+					if (content.getInt(ServerUtil.TAG_USER_RATING_FLAG) == 1) {
+						if (content.getString(ServerUtil.TAG_USER_RATING) != null) {
+							userRating = content.getInt(ServerUtil.TAG_USER_RATING);
 						}
 					}
 					
@@ -256,16 +240,16 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 						b.setUserRating(userRating);
 						arrayListContent.add(b);
 					} else if (contentType.equals("Discussion")) {
-						comments = content.getJSONArray(TAG_COMMENTS);
+						comments = content.getJSONArray(ServerUtil.TAG_COMMENTS);
 						List<Comment> commentsList = new ArrayList<Comment>();
 						for (int j = 0; j < comments.length(); j++) {
 							JSONObject comment = comments.getJSONObject(j);
 	
-							int commentID = Integer.parseInt(comment.getString(TAG_ID).trim());
-							int commentUserID = Integer.parseInt(comment.getString(TAG_USER_ID).trim());
-							String commentUsername = comment.getString(TAG_USER_NAME).trim();
-							String commentBody = comment.getString(TAG_BODY).trim();
-							Date commentTimestamp = Timestamp.valueOf(content.getString(TAG_TIMESTAMP).trim());
+							int commentID = Integer.parseInt(comment.getString(ServerUtil.TAG_ID).trim());
+							int commentUserID = Integer.parseInt(comment.getString(ServerUtil.TAG_USER_ID).trim());
+							String commentUsername = comment.getString(ServerUtil.TAG_USER_NAME).trim();
+							String commentBody = comment.getString(ServerUtil.TAG_BODY).trim();
+							Date commentTimestamp = Timestamp.valueOf(content.getString(ServerUtil.TAG_TIMESTAMP).trim());
 							
 							//String comment_timestamp = comment.getString(TAG_TIMESTAMP).trim();
 							User user = new User(commentUserID, commentUsername, null);
