@@ -1,24 +1,23 @@
 package edu.uark.spARK;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -31,12 +30,10 @@ public class MapView_Fragment extends MapFragment implements
 GooglePlayServicesClient.ConnectionCallbacks, 
 GooglePlayServicesClient.OnConnectionFailedListener {
 
-	
 	// Google Map
     private GoogleMap map;	//this is the map which is instantiated in the initializeMap();
 //    private View v;
     private LocationClient mLocationClient;
-
     
     public MapView_Fragment() {
 
@@ -50,22 +47,26 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-    	View v = super.onCreateView(inflater, container, savedInstanceState);
-//    	View view = inflater.inflate(R.layout.fragment_map_view, container, false);
-//         if (v.findViewById(R.id.FrameLayout1) == null)
-//        	 System.out.println("ID NULL");
-        //container.addView(fl);
-//        mListFragment = new ListFeed_Fragment();
-//        getChildFragmentManager().beginTransaction()
-//        .add(R.id.FrameLayout1, mListFragment).commit();
+    	final View v = super.onCreateView(inflater, container, savedInstanceState);
         try {
         	initializeMap();
         } catch (Exception e) {
             e.printStackTrace();
         }
-//	    final float scale = this.getResources().getDisplayMetrics().density;
-//	    int pixels = (int) (100 * scale + 0.5f);
-//	    v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, pixels));
+	    final float scale = this.getResources().getDisplayMetrics().density;
+	    final int pixels = (int) (100 * scale + 0.5f);
+	    
+	    // caculates the height of the view right after it's created, otherwise getHeight() will return 0.
+	    final ViewTreeObserver observer = v.getViewTreeObserver();
+	    observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+	        @Override
+	        public void onGlobalLayout() {
+	            v.setY((int) (-v.getHeight()/2 + pixels/2));
+	            v.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+	            //this will be called as the layout is finished, prior to displaying.
+	        }
+	    });
+	    
     	return v;
     }       	
 
@@ -76,7 +77,6 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     		map = getMap();
             map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             map.setMyLocationEnabled(true);
-
     }
     
     @Override
@@ -86,6 +86,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         if(isGooglePlayServicesAvailable()){
             mLocationClient.connect();
         }
+
 
     }
     
@@ -98,24 +99,17 @@ GooglePlayServicesClient.OnConnectionFailedListener {
  
     @Override
 	public void onResume() {
-        super.onResume();
+        super.onResume();      
     }
     
     @Override
     public void onPause() {
     	super.onPause();
-
     }
         
     @Override
-    public void onDestroyView() {
-    	
+    public void onDestroyView() {	
         super.onDestroyView();
-//        MapFragment m = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-//
-//        if (m != null)
-//        	getFragmentManager().beginTransaction().remove(m).commit();
-//
     }
 
     @Override
@@ -153,11 +147,9 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 	    CameraPosition cameraPosition = new CameraPosition.Builder()
 		.target(latLng)
-		.zoom(18)
+		.zoom(16)
 		.build();
 	    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-	    //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-	    //map.animateCamera(cameraUpdate);
 	}
 
 	@Override
@@ -199,5 +191,55 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	            }
 
 	    }
+	}
+	
+	//setMapPadding is called in PullToRefreshListView on EVENT_MOVE to move slightly slower than the listview padding size
+    public void setMapPadding(int padding){
+        final float scale = this.getResources().getDisplayMetrics().density;
+        final int pixels = (int) (100 * scale + 0.5f);
+        MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) getView().getLayoutParams();
+        mlp.setMargins(0, padding, 0, 0);
+        mlp.topMargin = padding;
+    	this.getView().setY((-getView().getHeight()/2 + pixels/2) + (float) (padding * .72));
+    }
+
+    //resets the framelayout when listview is done refreshing
+	public void resetView() {
+        final float scale = this.getResources().getDisplayMetrics().density;
+        final int pixels = (int) (100 * scale + 0.5f);
+		this.getView().setY((-getView().getHeight()/2 + pixels/2));
+	}
+
+	public void bounceBackMap() {
+		// TODO Auto-generated method stub	
+	}
+	
+	public void zoomInMap() {
+	    Location location = mLocationClient.getLastLocation();
+	    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+	    CameraPosition cameraPosition = new CameraPosition.Builder()
+		.target(latLng)
+		.zoom(17)
+		.build();
+	    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+		getView().animate().y(0).setDuration(250);
+	}
+	
+	public void zoomOutMap() {
+        final float scale = this.getResources().getDisplayMetrics().density;
+        final int pixels = (int) (100 * scale + 0.5f);
+
+		getView().animate().y((-getView().getHeight()/2 + pixels/2)).setDuration(250);
+	    Location location = mLocationClient.getLastLocation();
+	    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+	    CameraPosition cameraPosition = new CameraPosition.Builder()
+		.target(latLng)
+		.zoom(16)
+		.build();
+	    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+	}
+	
+	public LocationClient getLocationClient() {
+		return mLocationClient;
 	}
 }

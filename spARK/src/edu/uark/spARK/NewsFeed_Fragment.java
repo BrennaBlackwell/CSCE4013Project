@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -41,7 +42,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     public ArrayList<Content> arrayListContent = new ArrayList<Content>();
     private JSONArray contents = null;
     private JSONArray comments = null;
-
     
 	public static NewsFeed_Fragment newInstance(String param1, String param2) {
 		NewsFeed_Fragment fragment = new NewsFeed_Fragment();
@@ -53,7 +53,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     static NewsFeed_Fragment newInstance(int num) {
     	NewsFeed_Fragment f = new NewsFeed_Fragment();
 
-        // Supply num input as an argument.
+        // Supply num input as an argument (0 for discussion fragment, 1 for bulletin).
         Bundle args = new Bundle();
         args.putInt("num", num);
         f.setArguments(args);
@@ -72,18 +72,29 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		super.onActivityCreated(savedInstanceState);
 	    mAdapter = new NewsFeedArrayAdapter(getActivity(), R.layout.discussion_list_item, arrayListContent, this);		
 		mListView.setAdapter(mAdapter);
+		mListView.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				loadContent();
+				//update map with markers of discussions/bulletins nearby
+				//MainActivity.mMapViewFragment.getLocationClient().connect();
+			}
+			
+		});
 	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		//I have loadcontent here for startup, so that the load is performed automatically, but not whenever the fragment is paused and returned to	
+        loadContent();
+		//inital loading of content		
     }
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (getArrayListContent().size() == 0)
-			loadContent();
 	}
 	
 	@Override
@@ -98,8 +109,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			@Override
 			public void onBackStackChanged() {
 				if (getFragmentManager().getBackStackEntryCount() == 0)
-					mPager.setPaging(true);
-				
+					mPager.setPaging(true);			
 			}
         	
         });
@@ -116,43 +126,25 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	        	FragmentManager fm = getFragmentManager();
 	        	FragmentTransaction ft = fm.beginTransaction();
 	        	
-	        	ft.addToBackStack(null);
+//	    	    TranslateAnimation anim = new TranslateAnimation( 0, 0, 0, 0 - getView().getY());
+//	    	    anim.setDuration(250);
+//	    	    anim.setFillAfter( true );
+//	    	    getView().startAnimation(anim);
+	        	
+	        	ft.addToBackStack("Map");
 	        	//animations are ordered (enter, exit, popEnter, popExit)
 	        	ft.setCustomAnimations(R.animator.slide_up, R.animator.slide_down, 
 	        			R.animator.slide_up, R.animator.slide_down)
-	        			.hide(NewsFeed_Fragment.this).commit();
+	        			.hide(MainActivity.mListBulletinFragment)
+	        			.hide(MainActivity.mListDiscussionFragment).commit();
+	        	//ft.hide(NewsFeed_Fragment.this).commit();       	
+	        	//getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+	        	
 	        	mPager.setPaging(false);
+	        	MainActivity.mMapViewFragment.zoomInMap();
 	        }
 	    });
-	        mListView.setOnRefreshListener(new OnRefreshListener() {
 
-	            @Override
-	            public void onRefresh() {
-	                    // Your code to refresh the list contents goes here
-
-	                    // for example:
-	                    // If this is a webservice call, it might be asynchronous so
-	                    // you would have to call listView.onRefreshComplete(); when
-	                    // the webservice returns the data
-	                    loadContent();
-	                    
-	                    // Make sure you call listView.onRefreshComplete()
-	                    // when the loading is done. This can be done from here or any
-	                    // other place, like on a broadcast receive from your loading
-	                    // service or the onPostExecute of your AsyncTask.
-
-	                    // For the sake of this sample, the code will pause here to
-	                    // force a delay when invoking the refresh
-//	                    mListView.postDelayed(new Runnable() {
-//	                    	
-//	                            
-//	                            @Override
-//	                            public void run() {
-//	                                    mListView.onRefreshComplete();
-//	                            }
-//	                    }, 2000);
-	            }
-	    });
 //		mListView = new PullToRefreshListView(inflater.getContext());
 //		mListView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	    //set mapHeader clicklistener so the listview can be hidden
@@ -187,11 +179,11 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	
 	public void loadContent() {
 		String contentType = "Discussion";
-		int tab_position = getActivity().getActionBar().getSelectedTab().getPosition();
-		
-		if (tab_position == 0) {
+		//get int from instantiating the content fragment type
+		int pos = this.getArguments().getInt("num");
+		if (pos == 0) {
 			contentType = "Discussion";
-		} else if (tab_position == 1) {
+		} else if (pos == 1){
 			contentType = "Bulletin";
 		}
 		
@@ -311,20 +303,22 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 				 		getListAdapter().notifyDataSetChanged();
 				 	}
 		         
-		         //load from server here like in hw???
-//		         ContentResolver cr = getContentResolver();
-//		         ContentValues values = new ContentValues();
-//		         
-//		         values.put(RazorSquareContentProvider.KEY_USER, username);
-//		         values.put(RazorSquareContentProvider.KEY_DESC, e.getDescription());
-//		         values.put(RazorSquareContentProvider.KEY_TIMESTAMP, e.getCreatedDateAsInt());
-//		         cr.insert(RazorSquareContentProvider.CONTENT_URI, values);
-//		         getLoaderManager().restartLoader(0, null, this);
-		         
 			 }
         } else if (resultCode == Activity.RESULT_CANCELED) {
             // Handle cancel
         	
         }
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+
 	}
 }

@@ -24,6 +24,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
+import edu.uark.spARK.entities.Bulletin;
 import edu.uark.spARK.entities.Content;
 import edu.uark.spARK.entities.Discussion;
 
@@ -47,16 +48,22 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
+		final Content c = (Content) mContent.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = mInflater.inflate(R.layout.discussion_list_item, null);
+			if (c instanceof Discussion) {
+				convertView = mInflater.inflate(R.layout.discussion_list_item, null);
+				holder.commentTextView = (TextView) convertView.findViewById(R.id.commentTextView);
+				holder.commentLinearLayout = (LinearLayout) holder.commentTextView.getParent();
+			}
+			if (c instanceof Bulletin) {
+				convertView = mInflater.inflate(R.layout.bulletin_list_item, null);
+			}
 			
 			holder.mainFL = (FrameLayout) convertView.findViewById(R.id.list_discussionMainFrame);
 			holder.titleTextView = (TextView) convertView.findViewById(R.id.headerTextView);
 			holder.titleTextView.setTag(position);
 			holder.descTextView = (TextView) convertView.findViewById(R.id.descTextView);	
-			holder.commentTextView = (TextView) convertView.findViewById(R.id.commentTextView);
-			holder.commentLinearLayout = (LinearLayout) holder.commentTextView.getParent();
 			holder.groupTextView = (TextView) convertView.findViewById(R.id.groupTextView);
 			holder.userProfileIcon = (QuickContactBadge) convertView.findViewById(R.id.userQuickContactBadge);
 			holder.usernameTextView = (TextView) convertView.findViewById(R.id.usernameTextView);
@@ -82,18 +89,28 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		final Content c = (Content) mContent.get(position);
 		
 		holder.titleTextView.setText(c.getTitle());
 		holder.descTextView.setText(c.getText());
 		holder.descTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		Linkify.addLinks(holder.descTextView, Linkify.ALL);
-		holder.groupTextView.setText("test");
+		holder.groupTextView.setText("posted to group");
 		holder.usernameTextView.setText(c.getCreator().getTitle());
 		holder.creationDateTextView.setText(c.getCreationDateString());
 		holder.totalScoreTextView.setText(String.valueOf(c.getTotalRating()));
 		if (c instanceof Discussion) {
 			holder.commentTextView.setText(((Discussion) c).getNumComments() + " comments");
+			holder.commentLinearLayout.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(mContext, CommentActivity.class);
+					i.putExtra("Object", (Content) c);
+					i.putExtra("position", position);
+					fragment.startActivityForResult(i, 1);		
+				}
+				
+			});
 		}
 		holder.likeBtn.setTag(position);
 		holder.dislikeBtn.setTag(position);	
@@ -215,17 +232,6 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 					getItem((Integer) v.getTag()).incrementRating();
 					update();
 				}
-			}
-			
-		});
-		holder.commentLinearLayout.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(mContext, CommentActivity.class);
-				i.putExtra("Object", (Content) c);
-				i.putExtra("position", position);
-				fragment.startActivityForResult(i, 1);		
 			}
 			
 		});

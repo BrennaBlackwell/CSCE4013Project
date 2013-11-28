@@ -49,7 +49,7 @@ import android.widget.TextView;
  * @author Erik Wallentinsen <dev+ptr@erikw.eu>
  * @version 1.3.0
  */
-public class PullToRefreshListView extends ListView{
+public class PullToRefreshListView extends ListView {
 
     private static final float PULL_RESISTANCE                 = 3.0f;
     private static final int   BOUNCE_ANIMATION_DURATION       = 700;
@@ -322,7 +322,7 @@ public class PullToRefreshListView extends ListView{
 
         MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) header.getLayoutParams();
         mlp.setMargins(0, Math.round(padding), 0, 0);
-        header.setLayoutParams(mlp);
+        header.setLayoutParams(mlp);	
     }
 
     @Override
@@ -352,19 +352,18 @@ public class PullToRefreshListView extends ListView{
                         case RELEASE_TO_REFRESH:
                             setState(State.REFRESHING);
                             bounceBackHeader();
-
+                            MainActivity.mMapViewFragment.resetView();
                             break;
 
                         case PULL_TO_REFRESH:
                             resetHeader();
+                            MainActivity.mMapViewFragment.resetView();
                             break;
                     }
                 }
                 break;
 
             case MotionEvent.ACTION_MOVE:
-            	//System.out.println("ACTION_MOVE: Y: " + event.getY() + "   First Position: " + getFirstVisiblePosition()
-            	//		+ "   headerPadding: " + headerPadding);
 
                 if(previousY != -1 && getFirstVisiblePosition() == 0 && Math.abs(mScrollStartY-event.getY()) > IDLE_DISTANCE){
                     float y = event.getY();
@@ -376,7 +375,7 @@ public class PullToRefreshListView extends ListView{
 
                     if(newHeaderPadding != headerPadding && state != State.REFRESHING){
                         setHeaderPadding(newHeaderPadding);
-
+                		MainActivity.mMapViewFragment.setMapPadding(newHeaderPadding + header.getHeight());
                         if(state == State.PULL_TO_REFRESH && headerPadding > 0){
                             setState(State.RELEASE_TO_REFRESH);
 
@@ -400,7 +399,7 @@ public class PullToRefreshListView extends ListView{
     private void bounceBackHeader(){
         int yTranslate = state == State.REFRESHING ?
                 header.getHeight() - headerContainer.getHeight() :
-                -headerContainer.getHeight() - headerContainer.getTop() + getPaddingTop();;
+                -headerContainer.getHeight() - headerContainer.getTop() + getPaddingTop();
 
         TranslateAnimation bounceAnimation = new TranslateAnimation(
                 TranslateAnimation.ABSOLUTE, 0,
@@ -421,6 +420,7 @@ public class PullToRefreshListView extends ListView{
     private void resetHeader(){
         if(getFirstVisiblePosition() > 0){
             setHeaderPadding(-header.getHeight());
+            //MainActivity.mMapViewFragment.setMapPadding(-header.getHeight());
             setState(State.PULL_TO_REFRESH);
             return;
         }
@@ -429,6 +429,7 @@ public class PullToRefreshListView extends ListView{
             bounceBackHeader = true;
         }else{
             bounceBackHeader();
+            MainActivity.mMapViewFragment.bounceBackMap();
         }
     }
 

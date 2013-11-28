@@ -63,8 +63,8 @@ public class MainActivity extends Activity implements AsyncResponse{
     private JSONArray MyContents = null;
     
     //Our references to the two main fragments and map fragment
-	static NewsFeed_Fragment mListDiscussionFragment = new NewsFeed_Fragment();
-	static NewsFeed_Fragment mListBulletinFragment = new NewsFeed_Fragment();
+	static NewsFeed_Fragment mListDiscussionFragment = NewsFeed_Fragment.newInstance(0);
+	static NewsFeed_Fragment mListBulletinFragment = NewsFeed_Fragment.newInstance(1);
 	static MapView_Fragment mMapViewFragment;
 	
 	MyAdapter mAdapter;
@@ -162,7 +162,7 @@ public class MainActivity extends Activity implements AsyncResponse{
       tabA.setTabListener(tabListener);
       tabB.setTabListener(tabListener);
       bar.addTab(tabA);
-      bar.addTab(tabB); 
+      bar.addTab(tabB);
  
     }
 	
@@ -181,10 +181,15 @@ public class MainActivity extends Activity implements AsyncResponse{
         @Override
         public Fragment getItem(int position) {
         	//select either bulletin/discussion fragment
-        	if (position == 0)
+        	if (position == 0) {
         		return mListDiscussionFragment;
-        	else
+        	}
+        	else if (position == 1) {
         		return mListBulletinFragment;
+        	}
+        	else
+        		//this shouldn't happen
+        		return null;
         }
 
     }  	
@@ -470,16 +475,12 @@ public class MainActivity extends Activity implements AsyncResponse{
 	@Override
 	public void onResume() {
 		super.onResume();
-		//Load content from the server
-		
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
 	}
-	
-	//TAB SWITCHER CLASS
 	
 	@Override
 	public void onBackPressed() {
@@ -500,6 +501,10 @@ public class MainActivity extends Activity implements AsyncResponse{
 	    .setNegativeButton("No", null)
 	    .show();
 	    }
+		else if (getFragmentManager().getBackStackEntryAt(0).getName().compareTo("Map") == 0) {
+			mMapViewFragment.zoomOutMap();
+			super.onBackPressed();
+		}
 		else
 			super.onBackPressed();
 	}

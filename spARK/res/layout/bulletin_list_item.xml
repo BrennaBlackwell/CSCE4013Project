@@ -3,7 +3,7 @@
     android:id="@+id/list_discussionMainFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white_dialog" >
+    android:background="@drawable/container_bg" >
 
 <TableLayout
     android:layout_width="match_parent"
@@ -228,33 +228,6 @@
                     android:layout_margin="5dp"
                     android:background="@drawable/btn_star"
                     android:gravity="center" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/list_discussion_num_commentsLinearLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@+id/list_discussionRatingLinearLayout"
-                android:background="@drawable/selector"
-                android:onClick="onClick"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="1px"
-                    android:layout_height="32dp"
-                    android:background="@color/grey_bg2" />
-
-                <TextView
-                    android:id="@+id/commentTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:gravity="center"
-                    android:text="12 comments"
-                    android:textColor="@android:color/black" />
             </LinearLayout>
         </RelativeLayout>
     </TableRow>

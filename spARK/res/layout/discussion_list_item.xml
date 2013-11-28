@@ -14,42 +14,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:weightSum="1.0" >
-
-        <TextView
-            android:id="@+id/headerTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".85"
-            android:paddingLeft="5dp"
-            android:text="Free Cheesburgers in the Union!"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black" />
+        android:layout_marginRight="5dp" 
+        android:weightSum="1.0">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_weight=".15"
+            android:layout_weight="1.0"
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/groupTextView"
+                android:id="@+id/headerTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:text="Campus Events"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:text="Free Cheesburgers in the Union!"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/creationDateTextView"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:text="17 mins ago"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_marginBottom="2dp"
+                android:showDividers="beginning|end|middle" >
+
+                <TextView
+                    android:id="@+id/groupTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="7dp"
+                    android:text="Campus Events"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="13dp" />
+
+            </LinearLayout>
+
         </LinearLayout>
+
     </TableRow>
 
     <View
@@ -64,30 +68,14 @@
         android:id="@+id/tableRow1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:weightSum="1.0" >
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1.0"
             android:weightSum="1.0" >
-
-            <TextView
-                android:id="@+id/descTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@+id/userInfoLinearLayout_ref"
-                android:layout_weight="1.0"
-                android:ellipsize="end"
-                android:maxLines="4"
-                android:scrollHorizontally="false"
-                android:text="http://www.google.com"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
 
             <include
                 android:id="@+id/userInfoLinearLayout_ref"
@@ -95,8 +83,46 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
                 layout="@layout/user_badge" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/userInfoLinearLayout_ref"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/creationDateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="5dp"
+                    android:text="17 mins ago"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/descTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1.0"
+                    android:enabled="false"
+                    android:maxLines="4"
+                    android:text="http://www.google.com"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/black"
+                    android:textSize="14dp" />
+
+            </LinearLayout>
+
         </RelativeLayout>
     </TableRow>
 
@@ -204,17 +230,34 @@
                     android:gravity="center" />
             </LinearLayout>
 
-            <include
-                android:id="@+id/list_discussionCommentLinearLayout_ref"
+            <LinearLayout
+                android:id="@+id/list_discussion_num_commentsLinearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/list_discussionRatingLinearLayout"
-                layout="@layout/discussion_num_comments_item" />
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/list_discussionRatingLinearLayout"
+                android:background="@drawable/selector"
+                android:onClick="onClick"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="1px"
+                    android:layout_height="32dp"
+                    android:background="@color/grey_bg2" />
+
+                <TextView
+                    android:id="@+id/commentTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"
+                    android:text="12 comments"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
         </RelativeLayout>
     </TableRow>
-
 </TableLayout>
 
 </FrameLayout>

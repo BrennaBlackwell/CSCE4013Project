@@ -27,5 +27,15 @@ public class FragmentFrameLayout extends FrameLayout {
         final int width = getWidth();
         setX((width > 0) ? (xFraction * width) : -9999);
     }
+    
+	public float getYFraction() {
+        return getY() / getHeight(); // TODO: guard divide-by-zero
+    }
+
+    public void setYFraction(float yFraction) {
+        // TODO: cache width
+        final int height = getHeight();
+        setY((height > 0) ? (yFraction * height) : -9999);
+    }
 
 }

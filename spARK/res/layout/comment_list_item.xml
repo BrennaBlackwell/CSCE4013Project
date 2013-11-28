@@ -8,8 +8,7 @@
         android:id="@+id/commentLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_margin="5dp"
         android:orientation="horizontal"
         android:weightSum="1.0" >
 
@@ -18,19 +17,26 @@
             style="@style/TextViewAppTheme"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
             android:layout_weight="1.0"
+            android:linksClickable="true"
             android:text="Allright here is some text hopefully it will just expand downwards"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp" 
-            android:linksClickable="true"/>
+            android:textSize="14sp" />
 
         <include
             android:id="@+id/userInfoLinearLayout_ref"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_gravity="right"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
             layout="@layout/user_badge" />
+
     </LinearLayout>
 
 </FrameLayout>
