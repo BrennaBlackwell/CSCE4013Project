@@ -1,6 +1,9 @@
 package edu.uark.spARK.entities;
 
+import java.io.Serializable;
 import java.util.Date;
+
+import org.ocpsoft.prettytime.PrettyTime;
 
 import android.location.Location;
 import android.text.format.DateFormat;
@@ -10,6 +13,7 @@ public class Content extends Entity {
 	
 	private final User creator;
 	private final Date creationDate;
+	private final MyPrettyTime p = new MyPrettyTime();
 	private Location location;
 	private int totalRating;
 	private int userRating;
@@ -53,10 +57,10 @@ public class Content extends Entity {
 		return creationDate;
 	}
 	
-	public String getCreationDateString() {
-		return (String) DateFormat.format("MM/dd/yy hh:mm aa", creationDate.getTime());
+	public String getCreationDateAsPrettyTime() {
+		return p.format(creationDate).toString();
 	}
-	
+
 	public Location getLocation() {
 		return location;
 	}
@@ -106,4 +110,9 @@ public class Content extends Entity {
 	public void subtractFromRating(int amount) {
 		this.totalRating -= amount;
 	}
+	
+	private class MyPrettyTime extends PrettyTime implements Serializable {
+		
+	}
+
 }

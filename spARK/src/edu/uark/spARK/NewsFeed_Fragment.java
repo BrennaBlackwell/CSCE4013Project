@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
 import edu.uark.spARK.entities.Bulletin;
@@ -70,7 +72,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-	    mAdapter = new NewsFeedArrayAdapter(getActivity(), R.layout.discussion_list_item, arrayListContent, this);		
+	    mAdapter = new NewsFeedArrayAdapter(getActivity(), R.layout.discussion_list_item, arrayListContent, this);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnRefreshListener(new OnRefreshListener() {
 
@@ -82,14 +84,33 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			}
 			
 		});
+        loadContent();
+        
+        SwipeDismissListViewTouchListener touchListener =
+        		        new SwipeDismissListViewTouchListener(
+        		                mListView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
+        		                   public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+        		                       for (int position : reverseSortedPositions) {
+        		                            mAdapter.remove(mAdapter.getItem(position-2));	//we need to ignore both the refresh header and map header, that's why there is a -2
+        		                            Toast.makeText(getActivity(), "MATT DO AWESOME SERVER THINGS", Toast.LENGTH_SHORT).show();
+        		                      }
+        		                       mAdapter.notifyDataSetChanged();
+        		                   }
+
+								@Override
+								public boolean canDismiss(int position) {
+									return true;
+								}
+        		                  });
+        
+        		 mListView.setOnTouchListener(touchListener);
+        		 mListView.setOnScrollListener(touchListener.makeScrollListener());
 	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		//I have loadcontent here for startup, so that the load is performed automatically, but not whenever the fragment is paused and returned to	
-        loadContent();
-		//inital loading of content		
+        
     }
 	
 	@Override
@@ -102,7 +123,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		super.onCreateView(inflater, container, savedInstanceState);
 		
 		View v = inflater.inflate(R.layout.list_feed, container, false);
-//		mListView = new PullToRefreshListView(container.getContext());
+		
         mPager = (SelectiveViewPager) getActivity().findViewById(R.id.pager);
         getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 
@@ -115,7 +136,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
         });
 		
 		mListView = (PullToRefreshListView) v.findViewById(R.id.pullToRefreshListView);
-	    
 		
 		mListView.mapHeader.setOnClickListener(new OnClickListener() {
 
@@ -135,8 +155,8 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	        	//animations are ordered (enter, exit, popEnter, popExit)
 	        	ft.setCustomAnimations(R.animator.slide_up, R.animator.slide_down, 
 	        			R.animator.slide_up, R.animator.slide_down)
-	        			.hide(MainActivity.mListBulletinFragment)
-	        			.hide(MainActivity.mListDiscussionFragment).commit();
+	        			//.hide(MainActivity.mListBulletinFragment)
+	        			.hide(NewsFeed_Fragment.this).commit();
 	        	//ft.hide(NewsFeed_Fragment.this).commit();       	
 	        	//getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 	        	
@@ -180,7 +200,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	public void loadContent() {
 		String contentType = "Discussion";
 		//get int from instantiating the content fragment type
-		int pos = this.getArguments().getInt("num");
+		int pos = getArguments().getInt("num");
 		if (pos == 0) {
 			contentType = "Discussion";
 		} else if (pos == 1){
@@ -321,4 +341,5 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		super.onStop();
 
 	}
+	
 }

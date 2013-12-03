@@ -589,4 +589,5 @@ public class PullToRefreshListView extends ListView {
             return false;
         }
     }
+    
 }

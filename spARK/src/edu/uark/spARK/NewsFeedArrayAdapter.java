@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -62,7 +63,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.titleTextView = (TextView) convertView.findViewById(R.id.headerTextView);
 			holder.titleTextView.setTag(position);
 			holder.descTextView = (TextView) convertView.findViewById(R.id.descTextView);	
-			holder.groupTextView = (TextView) convertView.findViewById(R.id.groupTextView);
+			holder.groupAndDateTextView = (TextView) convertView.findViewById(R.id.groupAndDateTextView);
 			holder.userProfileIcon = (QuickContactBadge) convertView.findViewById(R.id.userQuickContactBadge);
 			holder.usernameTextView = (TextView) convertView.findViewById(R.id.usernameTextView);
 			holder.usernameTextView.setTag(position);
@@ -73,7 +74,6 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 //				}
 //				
 //			});
-			holder.creationDateTextView = (TextView) convertView.findViewById(R.id.creationDateTextView);
 			holder.totalScoreTextView = (TextView) convertView.findViewById(R.id.totalScoreTextView);
 			
 			holder.likeBtn = (ToggleButton) convertView.findViewById(R.id.likeBtn);
@@ -92,9 +92,8 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		holder.descTextView.setText(c.getText());
 		holder.descTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		Linkify.addLinks(holder.descTextView, Linkify.ALL);
-		holder.groupTextView.setText("posted to group");
+		holder.groupAndDateTextView.setText("posted to group - " + c.getCreationDateAsPrettyTime());
 		holder.usernameTextView.setText(c.getCreator().getTitle());
-		holder.creationDateTextView.setText(c.getCreationDateString());
 		holder.totalScoreTextView.setText(String.valueOf(c.getTotalRating()));
 		if (c instanceof Discussion) {
 			holder.commentTextView.setText(((Discussion) c).getNumComments() + " comments");
@@ -248,10 +247,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		FrameLayout mainFL;
 		TextView titleTextView;
 		TextView descTextView;
-		TextView groupTextView;
+		TextView groupAndDateTextView;
 		QuickContactBadge userProfileIcon;
 		TextView usernameTextView;
-		TextView creationDateTextView;
 		TextView totalScoreTextView;
 		TextView commentTextView;
 		LinearLayout commentLinearLayout;
@@ -268,5 +266,5 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	public ViewHolder getHolder() {
 		return holder;
 	}
-	
+
 }

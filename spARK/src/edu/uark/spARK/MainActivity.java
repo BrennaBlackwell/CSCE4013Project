@@ -63,9 +63,6 @@ public class MainActivity extends Activity implements AsyncResponse{
 
     private JSONArray MyContents = null;
     
-    //Our references to the two main fragments and map fragment
-	static NewsFeed_Fragment mListDiscussionFragment = NewsFeed_Fragment.newInstance(0);
-	static NewsFeed_Fragment mListBulletinFragment = NewsFeed_Fragment.newInstance(1);
 	static MapView_Fragment mMapViewFragment;
 	
 	MyAdapter mAdapter;
@@ -172,7 +169,7 @@ public class MainActivity extends Activity implements AsyncResponse{
         	
         };
         
-      final ActionBar.Tab tabA = bar.newTab().setText("Discussions");
+      ActionBar.Tab tabA = bar.newTab().setText("Discussions");
       ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
       tabA.setTabListener(tabListener);
       tabB.setTabListener(tabListener);
@@ -194,17 +191,8 @@ public class MainActivity extends Activity implements AsyncResponse{
         }
 
         @Override
-        public Fragment getItem(int position) {
-        	//select either bulletin/discussion fragment
-        	if (position == 0) {
-        		return mListDiscussionFragment;
-        	}
-        	else if (position == 1) {
-        		return mListBulletinFragment;
-        	}
-        	else
-        		//this shouldn't happen
-        		return null;
+        public NewsFeed_Fragment getItem(int position) {
+        	return NewsFeed_Fragment.newInstance(position);
         }
 
     }  	
@@ -429,14 +417,16 @@ public class MainActivity extends Activity implements AsyncResponse{
         	if(intent.hasExtra("bulletin")) {
         		Bulletin bulletin = (Bulletin) intent.getSerializableExtra("bulletin");
         		int groupSelected = intent.getIntExtra("groupSelected", 0);
-        		mListBulletinFragment.arrayListContent.add(0, bulletin);
+        		//mListBulletinFragment.arrayListContent.add(0, bulletin);
+        		mAdapter.getItem(1).arrayListContent.add(0, bulletin);
         		
         		JSONQuery jquery = new JSONQuery(this);
 				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Bulletin", Integer.toString(bulletin.getCreator().getId()), bulletin.getTitle(), bulletin.getText(), Integer.toString(groupSelected));
         	} else if (intent.hasExtra("discussion")) {
         		Discussion discussion = (Discussion) intent.getSerializableExtra("discussion");
         		int groupSelected = intent.getIntExtra("groupSelected", 0);
-        		mListDiscussionFragment.arrayListContent.add(0, discussion);
+        		//mListDiscussionFragment.arrayListContent.add(0, discussion);
+        		mAdapter.getItem(0).arrayListContent.add(0, discussion);
         		
         		JSONQuery jquery = new JSONQuery(this);
 				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Discussion", Integer.toString(discussion.getCreator().getId()), discussion.getTitle(), discussion.getText(), Integer.toString(groupSelected));

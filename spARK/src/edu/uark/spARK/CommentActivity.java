@@ -11,6 +11,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -34,9 +35,8 @@ public class CommentActivity extends Activity implements AsyncResponse{
 	public void refreshDiscussion(ViewHolder holder) {
 		holder.titleTextView.setText(mDiscussion.getTitle());
 		holder.descTextView.setText(mDiscussion.getText());
-		holder.groupTextView.setVisibility(View.GONE);
+		holder.groupAndDateTextView.setVisibility(View.GONE);
 		holder.usernameTextView.setText(mDiscussion.getCreator().getName());
-		holder.creationDateTextView.setText(mDiscussion.getCreationDateString());
 		holder.totalScoreTextView.setText(String.valueOf(mDiscussion.getTotalRating()));
 		holder.commentTextView.setText(mDiscussion.getNumComments() + " comments");		
 	}
@@ -66,9 +66,14 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		holder.titleTextView = (TextView) findViewById(R.id.headerTextView);
 		holder.descTextView = (TextView) findViewById(R.id.descTextView);	
 		holder.commentTextView = (TextView) findViewById(R.id.commentTextView);
-		holder.groupTextView = (TextView) findViewById(R.id.groupTextView);
+		holder.commentTextView.setOnTouchListener(new View.OnTouchListener() {
+		    @Override
+		    public boolean onTouch(View v, MotionEvent event) {
+		        return true;
+		    }
+		});
+		holder.groupAndDateTextView = (TextView) findViewById(R.id.groupAndDateTextView);
 		holder.usernameTextView = (TextView) findViewById(R.id.usernameTextView);
-		holder.creationDateTextView = (TextView) findViewById(R.id.creationDateTextView);
 		holder.totalScoreTextView = (TextView) findViewById(R.id.totalScoreTextView);		
 		holder.likeBtn = (ToggleButton) findViewById(R.id.likeBtn);	
 		holder.dislikeBtn = (ToggleButton) findViewById(R.id.dislikeBtn);
@@ -107,9 +112,8 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		holder.descTextView.setText(mDiscussion.getText());
 		holder.descTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		Linkify.addLinks(holder.descTextView, Linkify.ALL);
-		holder.groupTextView.setVisibility(View.GONE);
+		holder.groupAndDateTextView.setVisibility(View.GONE);
 		holder.usernameTextView.setText(mDiscussion.getCreator().getName());
-		holder.creationDateTextView.setText(mDiscussion.getCreationDateString());
 		holder.totalScoreTextView.setText(String.valueOf(mDiscussion.getTotalRating()));
 		holder.commentTextView.setText(mDiscussion.getNumComments() + " comments");
 
@@ -117,7 +121,7 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setTitle("test");
-		ab.setSubtitle(mDiscussion.getCreationDateString());
+		ab.setSubtitle(mDiscussion.getCreationDateAsPrettyTime());
 	    ab.show();
 	}
 

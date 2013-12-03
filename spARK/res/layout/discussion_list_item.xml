@@ -28,21 +28,22 @@
                 android:id="@+id/headerTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
                 android:text="Free Cheesburgers in the Union!"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
 
             <LinearLayout
+                android:id="@+id/groupAndTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:showDividers="beginning|end|middle" >
 
                 <TextView
-                    android:id="@+id/groupTextView"
+                    android:id="@+id/groupAndDateTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="7dp"
@@ -97,22 +98,12 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/creationDateTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="5dp"
-                    android:text="17 mins ago"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textSize="13dp" />
-
-                <TextView
                     android:id="@+id/descTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1.0"
                     android:enabled="false"
                     android:maxLines="4"
@@ -136,7 +127,7 @@
     <TableRow
         android:id="@+id/tableRow3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/container_items_bg"
         android:baselineAligned="true"
         android:visibility="visible"
