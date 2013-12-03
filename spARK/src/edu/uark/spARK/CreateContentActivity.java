@@ -4,27 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
+import android.app.*;
 import android.app.ActionBar.OnNavigationListener;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.RadioButton;
-import android.widget.Spinner;
-import android.widget.TextView;
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Discussion;
-import edu.uark.spARK.entities.Group;
-import edu.uark.spARK.entities.User;
+import edu.uark.spARK.entities.*;
 
 @SuppressLint("ValidFragment")
 public class CreateContentActivity extends FragmentActivity implements OnNavigationListener {
@@ -182,7 +171,10 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 						itemSelected = MainActivity.myGroups.get(position-1).getId();
 					}
 					
-					intent.putExtra("bulletin", new Bulletin(0, title, desc, user));
+					String lat = intent.getStringExtra("latitude");
+					String lng = intent.getStringExtra("longitude");
+					
+					intent.putExtra("bulletin", new Bulletin(0, title, desc, user, lat, lng));
 					intent.putExtra("groupSelected", itemSelected);
 					setResult(RESULT_OK, intent);
 					
@@ -259,7 +251,10 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 						itemSelected = MainActivity.myGroups.get(position-1).getId();
 					}
 					
-					intent.putExtra("discussion", new Discussion(0, title, desc, user));
+					String lat = intent.getStringExtra("latitude");
+					String lng = intent.getStringExtra("longitude");
+
+					intent.putExtra("discussion", new Discussion(0, title, desc, user, lat, lng));
 					intent.putExtra("groupSelected", itemSelected);
 					setResult(RESULT_OK, intent);
 					
@@ -303,7 +298,11 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					RadioButton visibility = (RadioButton)findViewById(R.id.radio_visible);
 							
 					User user = new User(MainActivity.UserID, MainActivity.Username, intent.getStringExtra("rank"));
-					Group g = new Group(0, title, desc, user, privacy.isChecked(), visibility.isChecked());
+					
+					String lat = intent.getStringExtra("latitude");
+					String lng = intent.getStringExtra("longitude");
+
+					Group g = new Group(0, title, desc, user, lat, lng, privacy.isChecked(), visibility.isChecked());
 					intent.putExtra("group", g);
 					setResult(RESULT_OK, intent);
 					

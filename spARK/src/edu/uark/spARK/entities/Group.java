@@ -2,7 +2,7 @@ package edu.uark.spARK.entities;
 
 import java.util.*;
 
-import android.location.Location;
+import com.google.android.gms.maps.model.LatLng;
 
 @SuppressWarnings("serial")
 public class Group extends Content {
@@ -41,31 +41,31 @@ public class Group extends Content {
 		this.visible = visible;
 	}
 	
-	public Group(int id, String title, String description, User creator, Location location) {
-		super(id, title, description, creator, location);
+	public Group(int id, String title, String description, User creator, String latitude, String longitude) {
+		super(id, title, description, creator, latitude, longitude);
 		this.users = new ArrayList<User>();
 		users.add(creator);
 		this.open = true;
 		this.visible = true;
 	}
 	
-	public Group(int id, String title, String description, User creator, Location location, boolean open, boolean visible) {
-		super(id, title, description, creator, location);
+	public Group(int id, String title, String description, User creator, String latitude, String longitude, boolean open, boolean visible) {
+		super(id, title, description, creator, latitude, longitude);
 		this.users = new ArrayList<User>();
 		users.add(creator);
 		this.open = open;
 		this.visible = visible;
 	}
 	
-	public Group(int id, String title, String description, User creator, Location location, List<User> users) {
-		super(id, title, description, creator, location);
+	public Group(int id, String title, String description, User creator, String latitude, String longitude, List<User> users) {
+		super(id, title, description, creator, latitude, longitude);
 		this.users = users;
 		this.open = true;
 		this.visible = true;
 	}
 	
-	public Group(int id, String title, String description, User creator, Location location, List<User> users, boolean open, boolean visible) {
-		super(id, title, description, creator, location);
+	public Group(int id, String title, String description, User creator, String latitude, String longitude, List<User> users, boolean open, boolean visible) {
+		super(id, title, description, creator, latitude, longitude);
 		this.users = users;
 		this.open = open;
 		this.visible = visible;
@@ -101,31 +101,31 @@ public class Group extends Content {
 		this.visible = visible;
 	}
 	
-	public Group(int id, String title, String description, User creator, Date creationDate, Location location) {
-		super(id, title, description, creator, creationDate, location);
+	public Group(int id, String title, String description, User creator, Date creationDate, String latitude, String longitude) {
+		super(id, title, description, creator, creationDate, latitude, longitude);
 		this.users = new ArrayList<User>();
 		users.add(creator);
 		this.open = true;
 		this.visible = true;
 	}
 	
-	public Group(int id, String title, String description, User creator, Date creationDate, Location location, boolean open, boolean visible) {
-		super(id, title, description, creator, creationDate, location);
+	public Group(int id, String title, String description, User creator, Date creationDate, String latitude, String longitude, boolean open, boolean visible) {
+		super(id, title, description, creator, creationDate, latitude, longitude);
 		this.users = new ArrayList<User>();
 		users.add(creator);
 		this.open = open;
 		this.visible = visible;
 	}
 	
-	public Group(int id, String title, String description, User creator, Date creationDate, Location location, List<User> users) {
-		super(id, title, description, creator, creationDate, location);
+	public Group(int id, String title, String description, User creator, Date creationDate, String latitude, String longitude, List<User> users) {
+		super(id, title, description, creator, creationDate, latitude, longitude);
 		this.users = users;
 		this.open = true;
 		this.visible = true;
 	}
 	
-	public Group(int id, String title, String description, User creator, Date creationDate, Location location, List<User> users, boolean open, boolean visible) {
-		super(id, title, description, creator, creationDate, location);
+	public Group(int id, String title, String description, User creator, Date creationDate, String latitude, String longitude, List<User> users, boolean open, boolean visible) {
+		super(id, title, description, creator, creationDate, latitude, longitude);
 		this.users = users;
 		this.open = open;
 		this.visible = visible;

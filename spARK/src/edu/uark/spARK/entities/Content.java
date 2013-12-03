@@ -5,16 +5,14 @@ import java.util.Date;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
-import android.location.Location;
-import android.text.format.DateFormat;
-
 @SuppressWarnings("serial")
 public class Content extends Entity {
 	
 	private final User creator;
 	private final Date creationDate;
 	private final MyPrettyTime p = new MyPrettyTime();
-	private Location location;
+	private String latitude;
+	private String longitude;
 	private int totalRating;
 	private int userRating;
 	
@@ -22,31 +20,36 @@ public class Content extends Entity {
 		super(id, title, text);
 		this.creator = null;
 		this.creationDate = new Date(System.currentTimeMillis());
-		this.location = null;
+		this.latitude = null;
+		this.longitude = null;
 	}
 	
 	public Content(int id, String title, String text, User creator) {
 		super(id, title, text);
 		this.creator = creator;
 		this.creationDate = new Date(System.currentTimeMillis());
-		this.location = null;
+		this.latitude = null;
+		this.longitude = null;
 	}
 	
-	public Content(int id, String title, String text, User creator, Location location) {
+	public Content(int id, String title, String text, User creator, String latitude, String longitude) {
 		this(id, title, text, creator);
-		this.location = location;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 	
 	public Content(int id, String title, String text, User creator, Date creationDate) {
 		super(id, title, text);
 		this.creator = creator;
 		this.creationDate = creationDate;
-		this.location = null;
+		this.latitude = null;
+		this.longitude = null;
 	}
 	
-	public Content(int id, String title, String text, User creator, Date creationDate, Location location) {
+	public Content(int id, String title, String text, User creator, Date creationDate, String latitude, String longitude) {
 		this(id, title, text, creator, creationDate);
-		this.location = location;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 	
 	public User getCreator() {
@@ -61,12 +64,20 @@ public class Content extends Entity {
 		return p.format(creationDate).toString();
 	}
 
-	public Location getLocation() {
-		return location;
+	public String getLatitude() {
+		return latitude;
 	}
 	
-	public void setLocaton(Location location) {
-		this.location = location;
+	public String getLongitude() {
+		return longitude;
+	}
+	
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
 	}
 	
 	public boolean hasCreator() {
@@ -74,7 +85,7 @@ public class Content extends Entity {
 	}
 	
 	public boolean hasLocation() {
-		return (location != null);
+		return (latitude != null && longitude != null);
 	}
 	
 	public int getTotalRating() {

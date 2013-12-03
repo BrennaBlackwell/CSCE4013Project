@@ -190,7 +190,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                 // Find the child view that was touched (perform a hit test)
                 Rect rect = new Rect();
                 int childCount = mListView.getChildCount();
-                System.out.println("count " + childCount);
                 int[] listViewCoords = new int[2];
                 mListView.getLocationOnScreen(listViewCoords);
                 int x = (int) motionEvent.getRawX() - listViewCoords[0];

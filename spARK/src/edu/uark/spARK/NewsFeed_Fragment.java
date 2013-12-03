@@ -1,36 +1,22 @@
 package edu.uark.spARK;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.*;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.app.*;
 import android.app.FragmentManager.OnBackStackChangedListener;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Comment;
-import edu.uark.spARK.entities.Content;
-import edu.uark.spARK.entities.Discussion;
-import edu.uark.spARK.entities.User;
+import edu.uark.spARK.entities.*;
 
 
 public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
@@ -110,7 +96,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
     }
 	
 	@Override
@@ -207,18 +192,17 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			contentType = "Bulletin";
 		}
 		
-		
 		JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, Integer.toString(MainActivity.UserID), contentType);
 	}
 	
 	@Override
 	public void processFinish(JSONObject result) {
-		arrayListContent.clear();
 		try {
 			int success = result.getInt(ServerUtil.TAG_SUCCESS);
 
 			if (success == 1) {
+				arrayListContent.clear();
 				// Get Array of discussions
 				contents = result.getJSONArray(ServerUtil.TAG_CONTENTS);
 

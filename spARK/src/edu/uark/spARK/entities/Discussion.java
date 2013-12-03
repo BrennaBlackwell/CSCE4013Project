@@ -2,7 +2,7 @@ package edu.uark.spARK.entities;
 
 import java.util.*;
 
-import android.location.Location;
+import com.google.android.gms.maps.model.LatLng;
 
 
 @SuppressWarnings("serial")
@@ -20,13 +20,13 @@ public class Discussion extends Content {
 		this.comments = new ArrayList<Comment>();
 	}
 	
-	public Discussion(int id, String title, String description, User creator, Location location) {
-		super(id, title, description, creator, location);
+	public Discussion(int id, String title, String description, User creator, String latitude, String longitude) {
+		super(id, title, description, creator, latitude, longitude);
 		this.comments = new ArrayList<Comment>();
 	}
 	
-	public Discussion(int id, String title, String description, User creator, Location location, List<Comment> comments) {
-		super(id, title, description, creator, location);
+	public Discussion(int id, String title, String description, User creator, String latitude, String longitude, List<Comment> comments) {
+		super(id, title, description, creator, latitude, longitude);
 		this.comments = comments;
 	}
 	
@@ -40,13 +40,13 @@ public class Discussion extends Content {
 		this.comments = comments;
 	}
 	
-	public Discussion(int id, String title, String description, User creator, Date creationDate, Location location) {
-		super(id, title, description, creator, creationDate, location);
+	public Discussion(int id, String title, String description, User creator, Date creationDate, String latitude, String longitude) {
+		super(id, title, description, creator, creationDate, latitude, longitude);
 		this.comments = new ArrayList<Comment>();
 	}
 	
-	public Discussion(int id, String title, String description, User creator, Date creationDate, Location location, List<Comment> comments) {
-		super(id, title, description, creator, creationDate, location);
+	public Discussion(int id, String title, String description, User creator, Date creationDate, String latitude, String longitude, List<Comment> comments) {
+		super(id, title, description, creator, creationDate, latitude, longitude);
 		this.comments = comments;
 	}
 	

@@ -1,28 +1,25 @@
 package edu.uark.spARK;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.ViewGroup.MarginLayoutParams;
-import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.*;
 import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
+
+import edu.uark.spARK.entities.*;
 
 
 
@@ -34,6 +31,10 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     private GoogleMap map;	//this is the map which is instantiated in the initializeMap();
 //    private View v;
     private LocationClient mLocationClient;
+    
+    private List<Marker> discussionMarkers = new ArrayList<Marker>();
+    private List<Marker> bulletinMarkers = new ArrayList<Marker>();
+    private List<Marker> groupMarkers = new ArrayList<Marker>();
     
     public MapView_Fragment() {
 
@@ -241,5 +242,43 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	
 	public LocationClient getLocationClient() {
 		return mLocationClient;
+	}
+	
+	public void addContent(Content c) {
+		addContent(c, true);
+	}
+	
+	public void addContent(Content c, boolean visible) {
+		LatLng latLng = new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()));
+		MarkerOptions markerOptions = new MarkerOptions();
+		markerOptions.position(latLng);
+		markerOptions.title(c.getTitle());
+		markerOptions.visible(visible);
+		
+		if(c instanceof Discussion) {
+			discussionMarkers.add(map.addMarker(markerOptions));
+		} else if (c instanceof Bulletin) {
+			bulletinMarkers.add(map.addMarker(markerOptions));
+		} else if (c instanceof Group) {
+			groupMarkers.add(map.addMarker(markerOptions));
+		}
+	}
+	
+	public void updateMarkers(String contentType) {
+		boolean isDiscussion = contentType.equalsIgnoreCase("discussions");
+		boolean isBulletin = contentType.equalsIgnoreCase("bulletins");
+		boolean isGroup = contentType.equalsIgnoreCase("groups");
+		
+		for(Marker marker : discussionMarkers) {
+			marker.setVisible(isDiscussion);
+		}
+		
+		for(Marker marker : bulletinMarkers) {
+			marker.setVisible(isBulletin);
+		}
+		
+		for(Marker marker : groupMarkers) {
+			marker.setVisible(isGroup);
+		}
 	}
 }

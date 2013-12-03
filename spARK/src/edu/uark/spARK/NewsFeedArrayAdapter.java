@@ -10,22 +10,11 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.QuickContactBadge;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.*;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Content;
-import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.*;
 
 public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements AsyncResponse{
 	//private static final String tag = "NewsFeedArrayAdapter";

@@ -2,8 +2,6 @@ package edu.uark.spARK.entities;
 
 import java.util.Date;
 
-import android.location.Location;
-
 
 @SuppressWarnings("serial")
 public class Bulletin extends Content {
@@ -16,16 +14,16 @@ public class Bulletin extends Content {
 		super(id, title, text, creator);
 	}
 	
-	public Bulletin(int id, String title, String text, User creator, Location location) {
-		super(id, title, text, creator, location);
+	public Bulletin(int id, String title, String text, User creator, String latitude, String longitude) {
+		super(id, title, text, creator, latitude, longitude);
 	}
 	
 	public Bulletin(int id, String title, String text, User creator, Date creationDate) {
 		super(id, title, text, creator, creationDate);
 	}
 	
-	public Bulletin(int id, String title, String text, User creator, Date creationDate, Location location) {
-		super(id, title, text, creator, creationDate, location);
+	public Bulletin(int id, String title, String text, User creator, Date creationDate, String latitude, String longitude) {
+		super(id, title, text, creator, creationDate, latitude, longitude);
 	}
 
 }

@@ -3,39 +3,24 @@ package edu.uark.spARK;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.*;
 
-import android.app.ActionBar;
+import android.app.*;
 import android.app.ActionBar.Tab;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Discussion;
-import edu.uark.spARK.entities.Group;
+import edu.uark.spARK.entities.*;
 
 public class MainActivity extends Activity implements AsyncResponse{
 	
@@ -160,6 +145,7 @@ public class MainActivity extends Activity implements AsyncResponse{
 			@Override
 			public void onTabSelected(Tab tab, FragmentTransaction ft) {
 				mPager.setCurrentItem(tab.getPosition());
+				mMapViewFragment.updateMarkers(tab.getText().toString());
 			}
 
 			@Override
@@ -169,13 +155,12 @@ public class MainActivity extends Activity implements AsyncResponse{
         	
         };
         
-      ActionBar.Tab tabA = bar.newTab().setText("Discussions");
-      ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
-      tabA.setTabListener(tabListener);
-      tabB.setTabListener(tabListener);
-      bar.addTab(tabA);
-      bar.addTab(tabB);
-      
+      final ActionBar.Tab discussionTab = bar.newTab().setText("Discussions");
+      ActionBar.Tab bulletinTab = bar.newTab().setText("Bulletins");
+      discussionTab.setTabListener(tabListener);
+      bulletinTab.setTabListener(tabListener);
+      bar.addTab(discussionTab);
+      bar.addTab(bulletinTab);
     }
 	
     public static class MyAdapter extends FragmentPagerAdapter {
@@ -230,6 +215,10 @@ public class MainActivity extends Activity implements AsyncResponse{
         	intent.putExtra("contentType", getActionBar().getSelectedTab().getText());
         	intent.putExtra("user", getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE).getString("currentUsername", ""));
         	intent.putExtra("rank", "Total N00B!"); // TODO: Get user info from database on login and store in global User variable
+        	
+        	Location loc = mMapViewFragment.getLocationClient().getLastLocation();
+        	intent.putExtra("latitude", String.valueOf(loc.getLatitude()));
+        	intent.putExtra("longitude", String.valueOf(loc.getLongitude()));
         	startActivityForResult(intent, CREATE_CONTENT_ACTIVITY);
         	break;
         }
@@ -419,6 +408,9 @@ public class MainActivity extends Activity implements AsyncResponse{
         		int groupSelected = intent.getIntExtra("groupSelected", 0);
         		//mListBulletinFragment.arrayListContent.add(0, bulletin);
         		mAdapter.getItem(1).arrayListContent.add(0, bulletin);
+        		if(bulletin.hasLocation()) {
+        			mMapViewFragment.addContent(bulletin, getActionBar().getSelectedTab().getPosition() == 1);
+        		}
         		
         		JSONQuery jquery = new JSONQuery(this);
 				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Bulletin", Integer.toString(bulletin.getCreator().getId()), bulletin.getTitle(), bulletin.getText(), Integer.toString(groupSelected));
@@ -427,12 +419,19 @@ public class MainActivity extends Activity implements AsyncResponse{
         		int groupSelected = intent.getIntExtra("groupSelected", 0);
         		//mListDiscussionFragment.arrayListContent.add(0, discussion);
         		mAdapter.getItem(0).arrayListContent.add(0, discussion);
+        		if(discussion.hasLocation()) {
+        			mMapViewFragment.addContent(discussion, getActionBar().getSelectedTab().getPosition() == 0);
+        		}
         		
         		JSONQuery jquery = new JSONQuery(this);
 				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Discussion", Integer.toString(discussion.getCreator().getId()), discussion.getTitle(), discussion.getText(), Integer.toString(groupSelected));
         	} else if (intent.hasExtra("group")) {
         		Group group = (Group) intent.getSerializableExtra("group");
 				JSONQuery jquery = new JSONQuery(this);
+				if(group.hasLocation()) {
+					mMapViewFragment.addContent(group, false);
+				}
+				
 				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", Integer.toString(group.getCreator().getId()), group.getTitle(), group.getDescription(), (group.isOpen() ? "Open" : "Closed"), (group.isVisible() ? "Visible" : "Hidden"));		
         	}
         }
@@ -443,7 +442,7 @@ public class MainActivity extends Activity implements AsyncResponse{
     @Override
 	public void processFinish(JSONObject result) {
 		try { 
-			myGroups = new ArrayList();
+			myGroups = new ArrayList<Group>();
 			int success = result.getInt(ServerUtil.TAG_SUCCESS);
 			if (success == 1) {
 				MyContents = result.getJSONArray(ServerUtil.TAG_GROUPS);
