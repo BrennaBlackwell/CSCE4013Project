@@ -77,9 +77,21 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
         		                mListView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
         		                   public void onDismiss(ListView listView, int[] reverseSortedPositions) {
         		                       for (int position : reverseSortedPositions) {
-        		                            mAdapter.remove(mAdapter.getItem(position-2));	//we need to ignore both the refresh header and map header, that's why there is a -2
-        		                            Toast.makeText(getActivity(), "MATT DO AWESOME SERVER THINGS", Toast.LENGTH_SHORT).show();
-        		                      }
+        		                    	   int contentID = mAdapter.getItem(position-2).getId();
+        		                    	   String contentType = "Discussion";
+        		                    	   
+        		                    	   // TODO: Added quick and dirty method to grab Content Type. May want to change this later
+        		                    	   if (mAdapter.getItem(position-2).getClass().toString().contains("Discussion")) {
+        		                    		   contentType = "Discussion";
+        		                    	   } else if (mAdapter.getItem(position-2).getClass().toString().contains("Bulletin")) {
+        		                    		   contentType = "Bulletin";
+        		                    	   }
+        		                           mAdapter.remove(mAdapter.getItem(position-2));	//we need to ignore both the refresh header and map header, that's why there is a -2
+        		                           
+        		                           JSONQuery jquery = new JSONQuery(NewsFeed_Fragment.this);
+        		                           jquery.execute(ServerUtil.URL_BLOCK_CONTENT, Integer.toString(MainActivity.UserID), Integer.toString(contentID), contentType);
+        		                       }
+        		                       
         		                       mAdapter.notifyDataSetChanged();
         		                   }
 

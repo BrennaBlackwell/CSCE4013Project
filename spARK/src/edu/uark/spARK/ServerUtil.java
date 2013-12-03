@@ -37,6 +37,7 @@ public class ServerUtil {
 	public static final String URL_LIKE_DISLIKE = SERVER_ADDR + "rating.php";
 	
 	public static final String URL_CREATE_CONTENT = SERVER_ADDR + "createcontent.php";
+	
+	public static final String URL_BLOCK_CONTENT = SERVER_ADDR + "blockcontent.php";
 
- 
 }

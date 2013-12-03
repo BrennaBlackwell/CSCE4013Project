@@ -2,6 +2,7 @@ package edu.uark.spARK;
 
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ public class MyProfile_Fragment extends Fragment implements AsyncResponse {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    	
+    	getActivity().getActionBar().setNavigationMode(ActionBar.DISPLAY_HOME_AS_UP);
     	
 		View profileView = inflater.inflate(R.layout.fragment_myprofile, container, false);
 		TextView textview = (TextView)profileView.findViewById(R.id.userName);

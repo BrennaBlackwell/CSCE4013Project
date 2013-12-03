@@ -50,8 +50,8 @@ public class MainActivity extends Activity implements AsyncResponse{
     
 	static MapView_Fragment mMapViewFragment;
 	
-	MyAdapter mAdapter;
-	SelectiveViewPager mPager;
+	public MyAdapter mAdapter;
+	public static SelectiveViewPager mPager;
 	
     
 	@Override
@@ -245,7 +245,7 @@ public class MainActivity extends Activity implements AsyncResponse{
     	
     	case 0:  		
             fragmentManager.beginTransaction().detach(mMapViewFragment)
-            .replace(R.id.fragment_frame, new Profile_Fragment()).commit();
+            .replace(R.id.fragment_frame, new MyProfile_Fragment()).commit();
             mPager.setVisibility(View.GONE);
             break;
     	case 1:

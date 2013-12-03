@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.*;
@@ -217,10 +217,20 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 
 			@Override
 			public void onClick(View v) {
-				if (getContext() instanceof FragmentActivity) {
-				    // Need to get this working
-					fragment.getFragmentManager().beginTransaction().add(fragment.getView().getId(), new Profile_Fragment()).commit();
-				}
+				// Need to get this working
+				//String user = v.getParent().getParent()
+				String userProfile = (String) holder.usernameTextView.getText();
+				
+				Bundle args = new Bundle();
+	            args.putSerializable("ProfileName", userProfile);
+	            Fragment profileFragment = new Profile_Fragment();
+	            profileFragment.setArguments(args);
+	            
+				//fragment.getFragmentManager().beginTransaction().add(fragment.getView().getId(), profileFragment).commit();
+				fragment.getFragmentManager().beginTransaction().detach(MainActivity.mMapViewFragment)
+		        .replace(R.id.fragment_frame, profileFragment).commit();
+		        MainActivity.mPager.setVisibility(View.GONE);
+		           
 			}			
 		});
 		return convertView;
