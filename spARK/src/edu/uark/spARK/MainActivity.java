@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -137,7 +138,21 @@ public class MainActivity extends Activity implements AsyncResponse{
 
         mAdapter = new MyAdapter(getFragmentManager());
         mPager.setAdapter(mAdapter);
-        
+        mPager.setOnPageChangeListener(new OnPageChangeListener() {
+
+  			@Override
+  			public void onPageScrollStateChanged(int state) { }
+
+  			@Override
+  			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+
+  			@Override
+  			public void onPageSelected(int position) {
+  				getActionBar().getTabAt(position).select();
+  			}
+        	
+        });
+
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 
 			@Override
@@ -157,13 +172,13 @@ public class MainActivity extends Activity implements AsyncResponse{
         	
         };
         
-      ActionBar.Tab tabA = bar.newTab().setText("Discussions");
+      final ActionBar.Tab tabA = bar.newTab().setText("Discussions");
       ActionBar.Tab tabB = bar.newTab().setText("Bulletins");
       tabA.setTabListener(tabListener);
       tabB.setTabListener(tabListener);
       bar.addTab(tabA);
       bar.addTab(tabB);
- 
+      
     }
 	
     public static class MyAdapter extends FragmentPagerAdapter {
@@ -486,26 +501,14 @@ public class MainActivity extends Activity implements AsyncResponse{
 	public void onBackPressed() {
 		//make sure there are no fragments in backstack
 		if(getFragmentManager().getBackStackEntryCount() == 0) {
-	    new AlertDialog.Builder(this)
-	        .setIcon(android.R.drawable.ic_dialog_alert)
-	        .setTitle("Exit spark")
-	        .setMessage("Are you sure you want to exit?")
-	        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-	    {
-	        @Override
-	        public void onClick(DialogInterface dialog, int which) {
-	            finish();    
-	        }
-
-	    })
-	    .setNegativeButton("No", null)
-	    .show();
+			finish();
 	    }
 		else if (getFragmentManager().getBackStackEntryAt(0).getName().compareTo("Map") == 0) {
 			mMapViewFragment.zoomOutMap();
 			super.onBackPressed();
 		}
-		else
+		else {
 			super.onBackPressed();
+		}
 	}
 }
