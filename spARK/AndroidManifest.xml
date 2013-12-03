@@ -74,6 +74,7 @@
         </activity>
         <activity
             android:name="edu.uark.spARK.CreateContentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_create_content" >
         </activity>
     </application>
