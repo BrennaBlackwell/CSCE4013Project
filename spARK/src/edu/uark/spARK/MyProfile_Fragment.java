@@ -2,9 +2,7 @@ package edu.uark.spARK;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +19,10 @@ public class MyProfile_Fragment extends Fragment implements AsyncResponse {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        
-    	SharedPreferences preferences = this.getActivity().getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-		String currentUsername = preferences.getString("currentUsername", "");
-		
+    	
 		View profileView = inflater.inflate(R.layout.fragment_myprofile, container, false);
 		TextView textview = (TextView)profileView.findViewById(R.id.userName);
-		textview.setText(currentUsername);
+		textview.setText(MainActivity.Username);
 		
     	return profileView;
     }

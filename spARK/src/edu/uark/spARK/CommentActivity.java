@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -86,15 +85,10 @@ public class CommentActivity extends Activity implements AsyncResponse{
 					//prevent user from posting
 					return;
 				else {
-					//post comment
-					//get user name from stored preferences or something
-					SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-					String currentUsername = preferences.getString("currentUsername", "");
-					
 					JSONQuery jquery = new JSONQuery(CommentActivity.this);
-					jquery.execute(ServerUtil.URL_POST_COMMENT, currentUsername, Integer.toString(mDiscussion.getId()), body);
+					jquery.execute(ServerUtil.URL_POST_COMMENT, Integer.toString(MainActivity.UserID), Integer.toString(mDiscussion.getId()), body);
 					
-					User u = new User(0, currentUsername, null);
+					User u = new User(MainActivity.UserID, MainActivity.Username, null);
 					Comment c = new Comment(0, body, u);
 					mDiscussion.addComment(c);
 					e.setText("");

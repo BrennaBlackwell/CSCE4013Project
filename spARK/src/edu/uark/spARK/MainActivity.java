@@ -81,7 +81,7 @@ public class MainActivity extends Activity implements AsyncResponse{
         Username = preferences.getString("currentUsername", "");
 
         JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, Username);
+		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, Integer.toString(UserID));
         
         mTitle = mDrawerTitle = getTitle();
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
@@ -432,25 +432,28 @@ public class MainActivity extends Activity implements AsyncResponse{
         		mListBulletinFragment.arrayListContent.add(0, bulletin);
         		
         		JSONQuery jquery = new JSONQuery(this);
-				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Bulletin", Integer.toString(UserID), bulletin.getTitle(), bulletin.getText(), Integer.toString(groupSelected));
+				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Bulletin", Integer.toString(bulletin.getCreator().getId()), bulletin.getTitle(), bulletin.getText(), Integer.toString(groupSelected));
         	} else if (intent.hasExtra("discussion")) {
         		Discussion discussion = (Discussion) intent.getSerializableExtra("discussion");
         		int groupSelected = intent.getIntExtra("groupSelected", 0);
         		mListDiscussionFragment.arrayListContent.add(0, discussion);
         		
         		JSONQuery jquery = new JSONQuery(this);
-				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Discussion", Integer.toString(UserID), discussion.getTitle(), discussion.getText(), Integer.toString(groupSelected));
+				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Discussion", Integer.toString(discussion.getCreator().getId()), discussion.getTitle(), discussion.getText(), Integer.toString(groupSelected));
         	} else if (intent.hasExtra("group")) {
         		Group group = (Group) intent.getSerializableExtra("group");
-				//JSONQuery jquery = new JSONQuery(this);
-				//jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", group.getCreator().getTitle(), group.getTitle(), group.getDescription(), (group.isOpen() ? "Open" : "Closed"), (group.isVisible() ? "Visible" : "Hidden"));		
+				JSONQuery jquery = new JSONQuery(this);
+				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", Integer.toString(group.getCreator().getId()), group.getTitle(), group.getDescription(), (group.isOpen() ? "Open" : "Closed"), (group.isVisible() ? "Visible" : "Hidden"));		
         	}
         }
+    	JSONQuery jquery = new JSONQuery(this);
+		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, Integer.toString(UserID));
     }
 
     @Override
 	public void processFinish(JSONObject result) {
 		try { 
+			myGroups = new ArrayList();
 			int success = result.getInt(ServerUtil.TAG_SUCCESS);
 			if (success == 1) {
 				MyContents = result.getJSONArray(ServerUtil.TAG_GROUPS);

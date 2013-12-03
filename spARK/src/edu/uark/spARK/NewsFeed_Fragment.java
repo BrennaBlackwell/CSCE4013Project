@@ -189,7 +189,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		
 		
 		JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.Username, contentType);
+		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, Integer.toString(MainActivity.UserID), contentType);
 	}
 	
 	@Override

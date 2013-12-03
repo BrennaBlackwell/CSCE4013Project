@@ -1,7 +1,6 @@
 package edu.uark.spARK;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -19,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import edu.uark.spARK.entities.Bulletin;
@@ -174,7 +174,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					if(desc == null || desc.trim().isEmpty()){
 						return; // do not add blank input to list
 					}
-					User user = new User(0, intent.getStringExtra("user"), intent.getStringExtra("rank"));
+					User user = new User(MainActivity.UserID, MainActivity.Username, intent.getStringExtra("rank"));
 					int position = groups.getSelectedItemPosition();
 					
 					int itemSelected = 0;
@@ -251,7 +251,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					if(desc == null || desc.trim().isEmpty()){
 						return; // do not add blank input to list
 					}
-					User user = new User(0, intent.getStringExtra("user"), intent.getStringExtra("rank"));
+					User user = new User(MainActivity.UserID, MainActivity.Username, intent.getStringExtra("rank"));
 					int position = groups.getSelectedItemPosition();
 
 					int itemSelected = 0;
@@ -299,8 +299,11 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 						return; // do not add blank input to list
 					}
 					
-					User user = new User(0, intent.getStringExtra("user"), intent.getStringExtra("rank"));
-					Group g = new Group(0, title, desc, user, findViewById(R.id.radio_open).isSelected(), findViewById(R.id.radio_visible).isSelected());
+					RadioButton privacy = (RadioButton)findViewById(R.id.radio_open);
+					RadioButton visibility = (RadioButton)findViewById(R.id.radio_visible);
+							
+					User user = new User(MainActivity.UserID, MainActivity.Username, intent.getStringExtra("rank"));
+					Group g = new Group(0, title, desc, user, privacy.isChecked(), visibility.isChecked());
 					intent.putExtra("group", g);
 					setResult(RESULT_OK, intent);
 					

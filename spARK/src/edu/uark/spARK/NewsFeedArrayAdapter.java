@@ -4,11 +4,9 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -185,21 +183,17 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			
 			@Override
 			public void onClick(View v) {
-				SharedPreferences preferences = mContext.getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-				String currentUser = preferences.getString("currentUsername", "");
-				
 				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
-				
 				ToggleButton button = (ToggleButton)((RadioGroup)v.getParent()).getChildAt(0);
 				
 				if (button.isChecked()) {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "like");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.UserID), Integer.toString(c.getId()), "like");
 					
 					((RadioGroup)v.getParent()).check(v.getId());	
 					getItem((Integer) v.getTag()).incrementRating();
 					update();
 				} else {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "delete");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.UserID), Integer.toString(c.getId()), "delete");
 					
 					((RadioGroup)v.getParent()).check(v.getId());
 					getItem((Integer) v.getTag()).decrementRating();
@@ -212,21 +206,17 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 
 			@Override
 			public void onClick(View v) {
-				SharedPreferences preferences = mContext.getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-				String currentUser = preferences.getString("currentUsername", "");
-				
 				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
-				
 				ToggleButton button = (ToggleButton)((RadioGroup)v.getParent()).getChildAt(2);
 				
 				if (button.isChecked()) {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "dislike");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.UserID), Integer.toString(c.getId()), "dislike");
 					
 					((RadioGroup)v.getParent()).check(v.getId());
 					getItem((Integer) v.getTag()).decrementRating();
 					update();
 				} else {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, currentUser, Integer.toString(c.getId()), "delete");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.UserID), Integer.toString(c.getId()), "delete");
 					
 					((RadioGroup)v.getParent()).check(v.getId());	
 					getItem((Integer) v.getTag()).incrementRating();
