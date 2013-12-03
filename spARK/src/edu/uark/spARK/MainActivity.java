@@ -81,7 +81,7 @@ public class MainActivity extends Activity implements AsyncResponse{
         Username = preferences.getString("currentUsername", "");
 
         JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, Integer.toString(UserID));
+		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, Username);
         
         mTitle = mDrawerTitle = getTitle();
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
@@ -447,7 +447,7 @@ public class MainActivity extends Activity implements AsyncResponse{
         	}
         }
     	JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, Integer.toString(UserID));
+		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, Username);
     }
 
     @Override
