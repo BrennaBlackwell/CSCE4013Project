@@ -3,11 +3,13 @@
     android:id="@+id/list_discussionMainFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/container_bg" >
+    android:background="@color/list_item_bg" >
 
 <TableLayout
+    android:id="@+id/table"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content" 
+    android:background="@drawable/container_bg">
 
     <TableRow
         android:id="@+id/tableRow2"
@@ -39,8 +41,7 @@
                 android:id="@+id/groupAndTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:showDividers="beginning|end|middle" >
+                android:layout_marginBottom="2dp" >
 
                 <TextView
                     android:id="@+id/groupAndDateTextView"
@@ -75,8 +76,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:layout_weight="1.0"
-            android:weightSum="1.0" >
+            android:layout_weight="1.0" >
 
             <include
                 android:id="@+id/userInfoLinearLayout_ref"
@@ -127,9 +127,10 @@
     <TableRow
         android:id="@+id/tableRow3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/container_items_bg"
         android:baselineAligned="true"
+        android:minHeight="48dp"
         android:visibility="visible"
         android:weightSum="1" >
 
@@ -145,7 +146,8 @@
                 android:id="@+id/list_discussionRatingLinearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true" >
+                android:layout_centerVertical="true" 
+                android:layout_weight="1">
 
                 <RadioGroup
                     android:id="@+id/discussionScoreRadioGroup"
@@ -251,4 +253,12 @@
     </TableRow>
 </TableLayout>
 
+    <ImageView
+       android:id="@+id/darkenScreen"
+       android:layout_height="0dp"
+       android:layout_width="0dp"
+       android:contentDescription = "Popup Fade out"
+       android:background="@android:color/black"
+	   android:alpha="0.5" />
+    
 </FrameLayout>

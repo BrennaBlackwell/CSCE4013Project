@@ -104,8 +104,6 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1.0"
-                    android:enabled="false"
-                    android:maxLines="4"
                     android:text="http://www.google.com"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/black"
@@ -228,7 +226,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/list_discussionRatingLinearLayout"
                 android:background="@drawable/selector"
-                android:onClick="onClick"
                 android:orientation="horizontal" >
 
                 <TextView
@@ -242,9 +239,11 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:clickable="false"
                     android:gravity="center"
                     android:text="12 comments"
                     android:textColor="@android:color/black" />
+
             </LinearLayout>
         </RelativeLayout>
     </TableRow>

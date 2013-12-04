@@ -3,12 +3,13 @@
     android:id="@+id/list_discussionMainFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/container_bg" >
+    android:background="@color/list_item_bg" >
 
 <TableLayout
     android:id="@+id/table"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content" 
+    android:background="@drawable/container_bg">
 
     <TableRow
         android:id="@+id/tableRow2"
