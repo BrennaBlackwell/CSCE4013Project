@@ -85,7 +85,7 @@ public class Content extends Entity {
 	}
 	
 	public boolean hasLocation() {
-		return (latitude != null && longitude != null);
+		return (latitude != null && longitude != null && !latitude.contains("null") && !longitude.contains("null"));
 	}
 	
 	public int getTotalRating() {

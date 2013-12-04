@@ -228,7 +228,9 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					String contentBody = content.getString(ServerUtil.TAG_BODY).trim();
 					String contentType = content.getString(ServerUtil.TAG_TYPE).trim(); 
 					Date contentTimestamp = Timestamp.valueOf(content.getString(ServerUtil.TAG_TIMESTAMP).trim());
-					    
+					String latitude = content.getString(ServerUtil.TAG_LATITUDE).trim();     
+					String longitude = content.getString(ServerUtil.TAG_LONGITUDE).trim(); 
+							
 					int totalRating = 0;
 					int userRating = 0;
 					if (content.getInt(ServerUtil.TAG_RATING_TOTAL_FLAG) == 1) {
@@ -243,9 +245,12 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					}
 					
 					if (contentType.equals("Bulletin")) {
-						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, null), contentTimestamp);
+						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, null), contentTimestamp, latitude, longitude);
 						b.setTotalRating(totalRating);
 						b.setUserRating(userRating);
+						if (b.hasLocation()) {
+							MainActivity.mMapViewFragment.addContent(b);
+						}
 						arrayListContent.add(b);
 					} else if (contentType.equals("Discussion")) {
 						comments = content.getJSONArray(ServerUtil.TAG_COMMENTS);
@@ -266,9 +271,12 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 							commentsList.add(c);
 						}
 						
-						Discussion d = new Discussion(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, null), contentTimestamp, commentsList);
+						Discussion d = new Discussion(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, null), contentTimestamp, latitude, longitude, commentsList);
 						d.setTotalRating(totalRating);
 						d.setUserRating(userRating);
+						if (d.hasLocation()) {
+							MainActivity.mMapViewFragment.addContent(d);
+						}
 						arrayListContent.add(d);
 					}
 					mAdapter.notifyDataSetChanged();

@@ -413,7 +413,12 @@ public class MainActivity extends Activity implements AsyncResponse{
         		}
         		
         		JSONQuery jquery = new JSONQuery(this);
-				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Bulletin", Integer.toString(bulletin.getCreator().getId()), bulletin.getTitle(), bulletin.getText(), Integer.toString(groupSelected));
+				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Bulletin", 
+						Integer.toString(bulletin.getCreator().getId()), 
+						bulletin.getTitle(), bulletin.getText(), 
+						Integer.toString(groupSelected),
+						bulletin.getLatitude(), bulletin.getLongitude());
+				
         	} else if (intent.hasExtra("discussion")) {
         		Discussion discussion = (Discussion) intent.getSerializableExtra("discussion");
         		int groupSelected = intent.getIntExtra("groupSelected", 0);
@@ -424,7 +429,12 @@ public class MainActivity extends Activity implements AsyncResponse{
         		}
         		
         		JSONQuery jquery = new JSONQuery(this);
-				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Discussion", Integer.toString(discussion.getCreator().getId()), discussion.getTitle(), discussion.getText(), Integer.toString(groupSelected));
+				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Discussion", 
+						Integer.toString(discussion.getCreator().getId()), 
+						discussion.getTitle(), discussion.getText(), 
+						Integer.toString(groupSelected), 
+						discussion.getLatitude(), discussion.getLongitude());
+				
         	} else if (intent.hasExtra("group")) {
         		Group group = (Group) intent.getSerializableExtra("group");
 				JSONQuery jquery = new JSONQuery(this);
@@ -432,7 +442,12 @@ public class MainActivity extends Activity implements AsyncResponse{
 					mMapViewFragment.addContent(group, false);
 				}
 				
-				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", Integer.toString(group.getCreator().getId()), group.getTitle(), group.getDescription(), (group.isOpen() ? "Open" : "Closed"), (group.isVisible() ? "Visible" : "Hidden"));		
+				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", 
+						Integer.toString(group.getCreator().getId()), 
+						group.getTitle(), group.getDescription(), 
+						(group.isOpen() ? "Open" : "Closed"), 
+						(group.isVisible() ? "Visible" : "Hidden"),
+						group.getLatitude(), group.getLongitude());
         	}
         }
     	JSONQuery jquery = new JSONQuery(this);

@@ -13,6 +13,8 @@ public class ServerUtil {
 	public static final String TAG_BODY = "body";
 	public static final String TAG_TYPE = "type";
 	public static final String TAG_TIMESTAMP = "timestamp";
+	public static final String TAG_LATITUDE = "latitude";
+	public static final String TAG_LONGITUDE = "longitude";
 	public static final String TAG_USER_ID = "userid";
 	public static final String TAG_USER_NAME = "username";
 	public static final String TAG_RATING_TOTAL = "rating_total";
