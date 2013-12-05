@@ -1,22 +1,45 @@
 package edu.uark.spARK;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import android.app.*;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.*;
+import android.view.HapticFeedbackConstants;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
-import edu.uark.spARK.entities.*;
+import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Comment;
+import edu.uark.spARK.entities.Content;
+import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.User;
 
 
 public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
@@ -72,37 +95,64 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		});
         loadContent();
         
-        SwipeDismissListViewTouchListener touchListener =
-        		        new SwipeDismissListViewTouchListener(
-        		                mListView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
-        		                   public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-        		                       for (int position : reverseSortedPositions) {
-        		                    	   int contentID = mAdapter.getItem(position-2).getId();
-        		                    	   String contentType = "Discussion";
-        		                    	   
-        		                    	   // TODO: Added quick and dirty method to grab Content Type. May want to change this later
-        		                    	   if (mAdapter.getItem(position-2).getClass().toString().contains("Discussion")) {
-        		                    		   contentType = "Discussion";
-        		                    	   } else if (mAdapter.getItem(position-2).getClass().toString().contains("Bulletin")) {
-        		                    		   contentType = "Bulletin";
-        		                    	   }
-        		                           mAdapter.remove(mAdapter.getItem(position-2));	//we need to ignore both the refresh header and map header, that's why there is a -2
-        		                           
-        		                           JSONQuery jquery = new JSONQuery(NewsFeed_Fragment.this);
-        		                           jquery.execute(ServerUtil.URL_BLOCK_CONTENT, Integer.toString(MainActivity.UserID), Integer.toString(contentID), contentType);
-        		                       }
-        		                       
-        		                       mAdapter.notifyDataSetChanged();
-        		                   }
+        SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(mListView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
+               public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                   for (int position : reverseSortedPositions) {
+                	   int contentID = mAdapter.getItem(position-2).getId();
+                	   String contentType = "Discussion";
+                	   
+                	   // TODO: Added quick and dirty method to grab Content Type. May want to change this later
+                	   if (mAdapter.getItem(position-2).getClass().toString().contains("Discussion")) {
+                		   contentType = "Discussion";
+                	   } else if (mAdapter.getItem(position-2).getClass().toString().contains("Bulletin")) {
+                		   contentType = "Bulletin";
+                	   }
+                       mAdapter.remove(mAdapter.getItem(position-2));	//we need to ignore both the refresh header and map header, that's why there is a -2
+                       
+                       JSONQuery jquery = new JSONQuery(NewsFeed_Fragment.this);
+                       jquery.execute(ServerUtil.URL_BLOCK_CONTENT, Integer.toString(MainActivity.UserID), Integer.toString(contentID), contentType);
+                   }
+                   
+                   mAdapter.notifyDataSetChanged();
+                }
 
-								@Override
-								public boolean canDismiss(int position) {
-									return true;
-								}
-        		                  });
+				@Override
+				public boolean canDismiss(int position) {
+					return true;
+				}
+		          });
         
         		 mListView.setOnTouchListener(touchListener);
         		 mListView.setOnScrollListener(touchListener.makeScrollListener());
+        		 
+        		 mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+					@Override
+					public boolean onItemLongClick(AdapterView<?> parent, View v, int pos, long id) {
+						if (v.getId() == R.id.list_discussionMainFrame) {
+							v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+							RelativeLayout darkenTop = (RelativeLayout) v.getRootView().findViewById(R.id.darkenScreenTop);
+			                ImageView darkenBottom = (ImageView) v.getRootView().findViewById(R.id.darkenScreenBottom);
+			                LayoutParams paramsTop = darkenTop.getLayoutParams();
+			                LayoutParams paramsBottom = darkenBottom.getLayoutParams();
+			                paramsTop.height = v.getTop();
+			                paramsBottom.height = parent.getHeight()-(v.getTop()+v.getHeight());
+			                darkenTop.setLayoutParams(paramsTop);
+			                darkenBottom.setLayoutParams(paramsBottom);
+			                
+			                darkenTop.animate()
+			                .alpha(.75f)
+			                .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+			                .setListener(null);
+			                darkenBottom.animate()
+			                .alpha(.75f)
+			                .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+			                .setListener(null);
+						}
+						return false;
+					}
+        			 
+        		 });
 	}
 
     @Override
@@ -307,12 +357,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		this.arrayListContent = arrayListContent;
 	}
 	
-	
-//    @Override
-//    public void onListItemClick(ListView l, View v, int position, long id) {
-//        Log.i("FragmentList", "Item clicked: " + id);
-//    }
-
 	//onActivityResult which is received by the fragment
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -345,5 +389,20 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		super.onStop();
 
 	}
+
+//	@Override
+//	public void onClick(View v) {
+//		switch (v.getId()) {
+//		case R.id.list_discussionMainFrame:
+//			getListView().setSelector(R.drawable.list_selector);
+//			getListView().setDrawSelectorOnTop(true);
+//			break;
+//			
+//		default:
+//			break;
+//		}
+//		
+//		getListView().invalidateViews();
+//	}
 	
 }

@@ -16,6 +16,10 @@
 
 package edu.uark.spARK;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -25,14 +29,10 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import android.widget.RelativeLayout;
 
 
 /**
@@ -101,6 +101,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     private static final int MIN_CLICK_DURATION = 1000;
     private long startClickTime;
 	private boolean longClickActive;
+	private long clickDuration;
 
     /**
      * The callback interface used by {@link SwipeDismissListViewTouchListener} to inform its client
@@ -185,12 +186,13 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         if (mViewWidth < 2) {
             mViewWidth = mListView.getWidth();
         }
-
         switch (motionEvent.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
+            	
                 if (mPaused) {
                     return false;
                 }
+                
                 if (longClickActive == false) {
                 	longClickActive = true;
                 	startClickTime = System.currentTimeMillis();
@@ -214,14 +216,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                         break;
                     }
                 }
-
                 if (mDownView != null) {
-                	//needs work here
-                	//ImageView shadow = (ImageView) mDownView.getRootView().findViewById(R.id.darkenScreen);
-                	//LayoutParams shadowParams = shadow.getLayoutParams();
-                	//shadowParams.height = 1000;
-                	//shadowParams.width = 1000;
-                	//shadow.setLayoutParams(shadowParams);
+ 
                 	mDownView = mDownView.findViewById(R.id.table);
                     mDownX = motionEvent.getRawX();
                     mDownPosition = mListView.getPositionForView(mDownView);
@@ -239,6 +235,17 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 
             case MotionEvent.ACTION_UP: {
                 longClickActive = false;
+                RelativeLayout darkenTop = (RelativeLayout) mListView.getRootView().findViewById(R.id.darkenScreenTop);
+                ImageView darkenBottom = (ImageView) mListView.getRootView().findViewById(R.id.darkenScreenBottom);
+
+                darkenTop.animate()
+                .alpha(0)
+                .setDuration(mAnimationTime)
+                .setListener(null);
+                darkenBottom.animate()
+                .alpha(0)
+                .setDuration(mAnimationTime)
+                .setListener(null);
                 if (mVelocityTracker == null) {
                     break;
                 }
@@ -282,6 +289,18 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 
             case MotionEvent.ACTION_CANCEL: {
             	longClickActive = false;
+            	RelativeLayout darkenTop = (RelativeLayout) mListView.getRootView().findViewById(R.id.darkenScreenTop);
+                ImageView darkenBottom = (ImageView) mListView.getRootView().findViewById(R.id.darkenScreenBottom);
+
+                darkenTop.animate()
+                .alpha(0)
+                .setDuration(mAnimationTime)
+                .setListener(null);
+                darkenBottom.animate()
+                .alpha(0)
+                .setDuration(mAnimationTime)
+                .setListener(null);
+                
                 if (mVelocityTracker == null) {
                     break;
                 }
@@ -304,16 +323,14 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
             }
 
             case MotionEvent.ACTION_MOVE: {
-            	//work needs to be done here
-            	
                 if (mVelocityTracker == null || mPaused) {
                     break;
                 }
                 
                 if (longClickActive) {
-                	long clickDuration = System.currentTimeMillis() - startClickTime;
+                	clickDuration = System.currentTimeMillis() - startClickTime;
                     if (clickDuration >= MIN_CLICK_DURATION) {
-
+                    	
 	                mVelocityTracker.addMovement(motionEvent);
 	                float deltaX = motionEvent.getRawX() - mDownX;
 	                if (Math.abs(deltaX) > mSlop) {
@@ -328,7 +345,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 	                    mListView.onTouchEvent(cancelEvent);
 	                    cancelEvent.recycle();
 	                }
-	
 	                if (mSwiping) {
 	                	
 	                    mDownView.setTranslationX(deltaX);

@@ -3,8 +3,9 @@
     android:id="@+id/list_discussionMainFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/list_item_bg" >
-
+    android:background="@color/list_item_bg"
+    android:descendantFocusability="blocksDescendants">
+    
 <TableLayout
     android:id="@+id/table"
     android:layout_width="match_parent"
@@ -105,7 +106,6 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1.0"
-                    android:enabled="false"
                     android:maxLines="4"
                     android:text="http://www.google.com"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -252,13 +252,5 @@
         </RelativeLayout>
     </TableRow>
 </TableLayout>
-
-    <ImageView
-       android:id="@+id/darkenScreen"
-       android:layout_height="0dp"
-       android:layout_width="0dp"
-       android:contentDescription = "Popup Fade out"
-       android:background="@android:color/black"
-	   android:alpha="0.5" />
     
 </FrameLayout>

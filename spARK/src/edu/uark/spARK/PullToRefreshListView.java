@@ -348,7 +348,7 @@ public class PullToRefreshListView extends ListView {
 
             case MotionEvent.ACTION_UP:
                 if(previousY != -1 && (state == State.RELEASE_TO_REFRESH || getFirstVisiblePosition() == 0)){
-                    switch(state){
+                	switch(state){
                         case RELEASE_TO_REFRESH:
                             setState(State.REFRESHING);
                             bounceBackHeader();
@@ -359,7 +359,8 @@ public class PullToRefreshListView extends ListView {
                             resetHeader();
                             MainActivity.mMapViewFragment.resetView();
                             break;
-                    }
+                    };
+                	
                 }
                 break;
 
@@ -583,11 +584,11 @@ public class PullToRefreshListView extends ListView {
 
             if(onItemLongClickListener != null && state == State.PULL_TO_REFRESH){
                 // Passing up onItemLongClick. Correct position with the number of header views
+
                 return onItemLongClickListener.onItemLongClick(adapterView, view, position - getHeaderViewsCount(), id);
             }
 
             return false;
         }
     }
-    
 }

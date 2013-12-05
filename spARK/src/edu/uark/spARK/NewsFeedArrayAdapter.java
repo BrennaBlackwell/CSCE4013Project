@@ -12,6 +12,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.*;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.entities.*;
@@ -265,5 +267,6 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	public ViewHolder getHolder() {
 		return holder;
 	}
+	
 
 }

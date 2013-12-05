@@ -91,4 +91,37 @@
  	
 
 </android.support.v4.widget.DrawerLayout>
+
+    <RelativeLayout
+        android:id="@+id/darkenScreenTop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|center"
+        android:alpha="0"
+        android:background="@android:color/black"
+        android:contentDescription="Popup Fade out"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:text="&lt;&lt; Swipe to Hide! &gt;&gt;"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/red"
+            android:textSize="28sp" />
+
+    </RelativeLayout>
+    
+        <ImageView
+            android:id="@+id/darkenScreenBottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|center"
+            android:alpha="0"
+            android:background="@android:color/black"
+            android:contentDescription="Popup Fade out"/>
+    
 </FrameLayout>      
