@@ -24,6 +24,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
+import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -74,7 +75,7 @@ import android.widget.RelativeLayout;
  * <p>This class Requires API level 12 or later due to use of {@link
  * android.view.ViewPropertyAnimator}.</p>
  */
-public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
+public class SwipeDismissListViewTouchListener implements View.OnTouchListener, Runnable {
 
 	// Cached ViewConfiguration and system-wide constant values
     private int mSlop;
@@ -91,7 +92,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     private List<PendingDismissData> mPendingDismisses = new ArrayList<PendingDismissData>();
     private int mDismissAnimationRefCount = 0;
     private float mDownX;
-    private boolean mSwiping;
+    public boolean mSwiping;
     private VelocityTracker mVelocityTracker;
     private int mDownPosition;
     private View mDownView;
@@ -99,7 +100,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     
     // Custom long press properties
     private static final int MIN_CLICK_DURATION = 1000;
-    private long startClickTime;
 	private boolean longClickActive;
 	private long clickDuration;
 
@@ -164,7 +164,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         return new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                setEnabled(scrollState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
+            		setEnabled(scrollState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
             }
 
             @Override
@@ -188,14 +188,9 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         }
         switch (motionEvent.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
-            	
                 if (mPaused) {
                     return false;
                 }
-                
-                if (longClickActive == false) {
-                	longClickActive = true;
-                	startClickTime = System.currentTimeMillis();
                 
                 // TODO: ensure this is a finger, and set a flag
 
@@ -229,7 +224,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                     }
                 }
                 view.onTouchEvent(motionEvent);
-                }
                 return true;
             }
 
@@ -323,28 +317,27 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
             }
 
             case MotionEvent.ACTION_MOVE: {
-                if (mVelocityTracker == null || mPaused) {
-                    break;
-                }
-                
+                System.out.println("Y: " + motionEvent.getRawY());
+                System.out.println("mPaused: " + mPaused);
                 if (longClickActive) {
-                	clickDuration = System.currentTimeMillis() - startClickTime;
-                    if (clickDuration >= MIN_CLICK_DURATION) {
-                    	
+                        if (mVelocityTracker == null || mPaused) {
+                            break;
+                        }
 	                mVelocityTracker.addMovement(motionEvent);
 	                float deltaX = motionEvent.getRawX() - mDownX;
-	                if (Math.abs(deltaX) > mSlop) {
+	                //the if statement is allowing the listview to scroll until a sufficient deltaX is made, while we want swiping immediately 
+//	                if (Math.abs(deltaX) > mSlop) {
 	                    mSwiping = true;
 	                    mListView.requestDisallowInterceptTouchEvent(true);
-	
-	                    // Cancel ListView's touch (un-highlighting the item)
-	                    MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
-	                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL |
-	                            (motionEvent.getActionIndex()
-	                                    << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
-	                    mListView.onTouchEvent(cancelEvent);
-	                    cancelEvent.recycle();
-	                }
+	                    
+	                    // Cancel ListView's touch (un-highlighting the item) which is not what we want
+//	                    MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
+//	                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL |
+//	                            (motionEvent.getActionIndex()
+//	                                    << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
+//	                    mListView.onTouchEvent(cancelEvent);
+//	                    cancelEvent.recycle();
+//	                }
 	                if (mSwiping) {
 	                	
 	                    mDownView.setTranslationX(deltaX);
@@ -353,7 +346,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 	//                            1f - 2f * Math.abs(deltaX) / mViewWidth)));
 	                    return true;
 	                }
-                    }
                 }
                 break;
             }
@@ -458,6 +450,19 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         mPendingDismisses.add(new PendingDismissData(dismissPosition, dismissView));
         animator.start();
     }
+
+	@Override
+	public void run() {
+		if (clickDuration >= MIN_CLICK_DURATION) {
+			System.out.println("LONG CLICK ACTIVE");
+		}
+		
+	}
+
+	public void setLongClickActive(boolean b) {
+		longClickActive = b;	
+	}
     
+	
 
 }

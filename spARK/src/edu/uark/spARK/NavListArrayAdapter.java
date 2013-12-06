@@ -73,6 +73,7 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 			}
 			ImageView imageview = (ImageView) convertView.findViewById(R.id.navListOptionIcon);
 			imageview.setImageDrawable (icon);
+			convertView.setTag(position);
 		//}
 		//else {
 			

@@ -95,7 +95,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		});
         loadContent();
         
-        SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(mListView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
+        final SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(mListView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
                public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                    for (int position : reverseSortedPositions) {
                 	   int contentID = mAdapter.getItem(position-2).getId();
@@ -148,6 +148,8 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			                .alpha(.75f)
 			                .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
 			                .setListener(null);
+			                touchListener.setLongClickActive(true);
+			                
 						}
 						return false;
 					}
@@ -177,7 +179,9 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			@Override
 			public void onBackStackChanged() {
 				if (getFragmentManager().getBackStackEntryCount() == 0)
-					mPager.setPaging(true);			
+					mPager.setPaging(true);		
+				if (mPager.getVisibility() == View.INVISIBLE)
+						mPager.setVisibility(View.VISIBLE);
 			}
         	
         });
@@ -389,20 +393,8 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		super.onStop();
 
 	}
-
-//	@Override
-//	public void onClick(View v) {
-//		switch (v.getId()) {
-//		case R.id.list_discussionMainFrame:
-//			getListView().setSelector(R.drawable.list_selector);
-//			getListView().setDrawSelectorOnTop(true);
-//			break;
-//			
-//		default:
-//			break;
-//		}
-//		
-//		getListView().invalidateViews();
-//	}
 	
+	public SelectiveViewPager getSelectiveViewPager() {
+		return mPager;
+	}
 }

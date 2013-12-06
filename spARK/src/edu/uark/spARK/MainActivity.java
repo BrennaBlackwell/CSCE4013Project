@@ -3,24 +3,39 @@ package edu.uark.spARK;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import android.app.*;
+import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
-import android.view.*;
-import android.widget.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
-import edu.uark.spARK.entities.*;
+import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.Group;
 
 public class MainActivity extends Activity implements AsyncResponse{
 	
@@ -37,6 +52,7 @@ public class MainActivity extends Activity implements AsyncResponse{
 
 
     private DrawerLayout mDrawerLayout;
+    private Handler mHandler = new Handler();	//using this for smoother drawer animation
     private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -51,6 +67,8 @@ public class MainActivity extends Activity implements AsyncResponse{
 	static MapView_Fragment mMapViewFragment;
 	
 	public MyAdapter mAdapter;
+	public static int mOldDrawerPosition=1;
+	public static int mNewDrawerPosition;
 	public static SelectiveViewPager mPager;
 	
     
@@ -76,7 +94,6 @@ public class MainActivity extends Activity implements AsyncResponse{
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(mNavListArrayAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -104,12 +121,7 @@ public class MainActivity extends Activity implements AsyncResponse{
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        if (savedInstanceState == null) {
-            //selectItem(0);
-        }
-
+        mDrawerLayout.setDrawerListener(new MainDrawerListener());
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         mMapViewFragment = new MapView_Fragment();
@@ -226,72 +238,115 @@ public class MainActivity extends Activity implements AsyncResponse{
         return super.onOptionsItemSelected(item);
     }
 
-    /* The click listner for ListView in the navigation drawer */
+    /* The click listener for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
+    	
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        	selectItem(position);
+            mNewDrawerPosition = position;
             mDrawerList.setItemChecked(position, true);
-            mDrawerLayout.closeDrawer(mDrawerList);
             view.setSelected(true);
+//            mHandler.postDelayed(new Runnable() {
+
+//                @Override
+//                public void run() {
+                    mDrawerLayout.closeDrawer(mDrawerList);
+//                }           
+//            }, 150);
         }
     }
+    
+    private class MainDrawerListener implements DrawerLayout.DrawerListener {
+    	private int mDrawerState;
+//    	public MainDrawerListener() {
+//    		mDrawerState = DrawerLayout.STATE_IDLE;
+//    	}
+		@Override
+		public void onDrawerClosed(View drawerView) {
+			System.out.println("mOld: " + mOldDrawerPosition + "   mNew: " + mNewDrawerPosition);
+			mDrawerToggle.onDrawerClosed(drawerView);
+            if (mOldDrawerPosition != mNewDrawerPosition)
+				selectItem(mNewDrawerPosition);
+            mOldDrawerPosition = mNewDrawerPosition;
+		}
 
-    private void selectItem(int position) {
+		@Override
+		public void onDrawerOpened(View drawerView) {
+			mDrawerToggle.onDrawerOpened(drawerView);
+		}
+
+		@Override
+		public void onDrawerSlide(View drawerView, float offset) {
+			mDrawerToggle.onDrawerSlide(drawerView, offset);
+
+		}
+
+		@Override
+		public void onDrawerStateChanged(int newState) {
+			mDrawerState = newState;
+			mDrawerToggle.onDrawerStateChanged(mDrawerState);
+		}
+
+    }
+
+    private void selectItem(final int position) {
     	
-        FragmentManager fragmentManager = getFragmentManager();
-    	
-        switch(position) {
-    	
-    	case 0:  		
-            fragmentManager.beginTransaction().detach(mMapViewFragment)
-            .replace(R.id.fragment_frame, new MyProfile_Fragment()).commit();
-            mPager.setVisibility(View.GONE);
-            break;
-    	case 1:
-            fragmentManager.beginTransaction().attach(mMapViewFragment)
-            .replace(R.id.fragment_frame, new Fragment()).commit();
-            mPager.setVisibility(View.VISIBLE);
-            break;
-        case 2:
-            fragmentManager.beginTransaction().detach(mMapViewFragment)
-            .replace(R.id.fragment_frame, new CheckIn_Fragment()).commit(); 
-            mPager.setVisibility(View.GONE);
-            break;
-            
-        case 3:
-        	//groups
-            fragmentManager.beginTransaction().detach(mMapViewFragment)
-            .replace(R.id.fragment_frame, new Fragment()).commit();
-            mPager.setVisibility(View.GONE);
-            break;
-        case 4:
-        	//bookmarks
-            fragmentManager.beginTransaction().detach(mMapViewFragment)
-            .replace(R.id.fragment_frame, new Fragment()).commit();
-            mPager.setVisibility(View.GONE);
-            break;
-        case 5:
-        	//settings we could make another activity/fragment/whatever
-        	break;
-        case 6:
-        	//dialog
-        	break;
-        case 7:
-            SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            //editor.remove("currentUsername");
-            editor.remove("currentPassword");
-            editor.remove("autoLogin");
-            editor.commit();
-            Intent backToLogin = new Intent(this, LogInActivity.class).putExtra("Logout", true);
-            startActivity(backToLogin);
-            finish();        	   
-        default:
-        	//nothing should happen here
-        	break;
-        }
-        	
+
+	        FragmentManager fragmentManager = getFragmentManager();
+	    	
+	        switch(position) {
+	    	
+	    	case 0:  		
+	            fragmentManager.beginTransaction().detach(mMapViewFragment)
+	            .replace(R.id.fragment_frame, new MyProfile_Fragment())
+	            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+	            .commit();
+	            mPager.setVisibility(View.GONE);
+	            break;
+	    	case 1:
+	            fragmentManager.beginTransaction().attach(mMapViewFragment)
+	            .replace(R.id.fragment_frame, new Fragment()).commit();
+	            mPager.setVisibility(View.VISIBLE);
+	            break;
+	        case 2:
+	            fragmentManager.beginTransaction().detach(mMapViewFragment)
+	            .replace(R.id.fragment_frame, new CheckIn_Fragment()).commit(); 
+	            mPager.setVisibility(View.GONE);
+	            break;
+	            
+	        case 3:
+	        	//groups
+	            fragmentManager.beginTransaction().detach(mMapViewFragment)
+	            .replace(R.id.fragment_frame, new Fragment()).commit();
+	            mPager.setVisibility(View.GONE);
+	            break;
+	        case 4:
+	        	//bookmarks
+	            fragmentManager.beginTransaction().detach(mMapViewFragment)
+	            .replace(R.id.fragment_frame, new Fragment()).commit();
+	            mPager.setVisibility(View.GONE);
+	            break;
+	        case 5:
+	        	//settings we could make another activity/fragment/whatever
+	        	break;
+	        case 6:
+	        	//dialog
+	        	break;
+	        case 7:
+	            SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+	            SharedPreferences.Editor editor = preferences.edit();
+	            //editor.remove("currentUsername");
+	            editor.remove("currentPassword");
+	            editor.remove("autoLogin");
+	            editor.commit();
+	            Intent backToLogin = new Intent(MainActivity.this, LogInActivity.class).putExtra("Logout", true);
+	            startActivity(backToLogin);
+	            finish();        	   
+	        default:
+	        	//nothing should happen here
+	        	break;
+	        }
+	        getFragmentManager().executePendingTransactions();
     }
     
 //    private void switchFragment(Fragment fragmentName) {
