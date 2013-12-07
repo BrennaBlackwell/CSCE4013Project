@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentManager.OnBackStackChangedListener;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -220,7 +222,15 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				// TODO: Need to implement addToBackStack on Profiles
 				Fragment profileFragment;
 				if (MainActivity.myUserID == c.getCreator().getId()) {
-					profileFragment = new MyProfile_Fragment();
+					profileFragment = new MyProfile_Fragment() {
+						@Override
+					    public void onCreate(Bundle savedInstanceState) {
+						    super.onCreate(savedInstanceState);
+							    getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+						    	getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+						    	setHasOptionsMenu(true);
+						    }
+					};
 				} else {
 					Bundle args = new Bundle();
 					args.putSerializable("ContentCreator", (User) c.getCreator());
@@ -228,13 +238,12 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		            profileFragment = new Profile_Fragment();
 		            profileFragment.setArguments(args);
 				}
-				
 	            
 				//fragment.getFragmentManager().beginTransaction().add(fragment.getView().getId(), profileFragment).commit();
+				((MainActivity) fragment.getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
 				fragment.getFragmentManager().beginTransaction().detach(MainActivity.mMapViewFragment)
 		        .add(R.id.fragment_frame, profileFragment).addToBackStack("Profile").commit();
-		        MainActivity.mPager.setVisibility(View.GONE);
-		           
+		        MainActivity.mPager.setVisibility(View.GONE);		           
 			}			
 		});
 		return convertView;

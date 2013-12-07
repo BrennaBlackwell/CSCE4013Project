@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -25,15 +26,37 @@ public class Profile_Fragment extends Fragment implements AsyncResponse {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+	    //update the actionbar to show the up caret
+	    getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+    	getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+    	
+    	//set options menu w/back caret
+	    setHasOptionsMenu(true);
+
+   
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+	    // get selected item
+	    switch (item.getItemId()) {
+	    	case android.R.id.home:
+	    		getActivity().onBackPressed();
+	    		break;
+    		default:
+    			break;
+	    }
+	    return true;
+    }
+    
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-    	final ActionBar actionBar = getActivity().getActionBar();
-//	    actionBar.setDisplayShowTitleEnabled(false);
-//	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//    	getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-    	
-    	final User u = (User) getArguments().getSerializable("ContentCreator");
-//    	getActivity().getActionBar().setNavigationMode(ActionBar.DISPLAY_HOME_AS_UP);
+ 	final User u = (User) getArguments().getSerializable("ContentCreator");
     	
 		View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 		TextView userName = (TextView)profileView.findViewById(R.id.userName);

@@ -25,6 +25,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
 import android.os.SystemClock;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -75,7 +77,7 @@ import android.widget.RelativeLayout;
  * <p>This class Requires API level 12 or later due to use of {@link
  * android.view.ViewPropertyAnimator}.</p>
  */
-public class SwipeDismissListViewTouchListener implements View.OnTouchListener, Runnable {
+public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 
 	// Cached ViewConfiguration and system-wide constant values
     private int mSlop;
@@ -188,9 +190,11 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener, 
         }
         switch (motionEvent.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
-                if (mPaused) {
-                    return false;
-                }
+            	mPaused = false;
+            	longClickActive = false;
+//                if (mPaused) {
+//                    return false;
+//                }
                 
                 // TODO: ensure this is a finger, and set a flag
 
@@ -203,6 +207,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener, 
                 int y = (int) motionEvent.getRawY() - listViewCoords[1];
                 View child;
 
+                //ignore header views
                 for (int i = 0; i < childCount; i++) {
                     child = mListView.getChildAt(i);
                     child.getHitRect(rect);
@@ -228,61 +233,61 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener, 
             }
 
             case MotionEvent.ACTION_UP: {
-                longClickActive = false;
-                RelativeLayout darkenTop = (RelativeLayout) mListView.getRootView().findViewById(R.id.darkenScreenTop);
-                ImageView darkenBottom = (ImageView) mListView.getRootView().findViewById(R.id.darkenScreenBottom);
-
-                darkenTop.animate()
-                .alpha(0)
-                .setDuration(mAnimationTime)
-                .setListener(null);
-                darkenBottom.animate()
-                .alpha(0)
-                .setDuration(mAnimationTime)
-                .setListener(null);
-                if (mVelocityTracker == null) {
-                    break;
+                if (longClickActive) {
+                    RelativeLayout darkenTop = (RelativeLayout) mListView.getRootView().findViewById(R.id.darkenScreenTop);
+                    ImageView darkenBottom = (ImageView) mListView.getRootView().findViewById(R.id.darkenScreenBottom);
+	                darkenTop.animate()
+	                .alpha(0)
+	                .setDuration(mAnimationTime)
+	                .setListener(null);
+	                darkenBottom.animate()
+	                .alpha(0)
+	                .setDuration(mAnimationTime)
+	                .setListener(null);
+	                if (mVelocityTracker == null) {
+	                    break;
+	                }
+	                float deltaX = motionEvent.getRawX() - mDownX;
+	                mVelocityTracker.addMovement(motionEvent);
+	                mVelocityTracker.computeCurrentVelocity(1000);
+	                float velocityX = mVelocityTracker.getXVelocity();
+	                float absVelocityX = Math.abs(velocityX);
+	                float absVelocityY = Math.abs(mVelocityTracker.getYVelocity());
+	                boolean dismiss = false;
+	                boolean dismissRight = false;
+	                if (Math.abs(deltaX) > mViewWidth / 2) {
+	                    dismiss = true;
+	                    dismissRight = deltaX > 0;
+	                } else if (mMinFlingVelocity <= absVelocityX && absVelocityX <= mMaxFlingVelocity
+	                        && absVelocityY < absVelocityX) {
+	                    // dismiss only if flinging in the same direction as dragging
+	                    dismiss = (velocityX < 0) == (deltaX < 0);
+	                    dismissRight = mVelocityTracker.getXVelocity() > 0;
+	                }
+	                if (dismiss) {
+	                    // dismiss
+	                    dismiss(mDownView, mDownPosition, dismissRight);
+	                } else {
+	                    // cancel
+	                    mDownView.animate()
+	                            .translationX(0)
+	                            .alpha(1)
+	                            .setDuration(mAnimationTime)
+	                            .setListener(null);
+	                }
+	                mVelocityTracker.recycle();
+	                mVelocityTracker = null;
+	                mDownX = 0;
+	                mDownView = null;
+	                mDownPosition = ListView.INVALID_POSITION;
+	                mSwiping = false;
                 }
-
-                float deltaX = motionEvent.getRawX() - mDownX;
-                mVelocityTracker.addMovement(motionEvent);
-                mVelocityTracker.computeCurrentVelocity(1000);
-                float velocityX = mVelocityTracker.getXVelocity();
-                float absVelocityX = Math.abs(velocityX);
-                float absVelocityY = Math.abs(mVelocityTracker.getYVelocity());
-                boolean dismiss = false;
-                boolean dismissRight = false;
-                if (Math.abs(deltaX) > mViewWidth / 2) {
-                    dismiss = true;
-                    dismissRight = deltaX > 0;
-                } else if (mMinFlingVelocity <= absVelocityX && absVelocityX <= mMaxFlingVelocity
-                        && absVelocityY < absVelocityX) {
-                    // dismiss only if flinging in the same direction as dragging
-                    dismiss = (velocityX < 0) == (deltaX < 0);
-                    dismissRight = mVelocityTracker.getXVelocity() > 0;
-                }
-                if (dismiss) {
-                    // dismiss
-                    dismiss(mDownView, mDownPosition, dismissRight);
-                } else {
-                    // cancel
-                    mDownView.animate()
-                            .translationX(0)
-                            .alpha(1)
-                            .setDuration(mAnimationTime)
-                            .setListener(null);
-                }
-                mVelocityTracker.recycle();
-                mVelocityTracker = null;
-                mDownX = 0;
-                mDownView = null;
-                mDownPosition = ListView.INVALID_POSITION;
-                mSwiping = false;
                 break;
             }
 
             case MotionEvent.ACTION_CANCEL: {
             	longClickActive = false;
+            	mPaused = false;
             	RelativeLayout darkenTop = (RelativeLayout) mListView.getRootView().findViewById(R.id.darkenScreenTop);
                 ImageView darkenBottom = (ImageView) mListView.getRootView().findViewById(R.id.darkenScreenBottom);
 
@@ -317,12 +322,10 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener, 
             }
 
             case MotionEvent.ACTION_MOVE: {
-                System.out.println("Y: " + motionEvent.getRawY());
-                System.out.println("mPaused: " + mPaused);
+                if (mVelocityTracker == null || mPaused) {
+                    break;
+                }
                 if (longClickActive) {
-                        if (mVelocityTracker == null || mPaused) {
-                            break;
-                        }
 	                mVelocityTracker.addMovement(motionEvent);
 	                float deltaX = motionEvent.getRawX() - mDownX;
 	                //the if statement is allowing the listview to scroll until a sufficient deltaX is made, while we want swiping immediately 
@@ -451,18 +454,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener, 
         animator.start();
     }
 
-	@Override
-	public void run() {
-		if (clickDuration >= MIN_CLICK_DURATION) {
-			System.out.println("LONG CLICK ACTIVE");
-		}
-		
-	}
-
 	public void setLongClickActive(boolean b) {
 		longClickActive = b;	
 	}
-    
-	
 
 }

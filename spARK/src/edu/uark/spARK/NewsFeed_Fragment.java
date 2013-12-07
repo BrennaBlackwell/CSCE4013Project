@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -17,6 +18,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -143,6 +145,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			                .alpha(.75f)
 			                .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
 			                .setListener(null);
+			                touchListener.setEnabled(true);
 			                touchListener.setLongClickActive(true);
 			                
 						}
@@ -169,17 +172,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		View v = inflater.inflate(R.layout.list_feed, container, false);
 		
         mPager = (SelectiveViewPager) getActivity().findViewById(R.id.pager);
-//        getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
-//
-//			@Override
-//			public void onBackStackChanged() {
-//				if (getFragmentManager().getBackStackEntryCount() == 0)
-//					mPager.setPaging(true);		
-//				if (mPager.getVisibility() == View.INVISIBLE)
-//						mPager.setVisibility(View.VISIBLE);
-//			}
-//        	
-//        });
 		
 		mListView = (PullToRefreshListView) v.findViewById(R.id.pullToRefreshListView);
 		
@@ -187,33 +179,18 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 
 			@Override
 	        public void onClick(View v) {
-	        	//set focus to the map fragment
-	        	MapView_Fragment f = (MapView_Fragment) getFragmentManager().findFragmentById(R.id.map);
 	        	FragmentManager fm = getFragmentManager();
 	        	FragmentTransaction ft = fm.beginTransaction();
 	        	
-//	    	    TranslateAnimation anim = new TranslateAnimation( 0, 0, 0, 0 - getView().getY());
-//	    	    anim.setDuration(250);
-//	    	    anim.setFillAfter( true );
-//	    	    getView().startAnimation(anim);
-	        	
-	        	ft.addToBackStack("Map");
 	        	//animations are ordered (enter, exit, popEnter, popExit)
 	        	ft.setCustomAnimations(R.animator.slide_up, R.animator.slide_down, 
 	        			R.animator.slide_up, R.animator.slide_down)
-	        			//.hide(MainActivity.mListBulletinFragment)
-	        			.hide(NewsFeed_Fragment.this).commit();
-	        	//ft.hide(NewsFeed_Fragment.this).commit();       	
-	        	//getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-	        	
+	        			.hide(NewsFeed_Fragment.this).addToBackStack("Map").commit();
+    	
 	        	mPager.setPaging(false);
 	        	MainActivity.mMapViewFragment.zoomInMap();
 	        }
 	    });
-
-//		mListView = new PullToRefreshListView(inflater.getContext());
-//		mListView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-	    //set mapHeader clicklistener so the listview can be hidden
 
 		return v;
 	}
