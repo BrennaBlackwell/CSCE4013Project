@@ -28,11 +28,12 @@ public class Profile_Fragment extends Fragment implements AsyncResponse {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
     	final ActionBar actionBar = getActivity().getActionBar();
-	    actionBar.setDisplayShowTitleEnabled(false);
-	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+//	    actionBar.setDisplayShowTitleEnabled(false);
+//	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+//    	getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     	
     	final User u = (User) getArguments().getSerializable("ContentCreator");
-    	getActivity().getActionBar().setNavigationMode(ActionBar.DISPLAY_HOME_AS_UP);
+//    	getActivity().getActionBar().setNavigationMode(ActionBar.DISPLAY_HOME_AS_UP);
     	
 		View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 		TextView userName = (TextView)profileView.findViewById(R.id.userName);

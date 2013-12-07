@@ -169,17 +169,17 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		View v = inflater.inflate(R.layout.list_feed, container, false);
 		
         mPager = (SelectiveViewPager) getActivity().findViewById(R.id.pager);
-        getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
-
-			@Override
-			public void onBackStackChanged() {
-				if (getFragmentManager().getBackStackEntryCount() == 0)
-					mPager.setPaging(true);		
-				if (mPager.getVisibility() == View.INVISIBLE)
-						mPager.setVisibility(View.VISIBLE);
-			}
-        	
-        });
+//        getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
+//
+//			@Override
+//			public void onBackStackChanged() {
+//				if (getFragmentManager().getBackStackEntryCount() == 0)
+//					mPager.setPaging(true);		
+//				if (mPager.getVisibility() == View.INVISIBLE)
+//						mPager.setVisibility(View.VISIBLE);
+//			}
+//        	
+//        });
 		
 		mListView = (PullToRefreshListView) v.findViewById(R.id.pullToRefreshListView);
 		

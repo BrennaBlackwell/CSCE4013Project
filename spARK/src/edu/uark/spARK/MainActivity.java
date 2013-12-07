@@ -73,8 +73,8 @@ public class MainActivity extends Activity implements AsyncResponse{
 	static MapView_Fragment mMapViewFragment = new MapView_Fragment();;
 	
 	public MyAdapter mAdapter;
-	public static int mOldDrawerPosition=1;
-	public static int mNewDrawerPosition;
+	public static int mOldDrawerPosition=1;	//default value
+	public static int mNewDrawerPosition=1;	//default value
 	public static SelectiveViewPager mPager;
 	
     
@@ -147,7 +147,7 @@ public class MainActivity extends Activity implements AsyncResponse{
 
   			@Override
   			public void onPageSelected(int position) {
-  				getActionBar().getTabAt(position).select();
+  				//getActionBar().getTabAt(position).select();
   			}
         	
         });
@@ -172,7 +172,7 @@ public class MainActivity extends Activity implements AsyncResponse{
         	
         };
         
-      final ActionBar.Tab discussionTab = bar.newTab().setText("Discussions");
+      ActionBar.Tab discussionTab = bar.newTab().setText("Discussions");
       ActionBar.Tab bulletinTab = bar.newTab().setText("Bulletins");
       discussionTab.setTabListener(tabListener);
       bulletinTab.setTabListener(tabListener);
@@ -575,20 +575,21 @@ public class MainActivity extends Activity implements AsyncResponse{
 	
 	@Override
 	public void onBackPressed() {
+		
 		//make sure there are no fragments in backstack
 		if(getFragmentManager().getBackStackEntryCount() == 0) {
 			finish();
 	    }
-		else if (getFragmentManager().getBackStackEntryAt(0).getName().compareTo("Profile") == 0) {
-			//mMapViewFragment.zoomOutMap();
-			super.onBackPressed();
-		}
-		else if (getFragmentManager().getBackStackEntryAt(0).getName().compareTo("Map") == 0) {
-			mMapViewFragment.zoomOutMap();
-			super.onBackPressed();
-		}
 		else {
-			super.onBackPressed();
+			if (getFragmentManager().getBackStackEntryAt(0).getName().compareTo("Profile") == 0) {
+				//mMapViewFragment.zoomOutMap();
+				mPager.setVisibility(View.VISIBLE);
+			}
+			else if (getFragmentManager().getBackStackEntryAt(0).getName().compareTo("Map") == 0) {
+				mMapViewFragment.zoomOutMap();
+			}
+			getFragmentManager().popBackStackImmediate();
 		}
+		//super.onBackPressed();
 	}
 }

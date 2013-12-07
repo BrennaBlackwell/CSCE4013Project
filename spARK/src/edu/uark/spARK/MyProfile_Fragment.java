@@ -24,8 +24,8 @@ public class MyProfile_Fragment extends Fragment implements AsyncResponse {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	
-    	getActivity().getActionBar().setNavigationMode(ActionBar.DISPLAY_HOME_AS_UP);
-    	
+    	//getActivity().getActionBar().setNavigationMode(ActionBar.DISPLAY_HOME_AS_UP);
+
 		View profileView = inflater.inflate(R.layout.fragment_myprofile, container, false);
 		TextView userName = (TextView)profileView.findViewById(R.id.userName);
 		TextView userFullName = (TextView)profileView.findViewById(R.id.userFullName);

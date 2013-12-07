@@ -31,7 +31,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 	    final ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayShowTitleEnabled(false);
 	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
+	    actionBar.setDisplayHomeAsUpEnabled(true);
 	    // Specify a SpinnerAdapter to populate the dropdown list.
 	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(actionBar.getThemedContext(),
 	        android.R.layout.simple_spinner_item, android.R.id.text1,
@@ -194,6 +194,22 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 	
 	public class NewDiscussionFragment extends Fragment {
 

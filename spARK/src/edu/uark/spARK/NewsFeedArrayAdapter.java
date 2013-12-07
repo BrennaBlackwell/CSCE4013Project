@@ -232,7 +232,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	            
 				//fragment.getFragmentManager().beginTransaction().add(fragment.getView().getId(), profileFragment).commit();
 				fragment.getFragmentManager().beginTransaction().detach(MainActivity.mMapViewFragment)
-		        .replace(R.id.fragment_frame, profileFragment).addToBackStack("Profile").commit();
+		        .add(R.id.fragment_frame, profileFragment).addToBackStack("Profile").commit();
 		        MainActivity.mPager.setVisibility(View.GONE);
 		           
 			}			
