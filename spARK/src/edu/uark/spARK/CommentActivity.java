@@ -91,9 +91,9 @@ public class CommentActivity extends Activity implements AsyncResponse{
 					return;
 				else {
 					JSONQuery jquery = new JSONQuery(CommentActivity.this);
-					jquery.execute(ServerUtil.URL_POST_COMMENT, Integer.toString(MainActivity.UserID), Integer.toString(mDiscussion.getId()), body);
+					jquery.execute(ServerUtil.URL_POST_COMMENT, Integer.toString(MainActivity.myUserID), Integer.toString(mDiscussion.getId()), body);
 					
-					User u = new User(MainActivity.UserID, MainActivity.Username, null);
+					User u = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0);
 					Comment c = new Comment(0, body, u);
 					mDiscussion.addComment(c);
 					e.setText("");

@@ -15,25 +15,8 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:src="@drawable/ic_menu_profile" />
-
-        <TextView
-            android:id="@+id/navListOptionTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/navListOptionIcon"
-            android:textColor="#000000"
-            android:text="Large Text"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:id="@+id/userName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/navListOptionTextView"
-            android:layout_toRightOf="@+id/navListOptionIcon"
-            android:textColor="#000000"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+        
+<!-- You'll come back another day  :(
 
         <ProgressBar
             android:id="@+id/progressBar1"
@@ -43,6 +26,17 @@
             android:layout_below="@id/userName"
             android:layout_toRightOf="@id/navListOptionIcon"
             android:progress="50" />
+-->
+
+        <TextView
+            android:id="@+id/navListOptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/navListOptionIcon"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#000000" />
 
     </RelativeLayout>
 

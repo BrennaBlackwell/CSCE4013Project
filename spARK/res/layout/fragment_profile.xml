@@ -29,56 +29,35 @@
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/TextView02"
-        android:layout_width="158dp"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/profileImageView"
-        android:layout_below="@+id/profileImageView"
-        android:gravity="center_horizontal"
-        android:text="Block"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#336699"
-        android:clickable="true"
-        android:onClick="BlockAccount"
-        tools:ignore="HardcodedText" />
-
-    <TextView
-        android:id="@+id/TextView01"
-        android:layout_width="158dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/TextView02"
-        android:layout_alignBottom="@+id/TextView02"
-        android:layout_alignParentRight="true"
-        android:gravity="center_horizontal"
-        android:text="Report"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#336699"
-        android:clickable="true"
-        android:onClick="ReportAccount"
-        tools:ignore="HardcodedText" />
-
-    <TextView
         android:id="@+id/userFullName"
         android:layout_width="158dp"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/userName"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/profileImageView"
-        android:layout_marginTop="14dp"
+        android:layout_below="@+id/userName"
+        android:layout_marginTop="8dp"
         android:text="Full Name"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/userName"
-        android:layout_width="158dp"
+        android:id="@+id/aboutMe"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@+id/userFullName"
         android:layout_below="@+id/userFullName"
-        android:layout_marginTop="14dp"
-        android:text="Name"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        tools:ignore="HardcodedText" />
+        android:layout_marginTop="8dp"
+        android:text="About Me:"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <TextView
+        android:id="@+id/aboutMeField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/aboutMe"
+        android:layout_below="@+id/aboutMe"
+        android:text="Desc..." />
+
+<!--  
     <ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleHorizontal"
@@ -87,7 +66,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/userName"
         android:progress="40" />
-
+-->
     <ImageView
         android:id="@+id/profileImageView"
         android:layout_width="130dp"
@@ -99,4 +78,37 @@
         android:src="@drawable/profile_icon"
         tools:ignore="ContentDescription,UnknownIdInLayout" />
 
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="158dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/profileImageView"
+        android:layout_toRightOf="@+id/profileImageView"
+        android:text="Username"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/Report"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Block"
+        android:layout_alignBottom="@+id/Block"
+        android:layout_alignLeft="@+id/aboutMeField"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="14dp"
+        android:text="Report" />
+
+    <Button
+        android:id="@+id/Block"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/profileImageView"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/Report"
+        android:text="Block" />
+    
 </RelativeLayout>

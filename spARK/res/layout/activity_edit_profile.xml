@@ -1,0 +1,84 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    tools:context=".Edit_Profile"
+    tools:ignore="Deprecated" >
+
+    <Button
+        android:id="@+id/cancel"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/save"
+        android:layout_alignBottom="@+id/save"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:text="Cancel"
+        android:onClick="Cancel"/>
+
+    <EditText
+        android:id="@+id/aboutMeField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/userFullNameField"
+        android:layout_marginTop="54dp"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <EditText
+        android:id="@+id/userFullNameField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/userName"
+        android:layout_marginTop="52dp"
+        android:ems="10" > 
+        <requestFocus/>
+	</EditText>
+	
+    <TextView
+        android:id="@+id/userFullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/userFullNameField"
+        android:layout_alignBottom="@+id/userFullNameField"
+        android:layout_alignLeft="@+id/userName"
+        android:text="Name: "
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/save"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/userFullName"
+        android:layout_below="@+id/aboutMeField"
+        android:layout_marginTop="68dp"
+        android:onClick="Save"
+        android:text="Save" />
+
+    <TextView
+        android:id="@+id/aboutMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/aboutMeField"
+        android:layout_alignBottom="@+id/aboutMeField"
+        android:layout_alignLeft="@+id/userFullName"
+        android:text="About Me: "
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="23dp"
+        android:text="Username"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+</RelativeLayout>

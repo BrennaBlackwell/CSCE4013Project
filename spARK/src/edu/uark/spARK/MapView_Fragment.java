@@ -264,6 +264,12 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		}
 	}
 	
+	public void clear() {
+		discussionMarkers.clear();
+		bulletinMarkers.clear();
+		groupMarkers.clear();
+	}
+	
 	public void updateMarkers(String contentType) {
 		boolean isDiscussion = contentType.equalsIgnoreCase("discussions");
 		boolean isBulletin = contentType.equalsIgnoreCase("bulletins");

@@ -12,8 +12,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.entities.*;
@@ -177,13 +175,13 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				ToggleButton button = (ToggleButton)((RadioGroup)v.getParent()).getChildAt(0);
 				
 				if (button.isChecked()) {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.UserID), Integer.toString(c.getId()), "like");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "like");
 					
 					((RadioGroup)v.getParent()).check(v.getId());	
 					getItem((Integer) v.getTag()).incrementRating();
 					update();
 				} else {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.UserID), Integer.toString(c.getId()), "delete");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "delete");
 					
 					((RadioGroup)v.getParent()).check(v.getId());
 					getItem((Integer) v.getTag()).decrementRating();
@@ -200,13 +198,13 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				ToggleButton button = (ToggleButton)((RadioGroup)v.getParent()).getChildAt(2);
 				
 				if (button.isChecked()) {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.UserID), Integer.toString(c.getId()), "dislike");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "dislike");
 					
 					((RadioGroup)v.getParent()).check(v.getId());
 					getItem((Integer) v.getTag()).decrementRating();
 					update();
 				} else {
-					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.UserID), Integer.toString(c.getId()), "delete");
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "delete");
 					
 					((RadioGroup)v.getParent()).check(v.getId());	
 					getItem((Integer) v.getTag()).incrementRating();
@@ -219,18 +217,22 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 
 			@Override
 			public void onClick(View v) {
-				// Need to get this working
-				//String user = v.getParent().getParent()
-				String userProfile = (String) holder.usernameTextView.getText();
+				// TODO: Need to implement addToBackStack on Profiles
+				Fragment profileFragment;
+				if (MainActivity.myUserID == c.getCreator().getId()) {
+					profileFragment = new MyProfile_Fragment();
+				} else {
+					Bundle args = new Bundle();
+					args.putSerializable("ContentCreator", (User) c.getCreator());
+					args.putSerializable("position", position);
+		            profileFragment = new Profile_Fragment();
+		            profileFragment.setArguments(args);
+				}
 				
-				Bundle args = new Bundle();
-	            args.putSerializable("ProfileName", userProfile);
-	            Fragment profileFragment = new Profile_Fragment();
-	            profileFragment.setArguments(args);
 	            
 				//fragment.getFragmentManager().beginTransaction().add(fragment.getView().getId(), profileFragment).commit();
 				fragment.getFragmentManager().beginTransaction().detach(MainActivity.mMapViewFragment)
-		        .replace(R.id.fragment_frame, profileFragment).commit();
+		        .replace(R.id.fragment_frame, profileFragment).addToBackStack("Profile").commit();
 		        MainActivity.mPager.setVisibility(View.GONE);
 		           
 			}			

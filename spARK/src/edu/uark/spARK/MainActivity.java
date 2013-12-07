@@ -13,6 +13,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -31,6 +33,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.entities.Bulletin;
@@ -39,9 +42,12 @@ import edu.uark.spARK.entities.Group;
 
 public class MainActivity extends Activity implements AsyncResponse{
 	
-	public static int UserID;
-	public static String Username;
+	// TODO: Need to create a Current/myUser Class for these variables
+	public static int myUserID;
+	public static String myUsername;
 	public static List<Group> myGroups = new ArrayList();
+	public static String myFullName;
+	public static String myDesc;
 	
     private static final int PROFILE_FRAGMENT = 0;
     private static final int NEWSFEED_FRAGMENT = 1;
@@ -64,7 +70,7 @@ public class MainActivity extends Activity implements AsyncResponse{
 
     private JSONArray MyContents = null;
     
-	static MapView_Fragment mMapViewFragment;
+	static MapView_Fragment mMapViewFragment = new MapView_Fragment();;
 	
 	public MyAdapter mAdapter;
 	public static int mOldDrawerPosition=1;
@@ -78,10 +84,10 @@ public class MainActivity extends Activity implements AsyncResponse{
         setContentView(R.layout.activity_main);
         
         SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-        Username = preferences.getString("currentUsername", "");
-
+        myUsername = preferences.getString("currentUsername", "");
+        
         JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, Username);
+		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, myUsername);
         
         mTitle = mDrawerTitle = getTitle();
         mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
@@ -124,7 +130,6 @@ public class MainActivity extends Activity implements AsyncResponse{
         mDrawerLayout.setDrawerListener(new MainDrawerListener());
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        mMapViewFragment = new MapView_Fragment();
         getFragmentManager().beginTransaction().add(R.id.map_frame, mMapViewFragment).commit();
         getFragmentManager().beginTransaction().add(R.id.fragment_frame, new Fragment());
         
@@ -199,6 +204,11 @@ public class MainActivity extends Activity implements AsyncResponse{
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         //SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+    	SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+    	searchView.setQueryHint("Type something...");
+    	searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         //configure search info, add listeners
         mMenu = menu;
         return super.onCreateOptionsMenu(menu);
@@ -265,6 +275,7 @@ public class MainActivity extends Activity implements AsyncResponse{
 		public void onDrawerClosed(View drawerView) {
 			System.out.println("mOld: " + mOldDrawerPosition + "   mNew: " + mNewDrawerPosition);
 			mDrawerToggle.onDrawerClosed(drawerView);
+			// TODO: Having problems logging out. Seems whenever you click position 7 selectItem gets skipped but the others work fine
             if (mOldDrawerPosition != mNewDrawerPosition)
 				selectItem(mNewDrawerPosition);
             mOldDrawerPosition = mNewDrawerPosition;
@@ -300,6 +311,7 @@ public class MainActivity extends Activity implements AsyncResponse{
 	            fragmentManager.beginTransaction().detach(mMapViewFragment)
 	            .replace(R.id.fragment_frame, new MyProfile_Fragment())
 	            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+	            .addToBackStack("Profile")
 	            .commit();
 	            mPager.setVisibility(View.GONE);
 	            break;
@@ -506,7 +518,7 @@ public class MainActivity extends Activity implements AsyncResponse{
         	}
         }
     	JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, Username);
+		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, myUsername);
     }
 
     @Override
@@ -516,7 +528,9 @@ public class MainActivity extends Activity implements AsyncResponse{
 			int success = result.getInt(ServerUtil.TAG_SUCCESS);
 			if (success == 1) {
 				MyContents = result.getJSONArray(ServerUtil.TAG_GROUPS);
-				UserID = result.getInt(ServerUtil.TAG_USER_ID);
+				myUserID = result.getInt(ServerUtil.TAG_USER_ID);
+				myFullName = result.getString(ServerUtil.TAG_USER_FULL_NAME);
+				myDesc = result.getString(ServerUtil.TAG_USER_DESC);
 				
 				for (int i = 0; i < MyContents.length(); i++) {
 					JSONObject content = MyContents.getJSONObject(i);
@@ -565,6 +579,10 @@ public class MainActivity extends Activity implements AsyncResponse{
 		if(getFragmentManager().getBackStackEntryCount() == 0) {
 			finish();
 	    }
+		else if (getFragmentManager().getBackStackEntryAt(0).getName().compareTo("Profile") == 0) {
+			//mMapViewFragment.zoomOutMap();
+			super.onBackPressed();
+		}
 		else if (getFragmentManager().getBackStackEntryAt(0).getName().compareTo("Map") == 0) {
 			mMapViewFragment.zoomOutMap();
 			super.onBackPressed();

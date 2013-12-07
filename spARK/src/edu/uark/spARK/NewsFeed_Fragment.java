@@ -15,9 +15,6 @@ import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.HapticFeedbackConstants;
@@ -28,8 +25,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -110,7 +105,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
                        mAdapter.remove(mAdapter.getItem(position-2));	//we need to ignore both the refresh header and map header, that's why there is a -2
                        
                        JSONQuery jquery = new JSONQuery(NewsFeed_Fragment.this);
-                       jquery.execute(ServerUtil.URL_BLOCK_CONTENT, Integer.toString(MainActivity.UserID), Integer.toString(contentID), contentType);
+                       jquery.execute(ServerUtil.URL_BLOCK_CONTENT, "Block", Integer.toString(MainActivity.myUserID), Integer.toString(contentID), contentType);
                    }
                    
                    mAdapter.notifyDataSetChanged();
@@ -252,6 +247,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		String contentType = "Discussion";
 		//get int from instantiating the content fragment type
 		int pos = getArguments().getInt("num");
+		//int tab_position = getActivity().getActionBar().getSelectedTab().getPosition();
 		if (pos == 0) {
 			contentType = "Discussion";
 		} else if (pos == 1){
@@ -259,7 +255,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		}
 		
 		JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, Integer.toString(MainActivity.UserID), contentType);
+		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, contentType);
 	}
 	
 	@Override
@@ -268,6 +264,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			int success = result.getInt(ServerUtil.TAG_SUCCESS);
 
 			if (success == 1) {
+				MainActivity.mMapViewFragment.clear();
 				arrayListContent.clear();
 				// Get Array of discussions
 				contents = result.getJSONArray(ServerUtil.TAG_CONTENTS);
@@ -278,6 +275,8 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					int contentID = Integer.parseInt(content.getString(ServerUtil.TAG_ID));
 					int contentUserID = Integer.parseInt(content.getString(ServerUtil.TAG_USER_ID).trim());
 					String contentUsername = content.getString(ServerUtil.TAG_USER_NAME).trim();
+					String contentUserFullName = content.getString(ServerUtil.TAG_USER_FULL_NAME).trim();
+					String contentUserDesc = content.getString(ServerUtil.TAG_USER_DESC).trim();
 					String contentTitle = content.getString(ServerUtil.TAG_TITLE).trim();
 					String contentBody = content.getString(ServerUtil.TAG_BODY).trim();
 					String contentType = content.getString(ServerUtil.TAG_TYPE).trim(); 
@@ -299,7 +298,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					}
 					
 					if (contentType.equals("Bulletin")) {
-						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, null), contentTimestamp, latitude, longitude);
+						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, contentUserFullName, contentUserDesc, "", 0), contentTimestamp, latitude, longitude);
 						b.setTotalRating(totalRating);
 						b.setUserRating(userRating);
 						if (b.hasLocation()) {
@@ -315,17 +314,16 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 							int commentID = Integer.parseInt(comment.getString(ServerUtil.TAG_ID).trim());
 							int commentUserID = Integer.parseInt(comment.getString(ServerUtil.TAG_USER_ID).trim());
 							String commentUsername = comment.getString(ServerUtil.TAG_USER_NAME).trim();
+							String commentUserFullName = content.getString(ServerUtil.TAG_USER_FULL_NAME).trim();
+							String commentUserDesc = content.getString(ServerUtil.TAG_USER_DESC).trim();
 							String commentBody = comment.getString(ServerUtil.TAG_BODY).trim();
 							Date commentTimestamp = Timestamp.valueOf(content.getString(ServerUtil.TAG_TIMESTAMP).trim());
 							
-							//String comment_timestamp = comment.getString(TAG_TIMESTAMP).trim();
-							User user = new User(commentUserID, commentUsername, null);
-							Comment c = new Comment(commentID, commentBody, user, commentTimestamp);
-							
+							Comment c = new Comment(commentID, commentBody, new User(commentUserID, commentUsername,  commentUserFullName, commentUserDesc, "", 0), commentTimestamp);
 							commentsList.add(c);
 						}
 						
-						Discussion d = new Discussion(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, null), contentTimestamp, latitude, longitude, commentsList);
+						Discussion d = new Discussion(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername,  contentUserFullName, contentUserDesc, "", 0), contentTimestamp, latitude, longitude, commentsList);
 						d.setTotalRating(totalRating);
 						d.setUserRating(userRating);
 						if (d.hasLocation()) {

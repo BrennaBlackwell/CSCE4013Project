@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class NavListArrayAdapter extends ArrayAdapter<String>{
 	private static final String tag = "NavListArrayAdapter";
 	private static final String MENU[] = 
-		{"Account", "Home", "Check In", "Groups", "Bookmarks", "Settings", "About", "Logout"};
+		{MainActivity.myUsername, "Home", "Check In", "Groups", "Bookmarks", "Settings", "About", "Logout"};
 	
 	private LayoutInflater mInflater;
 	private Context context;
