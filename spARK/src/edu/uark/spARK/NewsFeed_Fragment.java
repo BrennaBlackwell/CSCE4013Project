@@ -298,7 +298,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					}
 					
 					if (contentType.equals("Bulletin")) {
-						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, contentUserFullName, contentUserDesc, "", 0), contentTimestamp, latitude, longitude);
+						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0), contentTimestamp, latitude, longitude);
 						b.setTotalRating(totalRating);
 						b.setUserRating(userRating);
 						if (b.hasLocation()) {
@@ -323,7 +323,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 							commentsList.add(c);
 						}
 						
-						Discussion d = new Discussion(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername,  contentUserFullName, contentUserDesc, "", 0), contentTimestamp, latitude, longitude, commentsList);
+						Discussion d = new Discussion(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0), contentTimestamp, latitude, longitude, commentsList);
 						d.setTotalRating(totalRating);
 						d.setUserRating(userRating);
 						if (d.hasLocation()) {
