@@ -76,8 +76,83 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		holder.usernameTextView = (TextView) findViewById(R.id.usernameTextView);
 		holder.totalScoreTextView = (TextView) findViewById(R.id.totalScoreTextView);		
 		holder.likeBtn = (ToggleButton) findViewById(R.id.likeBtn);	
-		holder.dislikeBtn = (ToggleButton) findViewById(R.id.dislikeBtn);
+		holder.dislikeBtn = (ToggleButton) findViewById(R.id.dislikeBtn);	
+		if (mDiscussion.getUserRating() == 1) {
+			holder.likeBtn.setChecked(true);
+			holder.dislikeBtn.setChecked(false);
+		} else if (mDiscussion.getUserRating() == -1) {
+			holder.likeBtn.setChecked(false);
+			holder.dislikeBtn.setChecked(true);
+		} else {
+			holder.likeBtn.setChecked(false);
+			holder.dislikeBtn.setChecked(false);
+		}
+		
 		holder.scoreRadioGroup = (RadioGroup) findViewById(R.id.discussionScoreRadioGroup);
+		
+		holder.scoreRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+	        @Override
+	        public void onCheckedChanged(final RadioGroup radioGroup, final int i) {
+	            for (int j = 0; j < radioGroup.getChildCount(); j++) {
+	            	if (radioGroup.getChildAt(j).isEnabled()) {
+	            		final ToggleButton view = (ToggleButton) radioGroup.getChildAt(j);
+	            		if (view.getId() == i) {
+	            			view.setChecked(true);
+	            		} else {
+	            			view.setChecked(false);
+	            		}
+	            	}
+	            }
+	        }
+	    });	
+		
+		holder.likeBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				JSONQuery jquery = new JSONQuery(CommentActivity.this);
+				ToggleButton button = (ToggleButton)((RadioGroup)v.getParent()).getChildAt(0);
+				
+				if (button.isChecked()) {
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.myUserID), Integer.toString(mDiscussion.getId()), "like");
+					
+					((RadioGroup)v.getParent()).check(v.getId());	
+					mDiscussion.incrementRating();
+					refreshDiscussion(holder);
+				} else {
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.myUserID), Integer.toString(mDiscussion.getId()), "delete");
+					
+					((RadioGroup)v.getParent()).check(v.getId());
+					mDiscussion.decrementRating();
+					refreshDiscussion(holder);
+				}
+			}
+			
+		});
+		holder.dislikeBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				JSONQuery jquery = new JSONQuery(CommentActivity.this);
+				ToggleButton button = (ToggleButton)((RadioGroup)v.getParent()).getChildAt(2);
+				
+				if (button.isChecked()) {
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.myUserID), Integer.toString(mDiscussion.getId()), "dislike");
+					
+					((RadioGroup)v.getParent()).check(v.getId());
+					mDiscussion.decrementRating();
+					refreshDiscussion(holder);
+				} else {
+					jquery.execute(ServerUtil.URL_LIKE_DISLIKE, Integer.toString(MainActivity.myUserID), Integer.toString(mDiscussion.getId()), "delete");
+					
+					((RadioGroup)v.getParent()).check(v.getId());	
+					mDiscussion.incrementRating();
+					refreshDiscussion(holder);
+				}
+			}
+			
+		});
+		
 		
 		ImageButton ib = (ImageButton) findViewById(R.id.postCommentBtn);
 		ib.setOnClickListener(new OnClickListener() {
@@ -171,7 +246,7 @@ public class CommentActivity extends Activity implements AsyncResponse{
 			// Checking for SUCCESS TAG
 			int success = result.getInt("success");
 			if (success == 1) {
-				// Comment posted successfully
+				// success
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
