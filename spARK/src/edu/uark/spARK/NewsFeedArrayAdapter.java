@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.app.Fragment;
+import android.app.FragmentManager.OnBackStackChangedListener;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -221,6 +222,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				Fragment profileFragment;
 				if (MainActivity.myUserID == c.getCreator().getId()) {
 					profileFragment = new MyProfile_Fragment();
+					profileFragment.setHasOptionsMenu(true);
 				} else {
 					Bundle args = new Bundle();
 					args.putSerializable("ContentCreator", (User) c.getCreator());
@@ -228,13 +230,12 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		            profileFragment = new Profile_Fragment();
 		            profileFragment.setArguments(args);
 				}
-				
 	            
 				//fragment.getFragmentManager().beginTransaction().add(fragment.getView().getId(), profileFragment).commit();
+				((MainActivity) fragment.getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
 				fragment.getFragmentManager().beginTransaction().detach(MainActivity.mMapViewFragment)
 		        .add(R.id.fragment_frame, profileFragment).addToBackStack("Profile").commit();
-		        MainActivity.mPager.setVisibility(View.GONE);
-		           
+		        MainActivity.mPager.setVisibility(View.GONE);		           
 			}			
 		});
 		return convertView;

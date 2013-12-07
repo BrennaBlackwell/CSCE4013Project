@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -40,7 +41,7 @@ import edu.uark.spARK.entities.Bulletin;
 import edu.uark.spARK.entities.Discussion;
 import edu.uark.spARK.entities.Group;
 
-public class MainActivity extends Activity implements AsyncResponse{
+public class MainActivity extends Activity implements AsyncResponse {
 	
 	// TODO: Need to create a Current/myUser Class for these variables
 	public static int myUserID;
@@ -178,7 +179,7 @@ public class MainActivity extends Activity implements AsyncResponse{
       bulletinTab.setTabListener(tabListener);
       bar.addTab(discussionTab);
       bar.addTab(bulletinTab);
-    }
+	}
 	
     public static class MyAdapter extends FragmentPagerAdapter {
        
@@ -191,12 +192,13 @@ public class MainActivity extends Activity implements AsyncResponse{
         public int getCount() {
         	return 2;
         }
-
+        
         @Override
         public NewsFeed_Fragment getItem(int position) {
         	return NewsFeed_Fragment.newInstance(position);
-        }
-
+        }        
+        
+        
     }  	
 
     @Override
@@ -273,29 +275,35 @@ public class MainActivity extends Activity implements AsyncResponse{
 //    	}
 		@Override
 		public void onDrawerClosed(View drawerView) {
-			System.out.println("mOld: " + mOldDrawerPosition + "   mNew: " + mNewDrawerPosition);
 			mDrawerToggle.onDrawerClosed(drawerView);
-			// TODO: Having problems logging out. Seems whenever you click position 7 selectItem gets skipped but the others work fine
-            if (mOldDrawerPosition != mNewDrawerPosition)
+            if (mOldDrawerPosition != mNewDrawerPosition) {
+            	if (mNewDrawerPosition == 1) {
+        			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            	}
+            	else
+        			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 				selectItem(mNewDrawerPosition);
+            }
             mOldDrawerPosition = mNewDrawerPosition;
+
 		}
 
 		@Override
 		public void onDrawerOpened(View drawerView) {
 			mDrawerToggle.onDrawerOpened(drawerView);
+			//getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		}
 
 		@Override
 		public void onDrawerSlide(View drawerView, float offset) {
 			mDrawerToggle.onDrawerSlide(drawerView, offset);
-
 		}
 
 		@Override
 		public void onDrawerStateChanged(int newState) {
 			mDrawerState = newState;
 			mDrawerToggle.onDrawerStateChanged(mDrawerState);
+
 		}
 
     }
@@ -311,7 +319,6 @@ public class MainActivity extends Activity implements AsyncResponse{
 	            fragmentManager.beginTransaction().detach(mMapViewFragment)
 	            .replace(R.id.fragment_frame, new MyProfile_Fragment())
 	            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-	            .addToBackStack("Profile")
 	            .commit();
 	            mPager.setVisibility(View.GONE);
 	            break;
@@ -361,65 +368,6 @@ public class MainActivity extends Activity implements AsyncResponse{
 	        getFragmentManager().executePendingTransactions();
     }
     
-//    private void switchFragment(Fragment fragmentName) {
-//        Bundle args = new Bundle();
-//	    args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
-//        fragment.setArguments(args);
-//    
-//        FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.fragment_frame, switchFragment())
-//        .remove(mMapViewFragment)
-//        .commit();    	
-//    }
-
-//    private void switchFragment(int fragmentName){
-//        // update the main content by replacing fragments
-//    	
-//    	//if the desired fragment isn't the same as the already loaded page
-//    	if (fragmentName != page){
-//	    	Fragment fragment;
-//	    	//int fragmentName is statically declared above
-//	    	switch (fragmentName){
-//	    		case PROFILE_FRAGMENT: //0
-//	    			fragment = new MyProfile_Fragment();
-//	    			break;
-//		    	case NEWSFEED_FRAGMENT://1
-//		    		fragment = new HybridFragment();
-//		    		break;
-//		    	case CLUSTERVIEW_FRAGMENT: //2
-//	    			fragment = new ClusterView_Fragment();
-//		    		break;
-//		    	case CHECKIN_FRAGMENT: //2
-//	    			fragment = new CheckIn_Fragment();
-//		    		break;
-//		    	case MAPVIEW_FRAGMENT: //0
-//		    		fragment = new MapView_Fragment();
-//		    		break;
-////		    	case NEWSFEED_FRAGMENT: //5
-////		    		fragment = new ListFeed_Fragment();
-////		    		break;
-//		    	default:
-//		    		//(currently blank)
-//		    		fragment = new ContentFragment();
-//		    		break;
-//	    	}
-//	
-//	        Bundle args = new Bundle();
-//		    args.putInt(ContentFragment.ARG_FRAGMENT_TYPE, fragmentName);
-//	        fragment.setArguments(args);
-//        
-//            FragmentManager fragmentManager = getFragmentManager();
-//            
-//            return fragmentManager.beginTransaction().replace(R.id.fragment_frame, fragment)
-//
-//            mDrawerList.setItemChecked(fragmentName, true);
-//            //setTitle(mListTitles[position]);
-//
-//            page = fragmentName;
-//
-//        }
-//        mDrawerLayout.closeDrawer(mDrawerList);
-//    }
 
     @Override
     public void setTitle(CharSequence title) {
@@ -575,21 +523,27 @@ public class MainActivity extends Activity implements AsyncResponse{
 	
 	@Override
 	public void onBackPressed() {
-		
-		//make sure there are no fragments in backstack
-		if(getFragmentManager().getBackStackEntryCount() == 0) {
-			finish();
-	    }
-		else {
-			if (getFragmentManager().getBackStackEntryAt(0).getName().compareTo("Profile") == 0) {
-				//mMapViewFragment.zoomOutMap();
-				mPager.setVisibility(View.VISIBLE);
-			}
-			else if (getFragmentManager().getBackStackEntryAt(0).getName().compareTo("Map") == 0) {
+		FragmentManager fm = getFragmentManager();
+		if (fm.getBackStackEntryCount() != 0) {
+			getDrawerToggle().setDrawerIndicatorEnabled(true);
+			FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount()-1);
+			if (backEntry.getName() == "Map") {
 				mMapViewFragment.zoomOutMap();
+				mPager.setPaging(true);
 			}
-			getFragmentManager().popBackStackImmediate();
+			else if (backEntry.getName() == "Profile") {
+    			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    			mPager.setVisibility(View.VISIBLE);
+
+			}
+			super.onBackPressed();
 		}
-		//super.onBackPressed();
+		else
+			finish();
 	}
+	
+	public ActionBarDrawerToggle getDrawerToggle() {
+		return this.mDrawerToggle;
+	}
+	
 }

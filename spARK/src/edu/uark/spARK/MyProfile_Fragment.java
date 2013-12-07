@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -22,11 +23,22 @@ public class MyProfile_Fragment extends Fragment implements AsyncResponse {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+	    //update the actionbar to show the up caret
+	    getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+    	getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+	    
+    	//this should be false by default so there's no caret when a user selects their profile in NavDrawer
+    	setHasOptionsMenu(false);
+   
+    }
+    
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	
-    	//getActivity().getActionBar().setNavigationMode(ActionBar.DISPLAY_HOME_AS_UP);
-
-		View profileView = inflater.inflate(R.layout.fragment_myprofile, container, false);
+    	View profileView = inflater.inflate(R.layout.fragment_myprofile, container, false);
 		TextView userName = (TextView)profileView.findViewById(R.id.userName);
 		TextView userFullName = (TextView)profileView.findViewById(R.id.userFullName);
 		TextView aboutMeField = (TextView)profileView.findViewById(R.id.aboutMeField);
@@ -46,6 +58,20 @@ public class MyProfile_Fragment extends Fragment implements AsyncResponse {
 		});
 		
     	return profileView;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+	    // get selected item
+	    switch (item.getItemId()) {
+	    	case android.R.id.home:
+	    		getActivity().onBackPressed();
+	    		break;
+    		default:
+    			break;
+	    }
+	    return true;
     }
     
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
