@@ -148,7 +148,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 
   			@Override
   			public void onPageSelected(int position) {
-  				//getActionBar().getTabAt(position).select();
+  				getActionBar().getTabAt(position).select();
   			}
         	
         });
