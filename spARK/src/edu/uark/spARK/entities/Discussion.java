@@ -50,6 +50,11 @@ public class Discussion extends Content {
 		this.comments = comments;
 	}
 	
+	public Discussion(int id, String title, String description, User creator, Date creationDate, String latitude, String longitude, List<Comment> comments, Group groupAttached) {
+		super(id, title, description, creator, creationDate, latitude, longitude, groupAttached);
+		this.comments = comments;
+	}
+	
 	public String getDescription() {
 		return getText();
 	}

@@ -8,6 +8,9 @@ public class ServerUtil {
 	public static final String TAG_COMMENTS = "comments";
 	
 	public static final String TAG_GROUPS = "groups";
+	public static final String TAG_GROUP_ID = "groupid";
+	public static final String TAG_GROUP_NAME = "groupname";
+	public static final String TAG_GROUP_DESC = "groupdesc";
 	public static final String TAG_PRIVACY = "privacy";
 	public static final String TAG_VISIBILITY = "visibility";
 	
@@ -47,6 +50,8 @@ public class ServerUtil {
 	public static final String URL_LIKE_DISLIKE = SERVER_ADDR + "rating.php";
 	
 	public static final String URL_CREATE_CONTENT = SERVER_ADDR + "createcontent.php";
+	
+	public static final String URL_DELETE_CONTENT = SERVER_ADDR + "deletecontent.php";
 	
 	public static final String URL_BLOCK_CONTENT = SERVER_ADDR + "blockcontent.php";
 	

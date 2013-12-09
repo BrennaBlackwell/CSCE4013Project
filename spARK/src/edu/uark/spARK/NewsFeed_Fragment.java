@@ -9,16 +9,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +33,7 @@ import edu.uark.spARK.entities.Bulletin;
 import edu.uark.spARK.entities.Comment;
 import edu.uark.spARK.entities.Content;
 import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.Group;
 import edu.uark.spARK.entities.User;
 
 
@@ -249,18 +247,14 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 				for (int i = 0; i < contents.length(); i++) {
 					JSONObject content = contents.getJSONObject(i);
 
+					// Content
 					int contentID = Integer.parseInt(content.getString(ServerUtil.TAG_ID));
-					int contentUserID = Integer.parseInt(content.getString(ServerUtil.TAG_USER_ID).trim());
-					String contentUsername = content.getString(ServerUtil.TAG_USER_NAME).trim();
-					String contentUserFullName = content.getString(ServerUtil.TAG_USER_FULL_NAME).trim();
-					String contentUserDesc = content.getString(ServerUtil.TAG_USER_DESC).trim();
 					String contentTitle = content.getString(ServerUtil.TAG_TITLE).trim();
 					String contentBody = content.getString(ServerUtil.TAG_BODY).trim();
 					String contentType = content.getString(ServerUtil.TAG_TYPE).trim(); 
 					Date contentTimestamp = Timestamp.valueOf(content.getString(ServerUtil.TAG_TIMESTAMP).trim());
 					String latitude = content.getString(ServerUtil.TAG_LATITUDE).trim();     
 					String longitude = content.getString(ServerUtil.TAG_LONGITUDE).trim(); 
-							
 					int totalRating = 0;
 					int userRating = 0;
 					if (content.getInt(ServerUtil.TAG_RATING_TOTAL_FLAG) == 1) {
@@ -268,14 +262,30 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 							totalRating = Integer.parseInt(content.getString(ServerUtil.TAG_RATING_TOTAL));
 						} 
 					}
+					
+					
+					// Creator
+					int contentUserID = Integer.parseInt(content.getString(ServerUtil.TAG_USER_ID).trim());
+					String contentUsername = content.getString(ServerUtil.TAG_USER_NAME).trim();
+					String contentUserFullName = content.getString(ServerUtil.TAG_USER_FULL_NAME).trim();
+					String contentUserDesc = content.getString(ServerUtil.TAG_USER_DESC).trim();
 					if (content.getInt(ServerUtil.TAG_USER_RATING_FLAG) == 1) {
 						if (content.getString(ServerUtil.TAG_USER_RATING) != null) {
 							userRating = content.getInt(ServerUtil.TAG_USER_RATING);
 						}
 					}
+					User user = new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0);
+					
+					
+					// Group Attached
+					int groupID = Integer.parseInt(content.getString(ServerUtil.TAG_GROUP_ID).trim());
+					String groupName = content.getString(ServerUtil.TAG_GROUP_NAME).trim();
+					String groupDesc = content.getString(ServerUtil.TAG_GROUP_DESC).trim();
+					Group group = new Group(groupID, groupName, groupDesc);
+					
 					
 					if (contentType.equals("Bulletin")) {
-						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0), contentTimestamp, latitude, longitude);
+						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, user, contentTimestamp, latitude, longitude, group);
 						b.setTotalRating(totalRating);
 						b.setUserRating(userRating);
 						if (b.hasLocation()) {
@@ -300,7 +310,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 							commentsList.add(c);
 						}
 						
-						Discussion d = new Discussion(contentID, contentTitle, contentBody, new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0), contentTimestamp, latitude, longitude, commentsList);
+						Discussion d = new Discussion(contentID, contentTitle, contentBody, user, contentTimestamp, latitude, longitude, commentsList, group);
 						d.setTotalRating(totalRating);
 						d.setUserRating(userRating);
 						if (d.hasLocation()) {

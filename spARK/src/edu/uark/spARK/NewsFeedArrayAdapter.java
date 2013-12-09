@@ -2,29 +2,43 @@ package edu.uark.spARK;
 
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager.OnBackStackChangedListener;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.QuickContactBadge;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
-import edu.uark.spARK.entities.*;
+import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Content;
+import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.User;
 
 public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements AsyncResponse{
 	//private static final String tag = "NewsFeedArrayAdapter";
 	
-	private Fragment fragment;
+	public Fragment fragment;
 	private Context mContext;
 	private LayoutInflater mInflater;
-	private List<Content> mContent;
+	public List<Content> mContent;
 	public ViewHolder holder;
 	
 	
@@ -58,20 +72,10 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.userProfileIcon = (QuickContactBadge) convertView.findViewById(R.id.userQuickContactBadge);
 			holder.usernameTextView = (TextView) convertView.findViewById(R.id.usernameTextView);
 			holder.usernameTextView.setTag(position);
-//			holder.usernameTV.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//				}
-//				
-//			});
 			holder.totalScoreTextView = (TextView) convertView.findViewById(R.id.totalScoreTextView);
-			
 			holder.likeBtn = (ToggleButton) convertView.findViewById(R.id.likeBtn);
-
-				
 			holder.dislikeBtn = (ToggleButton) convertView.findViewById(R.id.dislikeBtn);
-			
+			holder.deleteBtn = (Button) convertView.findViewById(R.id.trashBtn);
 			holder.scoreRadioGroup = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
 			holder.scoreRadioGroup.setTag(position);
 			convertView.setTag(holder);
@@ -83,7 +87,10 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		holder.descTextView.setText(c.getText());
 		holder.descTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		Linkify.addLinks(holder.descTextView, Linkify.ALL);
-		holder.groupAndDateTextView.setText("posted to group - " + c.getCreationDateAsPrettyTime());
+		holder.groupAndDateTextView.setText("posted publicly - " + c.getCreationDateAsPrettyTime());
+		if (c.getGroupAttached().getId() != 0) {
+			holder.groupAndDateTextView.setText("posted to '" + c.getGroupAttached().getTitle() + "' - " + c.getCreationDateAsPrettyTime());
+		}
 		holder.usernameTextView.setText(c.getCreator().getTitle());
 		holder.totalScoreTextView.setText(String.valueOf(c.getTotalRating()));
 		if (c instanceof Discussion) {
@@ -111,6 +118,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		} else {
 			holder.likeBtn.setChecked(false);
 			holder.dislikeBtn.setChecked(false);
+		}
+		if (c.getCreator().getId() != MainActivity.myUserID) {
+			holder.deleteBtn.setVisibility(View.GONE);
 		}
 		//generic idea for expanding ellipsized text
 //		holder.descTV.setOnClickListener(new OnClickListener() {
@@ -232,10 +242,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 						    }
 					};
 				} else {
+					profileFragment = new Profile_Fragment();
 					Bundle args = new Bundle();
 					args.putSerializable("ContentCreator", (User) c.getCreator());
-					args.putSerializable("position", position);
-		            profileFragment = new Profile_Fragment();
 		            profileFragment.setArguments(args);
 				}
 	            
@@ -246,12 +255,61 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		        MainActivity.mPager.setVisibility(View.GONE);		           
 			}			
 		});
+		
+		holder.deleteBtn.setOnClickListener(new OnClickListener() {
+		
+			@Override
+			public void onClick(View v) { 
+				final int contentID = c.getId();
+				final int pos = position;
+				String content = "Discussion";
+				if (c.getClass().toString().contains("Bulletin")) {
+					content = "Bulletin";
+				}
+				final String contentType = content;
+				
+				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
+                jquery.execute(ServerUtil.URL_DELETE_CONTENT, Integer.toString(MainActivity.myUserID), Integer.toString(contentID), contentType, Integer.toString(pos));
+                
+                
+//				new AlertDialog.Builder(mContext)
+//		        .setIcon(android.R.drawable.ic_dialog_alert)
+//		        .setTitle("Delete " + contentType)
+//		        .setMessage("Are you sure you want to delete this item?")
+//		        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+//		    {
+//		        @Override
+//		        public void onClick(DialogInterface dialog, int which) {
+//		        	JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
+//                
+//					TODO: Wish I could get the following to work instead. For some reason 
+//                	here the contentID, contentType, and pos values are unknown. Check in debug for details
+//                
+//                  jquery.execute(ServerUtil.URL_DELETE_CONTENT, Integer.toString(MainActivity.myUserID), Integer.toString(contentID), contentType, Integer.toString(pos));
+//		        }
+//
+//		    })
+//		    .setNegativeButton("No", null)
+//		    .show();
+			}
+		});
+			
 		return convertView;
 	}
 	
 	@Override
 	public void processFinish(JSONObject result) {
-	//	results = result;
+		try { 
+			// Checking for SUCCESS TAG
+			int success = result.getInt("deleteSuccess");
+			if (success == 1) {
+				int position = result.getInt("position");
+				mContent.remove(mContent.get(position));
+				notifyDataSetChanged();
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//use this to load items, saving performance from not having to lookup id
@@ -268,6 +326,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		RadioGroup scoreRadioGroup;
 		ToggleButton likeBtn;
 		ToggleButton dislikeBtn;
+		Button deleteBtn;
 		int position;
 	}
 	

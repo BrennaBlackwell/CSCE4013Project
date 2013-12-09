@@ -15,9 +15,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.QuickContactBadge;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -36,6 +38,8 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		holder.titleTextView.setText(mDiscussion.getTitle());
 		holder.descTextView.setText(mDiscussion.getText());
 		holder.groupAndDateTextView.setVisibility(View.GONE);
+		// TODO: What would userProfileIcon set to onRefresh?
+		//holder.userProfileIcon.setImageAlpha(??);
 		holder.usernameTextView.setText(mDiscussion.getCreator().getName());
 		holder.totalScoreTextView.setText(String.valueOf(mDiscussion.getTotalRating()));
 		holder.commentTextView.setText(mDiscussion.getNumComments() + " comments");		
@@ -73,6 +77,7 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		    }
 		});
 		holder.groupAndDateTextView = (TextView) findViewById(R.id.groupAndDateTextView);
+		holder.userProfileIcon = (QuickContactBadge) findViewById(R.id.userQuickContactBadge);
 		holder.usernameTextView = (TextView) findViewById(R.id.usernameTextView);
 		holder.totalScoreTextView = (TextView) findViewById(R.id.totalScoreTextView);		
 		holder.likeBtn = (ToggleButton) findViewById(R.id.likeBtn);	
@@ -86,6 +91,11 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		} else {
 			holder.likeBtn.setChecked(false);
 			holder.dislikeBtn.setChecked(false);
+		}
+		
+		holder.deleteBtn = (Button) findViewById(R.id.trashBtn);
+		if (mDiscussion.getCreator().getId() != MainActivity.myUserID) {
+			holder.deleteBtn.setVisibility(View.GONE);
 		}
 		
 		holder.scoreRadioGroup = (RadioGroup) findViewById(R.id.discussionScoreRadioGroup);
@@ -153,6 +163,74 @@ public class CommentActivity extends Activity implements AsyncResponse{
 			
 		});
 		
+//		TODO:  Users need to be able to view other users profiles within CommentActivity.
+//			   Having trouble getting the following code to work
+		
+//		holder.userProfileIcon.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO: Need to implement addToBackStack on Profiles
+//				Fragment profileFragment;
+//				if (MainActivity.myUserID == mDiscussion.getCreator().getId()) {
+//					profileFragment = new MyProfile_Fragment() {
+//						@Override
+//					    public void onCreate(Bundle savedInstanceState) {
+//						    super.onCreate(savedInstanceState);
+//							    getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+//						    	getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+//						    	setHasOptionsMenu(true);
+//						    }
+//					};
+//				} else {
+//					profileFragment = new Profile_Fragment();
+//					Bundle args = new Bundle();
+//					args.putSerializable("ContentCreator", (User) mDiscussion.getCreator());
+//		            profileFragment.setArguments(args);
+//				}
+//	            
+//				//fragment.getFragmentManager().beginTransaction().add(fragment.getView().getId(), profileFragment).commit();
+//				((MainActivity) NewsFeedArrayAdapter.fragment.getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
+//				NewsFeedArrayAdapter.fragment.getFragmentManager().beginTransaction()
+//		        .add(R.id.fragment_frame, profileFragment).commit();
+//		        MainActivity.mPager.setVisibility(View.GONE);		           
+//			}			
+//		});
+		
+		holder.deleteBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) { 
+				final int contentID = mDiscussion.getId();
+				final int pos = 0;
+				final String contentType = "Discussion";
+				
+//				TODO: Fix processFinish() before uncommenting here
+//				JSONQuery jquery = new JSONQuery(CommentActivity.this);
+//              jquery.execute(ServerUtil.URL_DELETE_CONTENT, Integer.toString(MainActivity.myUserID), Integer.toString(contentID), contentType, Integer.toString(pos));
+                
+                
+//				new AlertDialog.Builder(mContext)
+//		        .setIcon(android.R.drawable.ic_dialog_alert)
+//		        .setTitle("Delete " + contentType)
+//		        .setMessage("Are you sure you want to delete this item?")
+//		        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+//		    {
+//		        @Override
+//		        public void onClick(DialogInterface dialog, int which) {
+//		        	JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
+//                
+//					TODO: Wish I could get the following to work instead. For some reason 
+//                	here the contentID, contentType, and pos values are unknown. Check in debug for details
+//                
+//                  jquery.execute(ServerUtil.URL_DELETE_CONTENT, Integer.toString(MainActivity.myUserID), Integer.toString(contentID), contentType, Integer.toString(pos));
+//		        }
+//
+//		    })
+//		    .setNegativeButton("No", null)
+//		    .show();
+			}
+		});
 		
 		ImageButton ib = (ImageButton) findViewById(R.id.postCommentBtn);
 		ib.setOnClickListener(new OnClickListener() {
@@ -244,9 +322,12 @@ public class CommentActivity extends Activity implements AsyncResponse{
 	public void processFinish(JSONObject result) {
 		try { 
 			// Checking for SUCCESS TAG
-			int success = result.getInt("success");
+			int success = result.getInt("deleteSuccess");
 			if (success == 1) {
-				// success
+//				TODO: Need to remove current discussion from NewsFeedArrayAdapter
+//				mContent.remove(mDiscussion);
+//				notifyDataSetChanged();
+				finish();
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -15,6 +15,7 @@ public class Content extends Entity {
 	private String longitude;
 	private int totalRating;
 	private int userRating;
+	private Group groupAttached;
 	
 	public Content(int id, String title, String text) {
 		super(id, title, text);
@@ -52,10 +53,25 @@ public class Content extends Entity {
 		this.longitude = longitude;
 	}
 	
+	public Content(int id, String title, String text, User creator, Date creationDate, String latitude, String longitude, Group gpt) {
+		this(id, title, text, creator, creationDate);
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.setGroupAttached(gpt);
+	}
+	
 	public User getCreator() {
 		return creator;
 	}
 	
+	public Group getGroupAttached() {
+		return groupAttached;
+	}
+
+	public void setGroupAttached(Group groupAttached) {
+		this.groupAttached = groupAttached;
+	}
+
 	public Date getCreationDate() {
 		return creationDate;
 	}
