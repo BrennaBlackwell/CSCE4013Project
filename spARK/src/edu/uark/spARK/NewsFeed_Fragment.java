@@ -177,16 +177,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 
 			@Override
 	        public void onClick(View v) {
-	        	FragmentManager fm = getFragmentManager();
-	        	FragmentTransaction ft = fm.beginTransaction();
-	        	
-	        	//animations are ordered (enter, exit, popEnter, popExit)
-	        	ft.setCustomAnimations(R.animator.slide_up, R.animator.slide_down, 
-	        			R.animator.slide_up, R.animator.slide_down)
-	        			.hide(NewsFeed_Fragment.this).addToBackStack("Map").commit();
-    	
-	        	mPager.setPaging(false);
-	        	MainActivity.mMapViewFragment.zoomInMap();
+				hideFragment();
 	        }
 	    });
 
@@ -381,5 +372,19 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	
 	public SelectiveViewPager getSelectiveViewPager() {
 		return mPager;
+	}
+	
+	public void hideFragment() {
+    	FragmentManager fm = getFragmentManager();
+    	FragmentTransaction ft = fm.beginTransaction();
+    	
+    	//animations are ordered (enter, exit, popEnter, popExit)
+    	ft.setCustomAnimations(R.animator.slide_up, R.animator.slide_down, 
+    			R.animator.slide_up, R.animator.slide_down)
+    			.hide(NewsFeed_Fragment.this).addToBackStack("Map").commit();
+    	fm.executePendingTransactions();
+    	mPager.setPaging(false);
+    	MainActivity.mMapViewFragment.zoomInMap();
+
 	}
 }

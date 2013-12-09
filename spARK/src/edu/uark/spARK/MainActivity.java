@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.DialogFragment;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.Activity;
 import android.app.Fragment;
@@ -74,8 +75,8 @@ public class MainActivity extends Activity implements AsyncResponse {
 	static MapView_Fragment mMapViewFragment = new MapView_Fragment();;
 	
 	public MyAdapter mAdapter;
-	public static int mOldDrawerPosition=1;	//default value
-	public static int mNewDrawerPosition=1;	//default value
+	public static int mOldDrawerPosition;	//default value
+	public static int mNewDrawerPosition;	//default value
 	public static SelectiveViewPager mPager;
 	
     
@@ -101,6 +102,8 @@ public class MainActivity extends Activity implements AsyncResponse {
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(mNavListArrayAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+    	mOldDrawerPosition=1;	//default value
+    	mNewDrawerPosition=1;	//default value
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -347,9 +350,15 @@ public class MainActivity extends Activity implements AsyncResponse {
 	            break;
 	        case 5:
 	        	//settings we could make another activity/fragment/whatever
+	            fragmentManager.beginTransaction().detach(mMapViewFragment)
+	            .replace(R.id.fragment_frame, new Fragment()).commit();
+	            mPager.setVisibility(View.GONE);
 	        	break;
 	        case 6:
 	        	//dialog
+	            fragmentManager.beginTransaction().detach(mMapViewFragment)
+	            .replace(R.id.fragment_frame, new DialogFragment()).commit();
+	            mPager.setVisibility(View.GONE);
 	        	break;
 	        case 7:
 	            SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);

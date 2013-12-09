@@ -8,7 +8,7 @@
     </item>
     <item 
         android:id="@+id/post"
-    	android:icon="@drawable/ic_create_button"
+    	android:icon="@drawable/ic_menu_create"
     	android:showAsAction="always"
     	android:title="New Post">
     </item>

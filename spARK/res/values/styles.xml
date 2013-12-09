@@ -16,6 +16,7 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:windowBackground">@color/grey_bg</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="android:actionBarItemBackground">@drawable/selector</item>  
         <item name="android:actionModeBackground">@drawable/cab_background_top_apptheme</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle</item>
         <item name="android:editTextStyle">@style/EditTextAppTheme</item>
@@ -25,9 +26,10 @@
     </style>
 
     <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid"> 
+        <item name="android:icon">@drawable/ic_menu_home</item>
         <item name="android:background">@drawable/ab_solid_bg</item>
         <item name="android:backgroundStacked">@drawable/ab_solid_stacked</item>
-        <item name="android:backgroundSplit">@drawable/ab_solid_bottom</item>    
+        <item name="android:backgroundSplit">@drawable/ab_solid_bottom</item>  
 		<item name="android:progressBarStyle">@style/ProgressBar</item>
     </style>
     

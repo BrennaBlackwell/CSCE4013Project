@@ -287,4 +287,12 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 			marker.setVisible(isGroup);
 		}
 	}
+	
+	public void moveCameraToLatLng(LatLng latLng) {
+	    CameraPosition cameraPosition = new CameraPosition.Builder()
+		.target(latLng)
+		.zoom(17)
+		.build();
+	    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+	}
 }

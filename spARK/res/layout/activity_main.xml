@@ -73,14 +73,17 @@
 
     
         <!-- The navigation drawer -->
-    <ListView android:id="@+id/left_drawer"
+
+    <ListView
+        android:id="@+id/left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:listSelector="@drawable/list_selector"
         android:choiceMode="singleChoice"
-        android:divider="#D0D0D0"
-    	android:dividerHeight="2dp"
-        android:background="@android:color/white"/>
+        android:divider="@color/red"
+        android:dividerHeight="1dp" />
 
 <!--  	<fragment -->
 <!--         android:id="@+id/right_drawer" -->
@@ -103,7 +106,7 @@
         android:gravity="center" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/locationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

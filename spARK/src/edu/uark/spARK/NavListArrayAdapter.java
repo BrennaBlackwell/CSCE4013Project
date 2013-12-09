@@ -47,27 +47,27 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 					break;
 				case 3:	//groups
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_group);
+					icon = convertView.getResources().getDrawable(R.drawable.drawer_group);
 					break;
 				case 4:	//bookmarks
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_bookmarks);
+					icon = convertView.getResources().getDrawable(R.drawable.drawer_bookmarks);
 					break;
 				case 5:	//settings
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_preferences);
+					icon = convertView.getResources().getDrawable(R.drawable.drawer_preferences);
 					break;
 				case 6:	//about
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_about);
+					icon = convertView.getResources().getDrawable(R.drawable.drawer_about);
 					break;
 				case 7:	//logout
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_logout);
+					icon = convertView.getResources().getDrawable(R.drawable.drawer_logout);
 					break;
 				default:
 					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_logout);
+					icon = convertView.getResources().getDrawable(R.drawable.drawer_logout);
 					break;
 			}
 			ImageView imageview = (ImageView) convertView.findViewById(R.id.navListOptionIcon);

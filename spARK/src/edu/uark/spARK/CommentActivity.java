@@ -273,8 +273,11 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		// Show the Up button in the action bar.
 		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
-		ab.setTitle("test");
-		ab.setSubtitle(mDiscussion.getCreationDateAsPrettyTime());
+		ab.setTitle(mDiscussion.getTitle());
+		ab.setSubtitle("posted publicly - " + mDiscussion.getCreationDateAsPrettyTime());
+		if (mDiscussion.getGroupAttached().getId() != 0) {
+			ab.setSubtitle("posted to '" + mDiscussion.getGroupAttached().getTitle() + "' - " + mDiscussion.getCreationDateAsPrettyTime());
+		}
 	    ab.show();
 	}
 

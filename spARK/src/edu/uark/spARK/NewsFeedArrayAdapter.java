@@ -6,11 +6,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -21,11 +20,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.QuickContactBadge;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.entities.Bulletin;
 import edu.uark.spARK.entities.Content;
@@ -35,14 +38,14 @@ import edu.uark.spARK.entities.User;
 public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements AsyncResponse{
 	//private static final String tag = "NewsFeedArrayAdapter";
 	
-	public Fragment fragment;
+	public NewsFeed_Fragment fragment;
 	private Context mContext;
 	private LayoutInflater mInflater;
 	public List<Content> mContent;
 	public ViewHolder holder;
 	
 	
-	public NewsFeedArrayAdapter(Context context, int layoutid, List<Content> content, Fragment f) {
+	public NewsFeedArrayAdapter(Context context, int layoutid, List<Content> content, NewsFeed_Fragment f) {
 		super(context, layoutid, content);
 		this.mContent = content;
 		mContext = context;
@@ -65,6 +68,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			}
 			
 			holder.mainFL = (FrameLayout) convertView.findViewById(R.id.list_discussionMainFrame);
+			holder.locationLinearLayout = (LinearLayout) convertView.findViewById(R.id.locationLinearLayout);
+			holder.locationImageButton = (ImageButton) convertView.findViewById(R.id.locationImageButton);
+			holder.locationTextView = (TextView) convertView.findViewById(R.id.locationTextView);
 			holder.titleTextView = (TextView) convertView.findViewById(R.id.headerTextView);
 			holder.titleTextView.setTag(position);
 			holder.descTextView = (TextView) convertView.findViewById(R.id.descTextView);	
@@ -83,6 +89,23 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
+		if (c.getLatitude().compareTo("") != 0 && c.getLatitude().compareTo("") != 0) {
+			holder.locationLinearLayout.setVisibility(View.VISIBLE);
+			//holder.locationImageButton
+			holder.locationTextView.setText(c.getLatitude() + ", " + c.getLongitude());
+			//holder.locationTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+			holder.locationTextView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					fragment.hideFragment();
+					((MainActivity) fragment.getActivity()).mMapViewFragment.moveCameraToLatLng(new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude())));
+				}
+				
+			});
+		}
+
 		holder.titleTextView.setText(c.getTitle());
 		holder.descTextView.setText(c.getText());
 		holder.descTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -315,6 +338,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	//use this to load items, saving performance from not having to lookup id
 	static class ViewHolder {
 		FrameLayout mainFL;
+		LinearLayout locationLinearLayout;
+		ImageButton locationImageButton;
+		TextView locationTextView;
 		TextView titleTextView;
 		TextView descTextView;
 		TextView groupAndDateTextView;
