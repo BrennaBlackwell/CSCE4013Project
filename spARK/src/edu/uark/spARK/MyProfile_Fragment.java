@@ -30,8 +30,7 @@ public class MyProfile_Fragment extends Fragment implements AsyncResponse {
 	    getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     	getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 	    
-    	//this should be false by default so there's no caret when a user selects their profile in NavDrawer
-    	setHasOptionsMenu(false);
+    	setHasOptionsMenu(true);
    
     }
     

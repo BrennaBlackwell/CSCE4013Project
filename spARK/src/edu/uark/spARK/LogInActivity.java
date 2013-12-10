@@ -1,31 +1,40 @@
 package edu.uark.spARK;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.plus.PlusClient.OnAccessRevokedListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.plus.PlusClient;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.plus.PlusClient.OnAccessRevokedListener;
 
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 
@@ -47,16 +56,12 @@ public class LogInActivity extends Activity implements AsyncResponse,
     private View mLoginView;
 
     private boolean GoogleLogout = false;
+	private SignInButton plusSignInButton;
     
     @SuppressLint("NewApi")
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bundle extras = getIntent().getExtras();
-
-
-
         mPlusClient = new PlusClient.Builder(this, this, this)
                 .setActions("http://schemas.google.com/AddActivity", "http://schemas.google.com/BuyActivity")
                 .build();
@@ -75,7 +80,6 @@ public class LogInActivity extends Activity implements AsyncResponse,
         setContentView(R.layout.splash);
         
         if (preferences.getBoolean("autoLogin", false)){
-            //Login(mLoginView);
 			Intent MainIntent = new Intent(this, MainActivity.class);
 			startActivity(MainIntent);
             finish();
@@ -92,10 +96,7 @@ public class LogInActivity extends Activity implements AsyncResponse,
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
                 display.getSize(size);
-                //float width = size.x;
-                //float height = size.y;
                 ImageView ivSplash = (ImageView) findViewById(R.id.profileImageView);
-                //float spark_X = ivSplash.getLeft();
                 float spark_Y = ivSplash.getTop();
             	float distance = (0-spark_Y);
             	ivSplash.animate().translationY(distance).withLayer();
@@ -107,30 +108,23 @@ public class LogInActivity extends Activity implements AsyncResponse,
             @Override
             public void run() {
                 mLoginView.animate().alpha(1f).setDuration(450).setListener(null);
-                //Intent i = new Intent(SplashActivity.this, LogInActivity.class);
-                //startActivity(i);
-                //findViewById(R.id.relativeLayoutLogin).setVisibility(View.VISIBLE);
-                // close this activity
-                //finish();
             }
         }, SPLASH_TIME_OUT + 450);
 
         EditText txtUsername = (EditText)findViewById(R.id.Username);
         txtUsername.setText(preferences.getString("currentUsername", ""));
-
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-
-        if (extras != null) {
-            if (extras.getBoolean("Logout") == true)
-                GoogleLogout = true;
-                Logout();
-        }
+        plusSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        plusSignInButton.setOnClickListener(this);
+        ProgressBar spinner = (ProgressBar) findViewById(R.id.loginProgress);
+        spinner.getIndeterminateDrawable().setColorFilter(0xFFFF0000, Mode.SRC_IN);
+        setGooglePlusButtonText(plusSignInButton, "Sign in to Google");
+        
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-            mPlusClient.connect();
+        mPlusClient.connect();
     }
 
     @Override
@@ -140,18 +134,23 @@ public class LogInActivity extends Activity implements AsyncResponse,
     }
 
     public void onClick(View view) {
-        if (view.getId() == R.id.sign_in_button && !mPlusClient.isConnected()) {
-            if (mConnectionResult == null) {
-                mConnectionProgressDialog.show();
-            } else {
-                try {
-                    mConnectionResult.startResolutionForResult(this, REQUEST_CODE_RESOLVE_ERR);
-                } catch (SendIntentException e) {
-                    // Try connecting again.
-                    mConnectionResult = null;
-                    mPlusClient.connect();
-                }
-            }
+        if (view.getId() == R.id.sign_in_button) {
+        	if (mPlusClient.isConnected()) {
+        		Logout();
+        	}
+        	else {
+	            if (mConnectionResult == null) {
+	                mConnectionProgressDialog.show();
+	            } else {
+	                try {
+	                    mConnectionResult.startResolutionForResult(this, REQUEST_CODE_RESOLVE_ERR);
+	                } catch (SendIntentException e) {
+	                    // Try connecting again.
+	                    mConnectionResult = null;
+	                    mPlusClient.connect();
+	                }
+	            }
+        	}
         }
     }
 
@@ -174,28 +173,35 @@ public class LogInActivity extends Activity implements AsyncResponse,
 			return;
 		}
 		else {		
-			JSONQuery jquery = new JSONQuery(this);
+			JSONQuery jquery = new JSONQuery(this) {	
+
+				@Override
+				public void onPreExecute() {
+//					mConnectionProgressDialog.setMessage("Signing in...");
+//					mConnectionProgressDialog.show();
+					findViewById(R.id.loginProgress).setVisibility(View.VISIBLE);
+				}
+			};
 			jquery.execute(ServerUtil.URL_AUTHENTICATE, username, password);
 			
 		}
 	}
 
     public void Logout(){
-        if (mPlusClient.isConnected()) {
-            mPlusClient.clearDefaultAccount();
-            mPlusClient.disconnect();
-            mPlusClient.connect();
-            mPlusClient.revokeAccessAndDisconnect(new OnAccessRevokedListener() {
-                @Override
-                public void onAccessRevoked(ConnectionResult status) {
-                    // mPlusClient is now disconnected and access has been revoked.
-                    // Trigger app logic to comply with the developer policies
-                }
-            });
-            Toast toast = Toast.makeText(getApplicationContext(), "Disconnected from Google+", Toast.LENGTH_SHORT);
-            toast.show();
-            GoogleLogout = false;
-        }
+        mPlusClient.clearDefaultAccount();
+        mPlusClient.revokeAccessAndDisconnect(new OnAccessRevokedListener() {
+            @Override
+            public void onAccessRevoked(ConnectionResult status) {
+                // mPlusClient is now disconnected and access has been revoked.
+                // Trigger app logic to comply with the developer policies
+                Toast toast = Toast.makeText(getApplicationContext(), "Disconnected from Google+", Toast.LENGTH_SHORT);
+                setGooglePlusButtonText(plusSignInButton, "Sign in to Google");
+                toast.show();
+                GoogleLogout = false;
+                mPlusClient.connect();
+            }
+        });
+        //mPlusClient.disconnect();
     }
 	
 	public void CreateAccount(View v){
@@ -208,8 +214,18 @@ public class LogInActivity extends Activity implements AsyncResponse,
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
-        	TextView text_view2 = (TextView)findViewById(R.id.accountCreated);
-        	text_view2.setVisibility(View.VISIBLE);
+            new CustomDialogBuilder(this)
+            .setIcon(R.drawable.ic_dialog_info_holo_light)
+            .setTitle("Signup Complete")
+            .setTitleColor(getResources().getColor(R.color.red))
+            .setDividerColor(getResources().getColor(R.color.red))
+            .setMessage("Account successfully created! You can now login below.")
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialog, int id) {
+
+               }
+           }).create().show();
         }
 
         if (requestCode == REQUEST_CODE_RESOLVE_ERR && resultCode == RESULT_OK) {
@@ -220,16 +236,12 @@ public class LogInActivity extends Activity implements AsyncResponse,
 	
 	@Override
 	public void processFinish(JSONObject result) {
-		TextView text_view1 = (TextView)findViewById(R.id.invalidLogin);
-		TextView text_view2 = (TextView)findViewById(R.id.accountCreated);
-		text_view2.setVisibility(View.INVISIBLE);
-		
+		//mConnectionProgressDialog.hide();
 		try {
 			
 			int success = result.getInt("success");
 
 			if (success == 1) {
-				text_view1.setVisibility(View.INVISIBLE);
 
                 SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -243,11 +255,23 @@ public class LogInActivity extends Activity implements AsyncResponse,
 				startActivity(MainIntent);
                 finish();
             } else {
-				text_view1.setVisibility(View.VISIBLE);
+                new CustomDialogBuilder(this)
+                .setIcon(R.drawable.ic_dialog_alert_holo_light)
+                .setTitle("Incorrect Login")
+                .setTitleColor(getResources().getColor(R.color.red))
+                .setDividerColor(getResources().getColor(R.color.red))
+                .setMessage("The username and password you have entered is incorrect. Please check your login information and try again.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int id) {
+
+                   }
+               }).create().show();
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		findViewById(R.id.loginProgress).setVisibility(View.INVISIBLE);
 	}
 
 
@@ -279,6 +303,7 @@ public class LogInActivity extends Activity implements AsyncResponse,
 
     @Override
     public void onConnected(Bundle connectionHint) {
+    	setGooglePlusButtonText(plusSignInButton, "Sign out of Google");
         String fullEmail = mPlusClient.getAccountName();
         String username = fullEmail.replace(fullEmail.substring(fullEmail.lastIndexOf("@"),fullEmail.length()),"");
         String userID = ""+mPlusClient.getCurrentPerson().getId();
@@ -295,7 +320,27 @@ public class LogInActivity extends Activity implements AsyncResponse,
 	@Override
 	public void onResume() {
 		super.onResume();
-		//hides the invalid login
-		findViewById(R.id.invalidLogin).setVisibility(View.INVISIBLE);
+	}
+	
+	@Override
+    public boolean onTouchEvent(MotionEvent event) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.
+                                                        INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        return true;
+    }
+	
+	//We can use the same button for signing in/out of google. The only caveat is that the TextView has to be found
+	protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
+	    // Find the TextView that is inside of the SignInButton and set its text
+	    for (int i = 0; i < signInButton.getChildCount(); i++) {
+	        View v = signInButton.getChildAt(i);
+
+	        if (v instanceof TextView) {
+	            TextView tv = (TextView) v;
+	            tv.setText(buttonText);
+	            return;
+	        }
+	    }
 	}
 }

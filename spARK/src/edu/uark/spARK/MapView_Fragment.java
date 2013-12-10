@@ -1,25 +1,45 @@
 package edu.uark.spARK;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.*;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-import edu.uark.spARK.entities.*;
+import edu.uark.spARK.entities.Bulletin;
+import edu.uark.spARK.entities.Content;
+import edu.uark.spARK.entities.Discussion;
+import edu.uark.spARK.entities.Group;
 
 
 
@@ -35,6 +55,9 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     private List<Marker> discussionMarkers = new ArrayList<Marker>();
     private List<Marker> bulletinMarkers = new ArrayList<Marker>();
     private List<Marker> groupMarkers = new ArrayList<Marker>();
+    private HashMap<Marker, Content> contentMap = new HashMap<Marker, Content>();
+    private Marker lastClicked;
+	private float scale, pixels;
     
     public MapView_Fragment() {
 
@@ -43,6 +66,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        scale = this.getResources().getDisplayMetrics().density;
+        pixels = (int) (100 * scale + 0.5f);
         mLocationClient = new LocationClient(this.getActivity(), this, this);
     }
     
@@ -78,6 +103,34 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     		map = getMap();
             map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             map.setMyLocationEnabled(true);
+            map.setInfoWindowAdapter(new MyInfoWindowAdapter());
+            map.setOnMarkerClickListener(new OnMarkerClickListener() {
+				@Override
+				public boolean onMarkerClick(Marker marker) {
+//			        if (lastClicked != null && lastClicked.equals(marker)) {
+//			            lastClicked = null;
+//			            marker.hideInfoWindow();
+//			            return true;
+//			        } else {
+			            lastClicked = marker;
+//			            return false;
+//			        }
+					return false;
+				}
+            	
+            });
+            map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+				@Override
+				public void onInfoWindowClick(Marker marker) {
+					if (contentMap.get(marker) instanceof Discussion) {
+						Intent i = new Intent(getActivity(), CommentActivity.class);
+						i.putExtra("Object", (Content) contentMap.get(marker));
+						MapView_Fragment.this.startActivityForResult(i, contentMap.get(marker).getId());	
+					}
+					
+				}
+            	
+            });
     }
     
     @Override
@@ -144,8 +197,14 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	public void onConnected(Bundle dataBundle) {
 	    // Display the connection status
 	    Toast.makeText(this.getActivity(), "Connected to gps services", Toast.LENGTH_SHORT).show();
-	    Location location = mLocationClient.getLastLocation();
-	    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+	    LatLng latLng;
+	    Location location;
+	    if (map.getMyLocation() == null) {
+	    	location = mLocationClient.getLastLocation();
+	    	latLng = new LatLng(location.getLatitude(), location.getLongitude());
+	    }
+	    else
+	    	latLng = map.getCameraPosition().target;
 	    CameraPosition cameraPosition = new CameraPosition.Builder()
 		.target(latLng)
 		.zoom(16)
@@ -227,9 +286,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	}
 	
 	public void zoomOutMap() {
-        final float scale = this.getResources().getDisplayMetrics().density;
-        final int pixels = (int) (100 * scale + 0.5f);
-
+    	if (lastClicked != null)
+    		lastClicked.hideInfoWindow();
 		getView().animate().y((-getView().getHeight()/2 + pixels/2)).setDuration(250);
 	    Location location = mLocationClient.getLastLocation();
 	    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -254,17 +312,19 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		markerOptions.position(latLng);
 		markerOptions.title(c.getTitle());
 		markerOptions.visible(visible);
+		Marker marker = map.addMarker(markerOptions);
 		
-		if(c instanceof Discussion) {
-			discussionMarkers.add(map.addMarker(markerOptions));
+		if(c instanceof Discussion) {			
+			bulletinMarkers.add(marker);
 		} else if (c instanceof Bulletin) {
-			bulletinMarkers.add(map.addMarker(markerOptions));
+			bulletinMarkers.add(marker);
 		} else if (c instanceof Group) {
-			groupMarkers.add(map.addMarker(markerOptions));
+			groupMarkers.add(marker);
 		}
+		contentMap.put(marker, c);
 	}
 	
-	public void clear() {
+	public void clearMarkers() {
 		discussionMarkers.clear();
 		bulletinMarkers.clear();
 		groupMarkers.clear();
@@ -294,5 +354,36 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		.zoom(17)
 		.build();
 	    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+	}
+
+	class MyInfoWindowAdapter implements InfoWindowAdapter {
+		
+		private final View mContentView;
+		MyInfoWindowAdapter() {
+			mContentView = getActivity().getLayoutInflater().inflate(R.layout.map_info_contents, null);
+		}
+		@Override
+		public View getInfoContents(Marker marker) {
+			return null;
+		}
+
+		@Override
+		public View getInfoWindow(Marker marker) {
+			//TODO: finish adding content items to view, also only doing bulletins/discussions for now
+			//also having an issue (resource not found exception) with the pretty date, 
+			Content c = contentMap.get(marker);
+			TextView title = (TextView) mContentView.findViewById(R.id.headerTextView);
+			TextView date = (TextView) mContentView.findViewById(R.id.groupAndDateTextView);
+			TextView desc = (TextView) mContentView.findViewById(R.id.descTextView);
+			TextView loc = (TextView) mContentView.findViewById(R.id.locationTextView);
+			TextView rating = (TextView) mContentView.findViewById(R.id.totalScoreTextView);
+			title.setText(c.getTitle());
+			//date.setText(c.getCreationDateAsPrettyTime().toString());
+			desc.setText(c.getText());
+			loc.setText(c.getLatitude() + ", " + c.getLongitude());
+			//rating.setText(c.getTotalRating());
+			return mContentView;
+		}
+		
 	}
 }

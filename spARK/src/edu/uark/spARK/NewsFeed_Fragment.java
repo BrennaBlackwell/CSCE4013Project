@@ -230,7 +230,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			int success = result.getInt(ServerUtil.TAG_SUCCESS);
 
 			if (success == 1) {
-				MainActivity.mMapViewFragment.clear();
+				MainActivity.mMapViewFragment.clearMarkers();
 				arrayListContent.clear();
 				// Get Array of discussions
 				contents = result.getJSONArray(ServerUtil.TAG_CONTENTS);

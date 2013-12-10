@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.Activity;
@@ -17,6 +18,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -279,8 +281,17 @@ public class MainActivity extends Activity implements AsyncResponse {
 		@Override
 		public void onDrawerClosed(View drawerView) {
 			mDrawerToggle.onDrawerClosed(drawerView);
-            if (mOldDrawerPosition != mNewDrawerPosition) {
-            	if (mNewDrawerPosition == 1) {
+			if (mNewDrawerPosition == 6) {			
+				selectItem(mNewDrawerPosition);
+				return;
+			}
+			else if (mNewDrawerPosition == 0) {
+				mDrawerToggle.setDrawerIndicatorEnabled(false);
+				selectItem(mNewDrawerPosition);
+				return;
+			}
+			else if (mOldDrawerPosition != mNewDrawerPosition) {
+            	if (mNewDrawerPosition == 1 || mNewDrawerPosition == 6) {
         			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
             	}
             	else
@@ -321,8 +332,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	    	case 0:  		
 	            fragmentManager.beginTransaction().detach(mMapViewFragment)
 	            .replace(R.id.fragment_frame, new MyProfile_Fragment())
-	            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-	            .commit();
+	            .addToBackStack("Profile").commit();
 	            mPager.setVisibility(View.GONE);
 	            break;
 	    	case 1:
@@ -356,9 +366,31 @@ public class MainActivity extends Activity implements AsyncResponse {
 	        	break;
 	        case 6:
 	        	//dialog
-	            fragmentManager.beginTransaction().detach(mMapViewFragment)
-	            .replace(R.id.fragment_frame, new DialogFragment()).commit();
-	            mPager.setVisibility(View.GONE);
+	            new DialogFragment() {
+	            	@Override
+	            	public Dialog onCreateDialog(Bundle savedInstanceState) {
+						
+	            		return new CustomDialogBuilder(MainActivity.this)
+	                    .setIcon(R.drawable.ic_menu_home)
+	                    .setTitle("About")
+	                    .setTitleColor(getResources().getColor(R.color.red))
+	                    .setDividerColor(getResources().getColor(R.color.red))
+	                    .setMessage("Created by: \n\nAlex Adamec \nBrenna Blackwell \nMatt McClelland \nJD Pack \nChandramohan Sol")
+	                    .setPositiveButton("Send Feedback", new DialogInterface.OnClickListener() {
+	                       @Override
+	                       public void onClick(DialogInterface dialog, int id) {
+
+	                       }
+	                    })
+	                    .setNegativeButton("Help", new DialogInterface.OnClickListener() {
+	                       @Override
+	                       public void onClick(DialogInterface dialog, int id) {
+
+	                       }
+	                    })
+	                   .create();
+	            	}
+	            }.show(getFragmentManager(), "about");
 	        	break;
 	        case 7:
 	            SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);

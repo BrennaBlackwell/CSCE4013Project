@@ -2,87 +2,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".LogInActivity" >
 
-    <Button
-        android:id="@+id/likeButton"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button2"
-        android:layout_alignRight="@+id/registerUsername"
-        android:layout_marginBottom="20dp"
-        android:onClick="Register"
-        android:text="Register"
-        tools:ignore="HardcodedText" />
-
     <EditText
-        android:id="@+id/registerEmail"
+        android:id="@+id/registerUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/registerUsername"
-        android:layout_below="@+id/registerUsername"
-        android:layout_marginTop="18dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
         android:ems="10"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:maxLength="40"
-        tools:ignore="HardcodedText" />
+        android:hint="Username"
+        android:maxLength="25"
+        tools:ignore="HardcodedText" >
+
+        <requestFocus />
+    </EditText>
+    
+        <EditText
+            android:id="@+id/registerEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/registerUsername"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:maxLength="40"
+            tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/registerPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/registerEmail"
+        android:layout_alignRight="@+id/registerEmail"
         android:layout_below="@+id/registerEmail"
-        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         android:maxLength="32"
         tools:ignore="HardcodedText" />
 
-    <EditText
-        android:id="@+id/registerUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="52dp"
-        android:ems="10"
-        android:hint="Username"
-        android:maxLength="25"
-        tools:ignore="HardcodedText" >
-        <requestFocus />
-    </EditText>
-
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/registerButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/likeButton"
+        android:layout_above="@+id/cancelButton"
+        android:layout_centerHorizontal="true"
+        android:onClick="Register"
+        android:text="Register"
+        tools:ignore="HardcodedText" />
+        
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="44dp"
+        android:layout_centerHorizontal="true"
         android:onClick="Cancel"
         android:text="Cancel"
         tools:ignore="HardcodedText" />
-
-    <TextView
-        android:id="@+id/userTaken"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/likeButton"
-        android:layout_alignRight="@+id/likeButton"
-        android:layout_below="@+id/registerPassword"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="This username is taken"
-        android:textColor="#FF0000"
-        android:visibility="invisible"
-        android:textAppearance="?android:attr/textAppearanceSmall" 
-        tools:ignore="HardcodedText"/>
     
 </RelativeLayout>
