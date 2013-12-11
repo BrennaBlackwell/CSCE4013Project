@@ -375,13 +375,14 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 			TextView title = (TextView) mContentView.findViewById(R.id.headerTextView);
 			TextView date = (TextView) mContentView.findViewById(R.id.groupAndDateTextView);
 			TextView desc = (TextView) mContentView.findViewById(R.id.descTextView);
-			TextView loc = (TextView) mContentView.findViewById(R.id.locationTextView);
+			//Seems unnecessary to have the location here
+			//TextView loc = (TextView) mContentView.findViewById(R.id.locationTextView);
 			TextView rating = (TextView) mContentView.findViewById(R.id.totalScoreTextView);
 			title.setText(c.getTitle());
 			//date.setText(c.getCreationDateAsPrettyTime().toString());
 			desc.setText(c.getText());
-			loc.setText(c.getLatitude() + ", " + c.getLongitude());
-			//rating.setText(c.getTotalRating());
+			//loc.setText(c.getLatitude() + ", " + c.getLongitude());
+			rating.setText(String.valueOf(c.getTotalRating()));
 			return mContentView;
 		}
 		

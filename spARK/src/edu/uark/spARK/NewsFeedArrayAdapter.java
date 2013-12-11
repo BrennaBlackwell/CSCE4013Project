@@ -81,6 +81,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.totalScoreTextView = (TextView) convertView.findViewById(R.id.totalScoreTextView);
 			holder.likeBtn = (ToggleButton) convertView.findViewById(R.id.likeBtn);
 			holder.dislikeBtn = (ToggleButton) convertView.findViewById(R.id.dislikeBtn);
+			holder.pinpointBtn = (Button) convertView.findViewById(R.id.pinpointBtn);
 			holder.deleteBtn = (Button) convertView.findViewById(R.id.trashBtn);
 			holder.scoreRadioGroup = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
 			holder.scoreRadioGroup.setTag(position);
@@ -96,6 +97,16 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			//holder.locationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
 			holder.locationTextView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					fragment.hideFragment();
+					((MainActivity) fragment.getActivity()).mMapViewFragment.moveCameraToLatLng(new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude())));
+				}
+				
+			});
+			
+			holder.pinpointBtn.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -352,6 +363,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		RadioGroup scoreRadioGroup;
 		ToggleButton likeBtn;
 		ToggleButton dislikeBtn;
+		Button pinpointBtn;
 		Button deleteBtn;
 		int position;
 	}

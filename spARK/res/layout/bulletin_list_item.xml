@@ -236,6 +236,14 @@
                         android:visibility="invisible" />
 
                     <Button
+                        android:id="@+id/pinpointBtn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/btn_pinpoint"
+                        android:gravity="center" />
+
+                    <Button
                         android:id="@+id/favoriteBtn"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
@@ -243,7 +251,7 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/btn_star"
                         android:gravity="center" />
-
+	                    
                     <Button
                         android:id="@+id/trashBtn"
                         android:layout_width="22dp"

@@ -239,6 +239,14 @@
                     android:layout_margin="5dp"
                     android:background="@drawable/btn_comment"
                     android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/pinpointBtn"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/btn_pinpoint"
+                    android:gravity="center" />
                 
                 <Button
                     android:id="@+id/favoriteBtn"
