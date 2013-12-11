@@ -23,8 +23,8 @@ public class JSONQuery extends AsyncTask<String, Void, String> {
 
 		private AsyncResponse delegate = null;
 		private InputStream is = null;
-	    static JSONObject jObj = null;
-		static String json = "";
+	    private JSONObject jObj = null;
+		private String json = "";
 		public boolean threadReady = true;
 	
 		public interface AsyncResponse {

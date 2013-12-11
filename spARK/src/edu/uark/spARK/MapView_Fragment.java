@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
@@ -20,6 +18,7 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -31,6 +30,7 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -308,17 +308,21 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	
 	public void addContent(Content c, boolean visible) {
 		LatLng latLng = new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()));
-		MarkerOptions markerOptions = new MarkerOptions();
-		markerOptions.position(latLng);
-		markerOptions.title(c.getTitle());
-		markerOptions.visible(visible);
+		MarkerOptions markerOptions = new MarkerOptions()
+		.position(latLng)
+		.title(c.getTitle())
+		.visible(visible);
+		
 		Marker marker = map.addMarker(markerOptions);
 		
-		if(c instanceof Discussion) {			
+		if(c instanceof Discussion) {	
+			marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_discussion));
 			bulletinMarkers.add(marker);
 		} else if (c instanceof Bulletin) {
+			marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_bulletin));
 			bulletinMarkers.add(marker);
 		} else if (c instanceof Group) {
+			marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_group));
 			groupMarkers.add(marker);
 		}
 		contentMap.put(marker, c);
@@ -369,20 +373,36 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 
 		@Override
 		public View getInfoWindow(Marker marker) {
-			//TODO: finish adding content items to view, also only doing bulletins/discussions for now
-			//also having an issue (resource not found exception) with the pretty date, 
 			Content c = contentMap.get(marker);
 			TextView title = (TextView) mContentView.findViewById(R.id.headerTextView);
-			TextView date = (TextView) mContentView.findViewById(R.id.groupAndDateTextView);
+			TextView dateAndGroup = (TextView) mContentView.findViewById(R.id.groupAndDateTextView);
 			TextView desc = (TextView) mContentView.findViewById(R.id.descTextView);
-			//Seems unnecessary to have the location here
-			//TextView loc = (TextView) mContentView.findViewById(R.id.locationTextView);
+			TextView comments = (TextView) mContentView.findViewById(R.id.commentTextView);
 			TextView rating = (TextView) mContentView.findViewById(R.id.totalScoreTextView);
+			ToggleButton likeBtn = (ToggleButton) mContentView.findViewById(R.id.likeBtn);
+			ToggleButton dislikeBtn = (ToggleButton) mContentView.findViewById(R.id.dislikeBtn);
 			title.setText(c.getTitle());
-			//date.setText(c.getCreationDateAsPrettyTime().toString());
 			desc.setText(c.getText());
 			//loc.setText(c.getLatitude() + ", " + c.getLongitude());
 			rating.setText(String.valueOf(c.getTotalRating()));
+			if (c.getUserRating() == 1) {
+				likeBtn.setChecked(true);
+				dislikeBtn.setChecked(false);
+			} else if (c.getUserRating() == -1) {
+				likeBtn.setChecked(false);
+				dislikeBtn.setChecked(true);
+			} else {
+				likeBtn.setChecked(false);
+				dislikeBtn.setChecked(false);
+			}
+			dateAndGroup.setText("posted publicly - " + c.getCreationDateAsPrettyTime());
+			if (c.getGroupAttached().getId() != 0) {
+				dateAndGroup.setText("posted to '" + c.getGroupAttached().getTitle() + "' - " + c.getCreationDateAsPrettyTime());
+			}
+			if (c instanceof Discussion)
+				comments.setText(((Discussion) c).getNumComments() + " comments");
+			else if (c instanceof Bulletin)
+				comments.setText("");
 			return mContentView;
 		}
 		

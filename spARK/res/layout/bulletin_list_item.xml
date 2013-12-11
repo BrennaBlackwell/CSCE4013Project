@@ -241,7 +241,8 @@
                         android:layout_height="25dp"
                         android:layout_margin="5dp"
                         android:background="@drawable/btn_pinpoint"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:visibility="gone" />
 
                     <Button
                         android:id="@+id/favoriteBtn"

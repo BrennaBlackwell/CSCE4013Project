@@ -210,16 +210,16 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 	}
 	
 	public void loadContent() {
-		String contentType = "Discussion";
+		String contentType = null;
 		//get int from instantiating the content fragment type
 		int pos = getArguments().getInt("num");
+		
 		//int tab_position = getActivity().getActionBar().getSelectedTab().getPosition();
 		if (pos == 0) {
 			contentType = "Discussion";
 		} else if (pos == 1){
 			contentType = "Bulletin";
-		}
-		
+		}	
 		JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, contentType);
 	}

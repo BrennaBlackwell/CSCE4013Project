@@ -281,31 +281,33 @@ public class MainActivity extends Activity implements AsyncResponse {
 		@Override
 		public void onDrawerClosed(View drawerView) {
 			mDrawerToggle.onDrawerClosed(drawerView);
-			if (mNewDrawerPosition == 6) {			
-				selectItem(mNewDrawerPosition);
-				return;
-			}
-			else if (mNewDrawerPosition == 0) {
-				mDrawerToggle.setDrawerIndicatorEnabled(false);
-				selectItem(mNewDrawerPosition);
-				return;
-			}
-			else if (mOldDrawerPosition != mNewDrawerPosition) {
-            	if (mNewDrawerPosition == 1 || mNewDrawerPosition == 6) {
-        			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-            	}
-            	else
-        			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-				selectItem(mNewDrawerPosition);
-            }
-            mOldDrawerPosition = mNewDrawerPosition;
+			if (mNewDrawerPosition != -1) {
+				if (mNewDrawerPosition == 6 || mNewDrawerPosition == 7) {			
+					selectItem(mNewDrawerPosition);
+					return;
+				}
+				else if (mNewDrawerPosition == 0) {
+					mDrawerToggle.setDrawerIndicatorEnabled(false);
+					selectItem(mNewDrawerPosition);
+					return;
+				}
+				else if (mOldDrawerPosition != mNewDrawerPosition) {
+	            	if (mNewDrawerPosition == 1 || mNewDrawerPosition == 6) {
+	        			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+	            	}
+	            	else
+	        			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+					selectItem(mNewDrawerPosition);
+	            }
+	            mOldDrawerPosition = mNewDrawerPosition;
+				}
 
 		}
 
 		@Override
 		public void onDrawerOpened(View drawerView) {
 			mDrawerToggle.onDrawerOpened(drawerView);
-			//getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			mNewDrawerPosition = -1;
 		}
 
 		@Override

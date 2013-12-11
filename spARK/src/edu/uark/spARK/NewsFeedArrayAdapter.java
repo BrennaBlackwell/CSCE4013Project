@@ -102,7 +102,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				@Override
 				public void onClick(View v) {
 					fragment.hideFragment();
-					((MainActivity) fragment.getActivity()).mMapViewFragment.moveCameraToLatLng(new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude())));
+					MainActivity.mMapViewFragment.moveCameraToLatLng(new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude())));
 				}
 				
 			});
@@ -112,7 +112,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				@Override
 				public void onClick(View v) {
 					fragment.hideFragment();
-					((MainActivity) fragment.getActivity()).mMapViewFragment.moveCameraToLatLng(new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude())));
+					MainActivity.mMapViewFragment.moveCameraToLatLng(new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude())));
 				}
 				
 			});
