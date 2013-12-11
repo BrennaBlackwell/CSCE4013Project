@@ -258,7 +258,8 @@
                         android:layout_height="22dp"
                         android:layout_margin="5dp"
                         android:background="@drawable/btn_delete_content"
-                        android:gravity="center" />
+                        android:gravity="center" 
+                        android:visibility="gone" />
                 </LinearLayout>
             </RelativeLayout>
         </TableRow>

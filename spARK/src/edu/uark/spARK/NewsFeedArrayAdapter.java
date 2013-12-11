@@ -83,6 +83,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.dislikeBtn = (ToggleButton) convertView.findViewById(R.id.dislikeBtn);
 			holder.pinpointBtn = (Button) convertView.findViewById(R.id.pinpointBtn);
 			holder.deleteBtn = (Button) convertView.findViewById(R.id.trashBtn);
+			holder.deleteBtn.setVisibility(View.GONE);
 			holder.scoreRadioGroup = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
 			holder.scoreRadioGroup.setTag(position);
 			convertView.setTag(holder);
@@ -153,7 +154,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.likeBtn.setChecked(false);
 			holder.dislikeBtn.setChecked(false);
 		}
-		if (c.getCreator().getId() != MainActivity.myUserID) {
+		if (c.getCreator().getId() == MainActivity.myUserID) {
+			holder.deleteBtn.setVisibility(View.VISIBLE);
+		} else {
 			holder.deleteBtn.setVisibility(View.GONE);
 		}
 		//generic idea for expanding ellipsized text

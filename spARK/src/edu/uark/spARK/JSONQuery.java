@@ -25,6 +25,7 @@ public class JSONQuery extends AsyncTask<String, Void, String> {
 		private InputStream is = null;
 	    static JSONObject jObj = null;
 		static String json = "";
+		public boolean threadReady = true;
 	
 		public interface AsyncResponse {
         	void processFinish(JSONObject result);

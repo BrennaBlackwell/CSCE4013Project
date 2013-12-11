@@ -56,5 +56,7 @@ public class ServerUtil {
 	public static final String URL_BLOCK_CONTENT = SERVER_ADDR + "blockcontent.php";
 	
 	public static final String URL_EDIT_PROFILE = SERVER_ADDR + "editprofile.php";
+	
+	public static final String URL_SEARCH = SERVER_ADDR + "search.php";
 
 }

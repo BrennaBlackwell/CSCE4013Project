@@ -42,7 +42,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     
 	
 	private SelectiveViewPager mPager;
-	private NewsFeedArrayAdapter mAdapter; 
+	public static NewsFeedArrayAdapter mAdapter; 
     private PullToRefreshListView mListView;
     
     public ArrayList<Content> arrayListContent = new ArrayList<Content>();
