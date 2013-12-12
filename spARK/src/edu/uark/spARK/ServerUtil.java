@@ -19,6 +19,7 @@ public class ServerUtil {
 	public static final String TAG_BODY = "body";
 	public static final String TAG_TYPE = "type";
 	public static final String TAG_TIMESTAMP = "timestamp";
+	public static final String TAG_FAVORITE = "favorite";
 	public static final String TAG_LATITUDE = "latitude";
 	public static final String TAG_LONGITUDE = "longitude";
 	
@@ -58,5 +59,7 @@ public class ServerUtil {
 	public static final String URL_EDIT_PROFILE = SERVER_ADDR + "editprofile.php";
 	
 	public static final String URL_SEARCH = SERVER_ADDR + "search.php";
+	
+	public static final String URL_FAVORITE = SERVER_ADDR + "favorite.php";
 
 }

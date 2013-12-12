@@ -53,6 +53,11 @@ public class Discussion extends Content {
 		this.comments = comments;
 	}
 	
+	public Discussion(int id, String title, String description, User creator, Date creationDate, String latitude, String longitude, List<Comment> comments, Group groupAttached, boolean favorited) {
+		super(id, title, description, creator, creationDate, latitude, longitude, groupAttached, favorited);
+		this.comments = comments;
+	}
+	
 	public String getDescription() {
 		return getText();
 	}

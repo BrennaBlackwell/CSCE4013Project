@@ -248,6 +248,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					String contentBody = content.getString(ServerUtil.TAG_BODY).trim();
 					String contentType = content.getString(ServerUtil.TAG_TYPE).trim(); 
 					Date contentTimestamp = Timestamp.valueOf(content.getString(ServerUtil.TAG_TIMESTAMP).trim());
+					//boolean favorited = content.getBoolean(ServerUtil.TAG_FAVORITE); 
 					String latitude = content.getString(ServerUtil.TAG_LATITUDE).trim();     
 					String longitude = content.getString(ServerUtil.TAG_LONGITUDE).trim(); 
 					int totalRating = 0;

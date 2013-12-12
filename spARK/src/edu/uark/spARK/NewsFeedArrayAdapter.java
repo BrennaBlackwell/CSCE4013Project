@@ -6,8 +6,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
@@ -22,7 +24,6 @@ import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.entities.*;
 
 public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements AsyncResponse{
-	//private static final String tag = "NewsFeedArrayAdapter";
 	
 	public NewsFeed_Fragment fragment;
 	private Context mContext;
@@ -68,6 +69,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.likeBtn = (ToggleButton) convertView.findViewById(R.id.likeBtn);
 			holder.dislikeBtn = (ToggleButton) convertView.findViewById(R.id.dislikeBtn);
 			holder.pinpointBtn = (Button) convertView.findViewById(R.id.pinpointBtn);
+			holder.favoriteBtn = (ToggleButton) convertView.findViewById(R.id.favoriteBtn);
 			holder.deleteBtn = (Button) convertView.findViewById(R.id.trashBtn);
 			holder.deleteBtn.setVisibility(View.GONE);
 			holder.scoreRadioGroup = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
@@ -140,6 +142,14 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.likeBtn.setChecked(false);
 			holder.dislikeBtn.setChecked(false);
 		}
+		
+		holder.favoriteBtn.setTag(position);
+		if (c.isFavorited()) {
+			holder.favoriteBtn.setChecked(true);
+		} else {
+			holder.favoriteBtn.setChecked(false);
+		}
+		
 		if (c.getCreator().getId() == MainActivity.myUserID) {
 			holder.deleteBtn.setVisibility(View.VISIBLE);
 		} else {
@@ -248,6 +258,27 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			}
 			
 		});
+		
+		holder.favoriteBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
+				ToggleButton button = (ToggleButton) v;
+				
+				if (button.isChecked()) {
+					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "favorite");
+					holder.favoriteBtn.setChecked(true);	
+					update();
+				} else {
+					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "unfavorite");
+					holder.favoriteBtn.setChecked(false);	
+					update();
+				}
+			}
+			
+		});
+		
 		holder.userProfileIcon.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -323,9 +354,8 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	@Override
 	public void processFinish(JSONObject result) {
 		try { 
-			// Checking for SUCCESS TAG
-			int success = result.getInt("deleteSuccess");
-			if (success == 1) {
+			int deleteSuccess = result.getInt("deleteSuccess");
+			if (deleteSuccess == 1) {
 				int position = result.getInt("position");
 				mContent.remove(mContent.get(position));
 				notifyDataSetChanged();
@@ -333,6 +363,14 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+//		try { 
+//			int favoriteSuccess = result.getInt("favoriteSuccess");
+//			if (favoriteSuccess == 1) {
+//				// Do something for favoriting later
+//			}
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	//use this to load items, saving performance from not having to lookup id
@@ -353,6 +391,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		ToggleButton likeBtn;
 		ToggleButton dislikeBtn;
 		Button pinpointBtn;
+		ToggleButton favoriteBtn;
 		Button deleteBtn;
 		int position;
 	}

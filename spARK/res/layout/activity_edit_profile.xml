@@ -78,7 +78,9 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/userName"
         android:layout_marginTop="67dp"
-        android:ems="10" />
+        android:ems="10" >
+        <requestFocus/>
+    </EditText>
 
     <TextView
         android:id="@+id/userFullName"
