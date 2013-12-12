@@ -1,7 +1,7 @@
 package edu.uark.spARK;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,9 +41,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Discussion;
-import edu.uark.spARK.entities.Group;
+import edu.uark.spARK.entities.*;
 
 public class MainActivity extends Activity implements AsyncResponse {
 	
@@ -236,7 +234,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     	SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-    	searchView.setQueryHint("Type something...");
+    	searchView.setQueryHint("Search for discussions and bulletins...");
     	searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         //configure search info, add listeners
         mMenu = menu;
@@ -263,10 +261,18 @@ public class MainActivity extends Activity implements AsyncResponse {
         switch(item.getItemId()) {
         case R.id.post:
         	Intent intent = new Intent(getApplicationContext(), CreateContentActivity.class);
-        	intent.putExtra("contentType", getActionBar().getSelectedTab().getText());
-        	intent.putExtra("user", getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE).getString("currentUsername", ""));
-        	intent.putExtra("rank", "Total N00B!"); // TODO: Get user info from database on login and store in global User variable
-        	
+        	try {
+        		if (MainActivity.mBulletinFragment.isVisible()) {
+        			intent.putExtra("contentType", "bulletins");
+        		} else if (MainActivity.mDiscussionFragment.isVisible()) { 
+        			intent.putExtra("contentType", "discussions");
+        		} else if (getFragmentManager().findFragmentByTag("Groups").isVisible()) {
+        			intent.putExtra("contentType", "Groups");
+        		}
+        	} catch (Exception e) {
+        		
+        	}
+        		
         	Location loc = mMapViewFragment.getLocationClient().getLastLocation();
         	intent.putExtra("latitude", String.valueOf(loc.getLatitude()));
         	intent.putExtra("longitude", String.valueOf(loc.getLongitude()));
@@ -362,31 +368,31 @@ public class MainActivity extends Activity implements AsyncResponse {
 	            break;
 	    	case 1:
 	            fragmentManager.beginTransaction().attach(mMapViewFragment)
-	            .replace(R.id.fragment_frame, new Fragment()).commit();
+	            .replace(R.id.fragment_frame, new Fragment(), "Home").commit();
 	            mPager.setVisibility(View.VISIBLE);
 	            break;
 	        case 2:
 	            fragmentManager.beginTransaction().detach(mMapViewFragment)
-	            .replace(R.id.fragment_frame, new CheckIn_Fragment()).commit(); 
+	            .replace(R.id.fragment_frame, new CheckIn_Fragment(), "Check In").commit(); 
 	            mPager.setVisibility(View.GONE);
 	            break;
 	            
 	        case 3:
 	        	//groups
 	            fragmentManager.beginTransaction().detach(mMapViewFragment)
-	            .replace(R.id.fragment_frame, new Fragment()).commit();
+	            .replace(R.id.fragment_frame, new Groups_Fragment(), "Groups").commit();
 	            mPager.setVisibility(View.GONE);
 	            break;
 	        case 4:
 	        	//bookmarks
 	            fragmentManager.beginTransaction().detach(mMapViewFragment)
-	            .replace(R.id.fragment_frame, new Fragment()).commit();
+	            .replace(R.id.fragment_frame, new Fragment(), "Bookmarks").commit();
 	            mPager.setVisibility(View.GONE);
 	            break;
 	        case 5:
 	        	//settings we could make another activity/fragment/whatever
 	            fragmentManager.beginTransaction().detach(mMapViewFragment)
-	            .replace(R.id.fragment_frame, new Fragment()).commit();
+	            .replace(R.id.fragment_frame, new Fragment(), "Settings").commit();
 	            mPager.setVisibility(View.GONE);
 	        	break;
 	        case 6:
@@ -415,7 +421,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	                    })
 	                   .create();
 	            	}
-	            }.show(getFragmentManager(), "about");
+	            }.show(getFragmentManager(), "About");
 	        	break;
 	        case 7:
 	            SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
@@ -616,4 +622,32 @@ public class MainActivity extends Activity implements AsyncResponse {
 	public DrawerLayout getDrawerLayout() {
 		return mDrawerLayout;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            doMySearch(query);
+        }
+    }
+
+    private void doMySearch(String query)
+    {
+    	JSONQuery jquery = new JSONQuery(MainActivity.this);
+        jquery.execute(ServerUtil.URL_SEARCH, Integer.toString(MainActivity.myUserID), query);
+    }
+	
 }

@@ -206,8 +206,17 @@ public class GroupsArrayAdapter extends ArrayAdapter<Group> implements AsyncResp
 
 	@Override
 	public void processFinish(JSONObject result) {
-		// TODO Auto-generated method stub
-		
+		try { 
+			// Checking for SUCCESS TAG
+			int success = result.getInt("deleteSuccess");
+			if (success == 1) {
+				int position = result.getInt("position");
+				mGroups.remove(position);
+				notifyDataSetChanged();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//use this to load items, saving performance from not having to lookup id

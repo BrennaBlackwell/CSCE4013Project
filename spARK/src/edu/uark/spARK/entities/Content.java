@@ -16,6 +16,7 @@ public class Content extends Entity {
 	private int totalRating;
 	private int userRating;
 	private Group groupAttached;
+	private boolean favorited;
 	
 	public Content(int id, String title, String text) {
 		super(id, title, text);
@@ -57,7 +58,15 @@ public class Content extends Entity {
 		this(id, title, text, creator, creationDate);
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.setGroupAttached(gpt);
+		this.groupAttached = gpt;
+	}
+	
+	public Content(int id, String title, String text, User creator, Date creationDate, String latitude, String longitude, Group gpt, boolean favorite) {
+		this(id, title, text, creator, creationDate);
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.groupAttached = gpt;
+		this.favorited = favorite;
 	}
 	
 	public User getCreator() {
@@ -120,6 +129,14 @@ public class Content extends Entity {
 		this.userRating = rating;
 	}
 	
+	public boolean isFavorited() {
+		return favorited;
+	}
+
+	public void setFavorited(boolean favorited) {
+		this.favorited = favorited;
+	}
+
 	public void incrementRating() {
 		this.totalRating++;
 		this.userRating++;

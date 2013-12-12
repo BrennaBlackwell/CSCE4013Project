@@ -113,7 +113,7 @@ public class Groups_Fragment extends Fragment implements AsyncResponse {
 
 				for (int i = 0; i < groups.length(); i++) {
 					JSONObject g = groups.getJSONObject(i);
-
+					
 					// Group
 					int groupID = g.getInt(ServerUtil.TAG_GROUP_ID);
 					String groupName = g.getString(ServerUtil.TAG_GROUP_NAME).trim();

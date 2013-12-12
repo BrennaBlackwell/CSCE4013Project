@@ -29,4 +29,8 @@ public class Bulletin extends Content {
 	public Bulletin(int id, String title, String text, User creator, Date creationDate, String latitude, String longitude, Group groupAttached) {
 		super(id, title, text, creator, creationDate, latitude, longitude, groupAttached);
 	}
+	
+	public Bulletin(int id, String title, String text, User creator, Date creationDate, String latitude, String longitude, Group groupAttached, boolean favorited) {
+		super(id, title, text, creator, creationDate, latitude, longitude, groupAttached, favorited);
+	}
 }
