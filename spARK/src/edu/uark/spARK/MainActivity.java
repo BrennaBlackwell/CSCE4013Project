@@ -264,12 +264,13 @@ public class MainActivity extends Activity implements AsyncResponse {
         	} catch (Exception e) {
         		intent.putExtra("contentType", "Groups");
         	}
-        	
-        	Location loc = mMapViewFragment.getLocationClient().getLastLocation();
-        	if (loc != null) {
-     	    	intent.putExtra("latitude", String.valueOf(loc.getLatitude()));
-            	intent.putExtra("longitude", String.valueOf(loc.getLongitude()));
-     	    }
+        	try {
+	        	Location loc = mMapViewFragment.getLocationClient().getLastLocation();
+	        	if (loc != null) {
+	     	    	intent.putExtra("latitude", String.valueOf(loc.getLatitude()));
+	            	intent.putExtra("longitude", String.valueOf(loc.getLongitude()));
+	     	    }
+        	} catch (Exception e) { }
         	
         	startActivityForResult(intent, CREATE_CONTENT_ACTIVITY);
         	break;
