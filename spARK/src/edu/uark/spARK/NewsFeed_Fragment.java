@@ -42,7 +42,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     
 	
 	private SelectiveViewPager mPager;
-	public static NewsFeedArrayAdapter mAdapter; 
+	private NewsFeedArrayAdapter mAdapter; 
     private PullToRefreshListView mListView;
     
     public ArrayList<Content> arrayListContent = new ArrayList<Content>();
@@ -93,21 +93,21 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
         final SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(mListView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
                public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                    for (int position : reverseSortedPositions) {
-                	   int contentID = mAdapter.getItem(position-2).getId();
-                	   String contentType = "Discussion";
+                	   
+                	   int contentID = ((Content) listView.getItemAtPosition(position)).getId();
+                	   String contentType = null;
                 	   
                 	   // TODO: Added quick and dirty method to grab Content Type. May want to change this later
-                	   if (mAdapter.getItem(position-2).getClass().toString().contains("Discussion")) {
+                	   if (((Content) listView.getItemAtPosition(position)).getClass().toString().contains("Discussion")) {
                 		   contentType = "Discussion";
-                	   } else if (mAdapter.getItem(position-2).getClass().toString().contains("Bulletin")) {
+                	   } else if (((Content) listView.getItemAtPosition(position)).getClass().toString().contains("Bulletin")) {
                 		   contentType = "Bulletin";
                 	   }
-                       mAdapter.remove(mAdapter.getItem(position-2));	//we need to ignore both the refresh header and map header, that's why there is a -2
-                       
                        JSONQuery jquery = new JSONQuery(NewsFeed_Fragment.this);
                        jquery.execute(ServerUtil.URL_BLOCK_CONTENT, "Block", Integer.toString(MainActivity.myUserID), Integer.toString(contentID), contentType);
+                       mAdapter.remove(((Content) listView.getItemAtPosition(position)));	//we need to ignore both the refresh header and map header, that's why there is a -2
+
                    }
-                   
                    mAdapter.notifyDataSetChanged();
                 }
 

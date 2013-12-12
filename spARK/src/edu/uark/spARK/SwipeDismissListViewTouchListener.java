@@ -334,12 +334,12 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 	                    mListView.requestDisallowInterceptTouchEvent(true);
 	                    
 	                    // Cancel ListView's touch (un-highlighting the item) which is not what we want
-//	                    MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
-//	                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL |
-//	                            (motionEvent.getActionIndex()
-//	                                    << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
-//	                    mListView.onTouchEvent(cancelEvent);
-//	                    cancelEvent.recycle();
+	                    MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
+	                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL |
+	                            (motionEvent.getActionIndex()
+	                                    << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
+	                    mListView.onTouchEvent(cancelEvent);
+	                    cancelEvent.recycle();
 //	                }
 	                if (mSwiping) {
 	                	

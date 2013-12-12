@@ -154,7 +154,7 @@
     <TableRow
         android:id="@+id/tableRow3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:background="@drawable/container_items_bg"
         android:baselineAligned="true"
         android:minHeight="48dp"
@@ -164,7 +164,7 @@
         <RelativeLayout
             android:id="@+id/RelativeLayout02"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:gravity="right" >
@@ -249,14 +249,17 @@
                     android:gravity="center"
                     android:visibility="gone" />
                 
-                <Button
-                    android:id="@+id/favoriteBtn"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/btn_star"
-                    android:gravity="center" />
+                   <ToggleButton
+                        android:id="@+id/favoriteBtn"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/btn_favorite"
+                        android:gravity="center"
+                        android:textOn=""
+                        android:textOff=""
+                        android:text="" />
 
                 <Button
                     android:id="@+id/trashBtn"

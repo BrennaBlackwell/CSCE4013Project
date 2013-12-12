@@ -203,7 +203,6 @@ public class MainActivity extends Activity implements AsyncResponse {
         	return NewsFeed_Fragment.newInstance(position);
         }        
         
-        
     }  	
 
     @Override

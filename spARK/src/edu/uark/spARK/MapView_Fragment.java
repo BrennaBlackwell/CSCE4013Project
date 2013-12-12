@@ -189,14 +189,14 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                 e.printStackTrace();
             }
         } else {
-           Toast.makeText(getActivity().getApplicationContext(), "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
+           //Toast.makeText(getActivity().getApplicationContext(), "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
         }
     }
 
 	@Override
 	public void onConnected(Bundle dataBundle) {
 	    // Display the connection status
-	    Toast.makeText(this.getActivity(), "Connected to gps services", Toast.LENGTH_SHORT).show();
+	    //Toast.makeText(this.getActivity(), "Connected to gps services", Toast.LENGTH_SHORT).show();
 	    LatLng latLng;
 	    Location location;
 	    if (map.getMyLocation() == null) {
@@ -215,8 +215,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	@Override
 	public void onDisconnected() {
 	    // Display the connection status
-	    Toast.makeText(this.getActivity(), "Disconnected from gps services. Please re-connect.",
-	            Toast.LENGTH_SHORT).show();
+	    //Toast.makeText(this.getActivity(), "Disconnected from gps services. Please re-connect.",
+	            //Toast.LENGTH_SHORT).show();
 	}
 	
 	private boolean isGooglePlayServicesAvailable() {

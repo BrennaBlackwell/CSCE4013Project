@@ -208,14 +208,17 @@
                     android:background="@drawable/btn_comment"
                     android:visibility="invisible" />
 
-                <Button
-                    android:id="@+id/favoriteBtn"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/btn_star"
-                    android:gravity="center" />
+                   <ToggleButton
+                        android:id="@+id/favoriteBtn"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/btn_favorite"
+                        android:gravity="center"
+                        android:textOn=""
+                        android:textOff=""
+                        android:text="" />
                 
                 <Button
                     android:id="@+id/trashBtn"

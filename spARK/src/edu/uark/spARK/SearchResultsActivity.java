@@ -138,7 +138,7 @@ public class SearchResultsActivity extends Activity implements AsyncResponse {
 						}
 						arrayListContent.add(d);
 					}
-					NewsFeed_Fragment.mAdapter.notifyDataSetChanged();
+					//MainActivity.mPager.getAdapter().getListAdapter().notifyDataSetChanged();
 					//mListView.onRefreshComplete();
 				}
 			}
