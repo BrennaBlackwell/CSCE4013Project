@@ -397,7 +397,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 						
 	            		return new CustomDialogBuilder(MainActivity.this)
 	                    .setIcon(R.drawable.ic_menu_home)
-	                    .setTitle("About")
+	                    .setTitle("About spark")
 	                    .setTitleColor(getResources().getColor(R.color.red))
 	                    .setDividerColor(getResources().getColor(R.color.red))
 	                    .setMessage("Created by: \n\nAlex Adamec \nBrenna Blackwell \nMatt McClelland \nJD Pack \nChandramohan Sol")

@@ -20,7 +20,6 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_apptheme</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle</item>
         <item name="android:editTextStyle">@style/EditTextAppTheme</item>
-        <item name="android:editTextStyle">@style/EditTextAppTheme</item>
         <item name="android:buttonStyle">@style/ButtonAppTheme</item>
         <item name="android:imageButtonStyle">@style/ImageButtonAppTheme</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>

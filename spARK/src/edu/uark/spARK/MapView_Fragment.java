@@ -127,6 +127,9 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 						i.putExtra("Object", (Content) contentMap.get(marker));
 						MapView_Fragment.this.startActivityForResult(i, contentMap.get(marker).getId());	
 					}
+					else if (contentMap.get(marker) instanceof Bulletin) {
+						//	
+					}
 					
 				}
             	
