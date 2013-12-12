@@ -315,13 +315,14 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 					}
 				}
 				mAdapter.notifyDataSetChanged();
-				mListView.onRefreshComplete();
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-		}	
+		}
+		
+		mListView.onRefreshComplete();
 		
 	}
 	

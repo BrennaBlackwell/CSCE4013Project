@@ -9,32 +9,17 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.QuickContactBadge;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.*;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import edu.uark.spARK.JSONQuery.AsyncResponse;
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Content;
-import edu.uark.spARK.entities.Discussion;
-import edu.uark.spARK.entities.User;
+import edu.uark.spARK.entities.*;
 
 public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements AsyncResponse{
 	//private static final String tag = "NewsFeedArrayAdapter";
@@ -290,7 +275,6 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				((MainActivity) fragment.getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
 				fragment.getFragmentManager().beginTransaction().detach(MainActivity.mMapViewFragment)
 		        .add(R.id.fragment_frame, profileFragment).addToBackStack("Profile").commit();
-				((MainActivity) fragment.getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 		        MainActivity.mPager.setVisibility(View.GONE);		           
 			}			
 		});
