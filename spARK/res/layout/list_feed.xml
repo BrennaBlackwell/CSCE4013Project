@@ -6,19 +6,26 @@
     tools:context=".NewsFeed_Fragment" >
 
     <!-- TODO: Update blank fragment layout -->
-    
-          <edu.uark.spARK.PullToRefreshListView
-              android:id="@+id/pullToRefreshListView"
-              android:layout_width="fill_parent"
-              android:layout_height="match_parent"
-              android:divider="@null"
-              android:dividerHeight="0dp"
-              android:scrollbars="none"
-              android:overScrollFooter="@null" 
-              android:listSelector="@drawable/list_selector"
-              android:drawSelectorOnTop="true"
-              android:background="@android:color/transparent">
 
-    	</edu.uark.spARK.PullToRefreshListView>
+              <edu.uark.spARK.PullToRefreshListView
+                  android:layout_weight="1.0"
+                  android:id="@+id/pullToRefreshListView"
+                  android:layout_width="fill_parent"
+                  android:layout_height="match_parent"
+                  android:background="@android:color/transparent"
+                  android:divider="@null"
+                  android:dividerHeight="0dp"
+                  android:drawSelectorOnTop="true"
+                  android:listSelector="@drawable/list_selector"
+                  android:overScrollFooter="@null"
+                  android:scrollbars="none" >
+              </edu.uark.spARK.PullToRefreshListView>
+
+<!--               <View -->
+<!--                   android:id="@+id/listViewBg" -->
+<!--                   android:layout_width="match_parent" -->
+<!--                   android:layout_height="match_parent" -->
+<!--                   android:layout_gravity="bottom" -->
+<!--                   android:background="@color/list_item_bg" /> -->
 
 </edu.uark.spARK.FragmentFrameLayout>

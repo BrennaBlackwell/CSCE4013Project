@@ -303,21 +303,16 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	}
 	
 	public void addContent(Content c) {
-		addContent(c, true);
-	}
-	
-	public void addContent(Content c, boolean visible) {
 		LatLng latLng = new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()));
 		MarkerOptions markerOptions = new MarkerOptions()
 		.position(latLng)
-		.title(c.getTitle())
-		.visible(visible);
+		.title(c.getTitle());
 		
 		Marker marker = map.addMarker(markerOptions);
 		
-		if(c instanceof Discussion) {	
+		if (c instanceof Discussion) {	
 			marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_discussion));
-			bulletinMarkers.add(marker);
+			discussionMarkers.add(marker);
 		} else if (c instanceof Bulletin) {
 			marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_bulletin));
 			bulletinMarkers.add(marker);
@@ -329,26 +324,27 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	}
 	
 	public void clearMarkers() {
-		discussionMarkers.clear();
-		bulletinMarkers.clear();
-		groupMarkers.clear();
+//		discussionMarkers.clear();
+//		bulletinMarkers.clear();
+//		groupMarkers.clear();
 	}
 	
-	public void updateMarkers(String contentType) {
-		boolean isDiscussion = contentType.equalsIgnoreCase("discussions");
-		boolean isBulletin = contentType.equalsIgnoreCase("bulletins");
-		boolean isGroup = contentType.equalsIgnoreCase("groups");
-		
-		for(Marker marker : discussionMarkers) {
-			marker.setVisible(isDiscussion);
+	public void updateMarkers(int position) {
+		if (position == 0) {
+			for (Marker marker : discussionMarkers) {
+				marker.setVisible(true);
+			}
+			for (Marker marker : bulletinMarkers) {
+				marker.setVisible(false);
+			}
 		}
-		
-		for(Marker marker : bulletinMarkers) {
-			marker.setVisible(isBulletin);
-		}
-		
-		for(Marker marker : groupMarkers) {
-			marker.setVisible(isGroup);
+		else if (position == 1) {
+			for (Marker marker : discussionMarkers) {
+				marker.setVisible(false);
+			}
+			for (Marker marker : bulletinMarkers) {
+				marker.setVisible(true);
+			}
 		}
 	}
 	
@@ -406,5 +402,10 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 			return mContentView;
 		}
 		
+	}
+
+	public void addContent(Content content, int position) {
+		addContent(content);
+		updateMarkers(position);	
 	}
 }

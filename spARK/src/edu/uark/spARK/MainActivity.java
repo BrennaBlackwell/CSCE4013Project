@@ -28,6 +28,7 @@ import android.os.Handler;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -74,7 +75,9 @@ public class MainActivity extends Activity implements AsyncResponse {
 
     private JSONArray MyContents = null;
     
-	static MapView_Fragment mMapViewFragment = new MapView_Fragment();;
+	static MapView_Fragment mMapViewFragment = new MapView_Fragment();
+	static NewsFeed_Fragment mDiscussionFragment;
+	static NewsFeed_Fragment mBulletinFragment;
 	
 	public MyAdapter mAdapter;
 	public static int mOldDrawerPosition;	//default value
@@ -163,17 +166,20 @@ public class MainActivity extends Activity implements AsyncResponse {
 			@Override
 			public void onTabReselected(Tab tab, FragmentTransaction ft) {
 				// TODO Auto-generated method stub
+				System.out.println("on tab reselected");
 			}
 
 			@Override
 			public void onTabSelected(Tab tab, FragmentTransaction ft) {
 				mPager.setCurrentItem(tab.getPosition());
-				mMapViewFragment.updateMarkers(tab.getText().toString());
+				System.out.println("on tab selected");
+				mMapViewFragment.updateMarkers(tab.getPosition());
 			}
 
 			@Override
 			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-				// TODO Auto-generated method stub
+				//mMapViewFragment.hideMarkers(tab.getText().toString());
+				System.out.println("on tab unselected");
 			}
         	
         };
@@ -187,10 +193,11 @@ public class MainActivity extends Activity implements AsyncResponse {
 	}
 	
     public static class MyAdapter extends FragmentPagerAdapter {
-       
-    	
-    	public MyAdapter(FragmentManager fm) {
+        	
+    	private FragmentManager mFragmentManager;
+		public MyAdapter(FragmentManager fm) {
             super(fm);
+            mFragmentManager = fm;
         }
 
         @Override
@@ -200,9 +207,25 @@ public class MainActivity extends Activity implements AsyncResponse {
         
         @Override
         public NewsFeed_Fragment getItem(int position) {
-        	return NewsFeed_Fragment.newInstance(position);
+        	if (position == 0) {
+        		mDiscussionFragment = NewsFeed_Fragment.newInstance(position);
+        		return mDiscussionFragment;
+        	} else if (position == 1) {
+        		mBulletinFragment = NewsFeed_Fragment.newInstance(position);
+        		return mBulletinFragment;
+        	
+        	}
+			return null;
         }        
         
+        public NewsFeed_Fragment getActiveFragment(ViewPager container, int position) {
+        	String name = makeFragmentName(container.getId(), position);
+        		return  (NewsFeed_Fragment) mFragmentManager.findFragmentByTag(name);
+        	}
+
+        	private static String makeFragmentName(int viewId, int index) {
+        	    return "android:switcher:" + viewId + ":" + index;
+        	}
     }  	
 
     @Override
@@ -466,7 +489,7 @@ public class MainActivity extends Activity implements AsyncResponse {
         		//mListBulletinFragment.arrayListContent.add(0, bulletin);
         		mAdapter.getItem(1).arrayListContent.add(0, bulletin);
         		if(bulletin.hasLocation()) {
-        			mMapViewFragment.addContent(bulletin, getActionBar().getSelectedTab().getPosition() == 1);
+        			mMapViewFragment.addContent(bulletin, getActionBar().getSelectedTab().getPosition());
         		}
         		
         		JSONQuery jquery = new JSONQuery(this);
@@ -482,7 +505,7 @@ public class MainActivity extends Activity implements AsyncResponse {
         		//mListDiscussionFragment.arrayListContent.add(0, discussion);
         		mAdapter.getItem(0).arrayListContent.add(0, discussion);
         		if(discussion.hasLocation()) {
-        			mMapViewFragment.addContent(discussion, getActionBar().getSelectedTab().getPosition() == 0);
+        			mMapViewFragment.addContent(discussion, getActionBar().getSelectedTab().getPosition());
         		}
         		
         		JSONQuery jquery = new JSONQuery(this);
@@ -496,7 +519,7 @@ public class MainActivity extends Activity implements AsyncResponse {
         		Group group = (Group) intent.getSerializableExtra("group");
 				JSONQuery jquery = new JSONQuery(this);
 				if(group.hasLocation()) {
-					mMapViewFragment.addContent(group, false);
+					mMapViewFragment.addContent(group, -1);
 				}
 				
 				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", 

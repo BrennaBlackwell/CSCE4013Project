@@ -27,6 +27,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
 import edu.uark.spARK.entities.Bulletin;
@@ -180,7 +181,10 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 				hideFragment();
 	        }
 	    });
-
+	    //TextView bg = (TextView) v.findViewById(R.id.listViewBg);
+	    final float scale = v.getContext().getResources().getDisplayMetrics().density;
+	    int pixels = (int) (100 * scale + 0.5f);
+        //bg.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, v.getContext().getResources().getDisplayMetrics().heightPixels - pixels));
 		return v;
 	}
 	
@@ -230,7 +234,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 			int success = result.getInt(ServerUtil.TAG_SUCCESS);
 
 			if (success == 1) {
-				MainActivity.mMapViewFragment.clearMarkers();
+				//MainActivity.mMapViewFragment.clearMarkers();
 				arrayListContent.clear();
 				// Get Array of discussions
 				contents = result.getJSONArray(ServerUtil.TAG_CONTENTS);
@@ -309,9 +313,9 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 						}
 						arrayListContent.add(d);
 					}
-					mAdapter.notifyDataSetChanged();
-					mListView.onRefreshComplete();
 				}
+				mAdapter.notifyDataSetChanged();
+				mListView.onRefreshComplete();
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -381,7 +385,8 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     	//animations are ordered (enter, exit, popEnter, popExit)
     	ft.setCustomAnimations(R.animator.slide_up, R.animator.slide_down, 
     			R.animator.slide_up, R.animator.slide_down)
-    			.hide(NewsFeed_Fragment.this).addToBackStack("Map").commit();
+    			.hide(MainActivity.mDiscussionFragment)
+    			.hide(MainActivity.mBulletinFragment).addToBackStack("Map").commit();
     	fm.executePendingTransactions();
     	mPager.setPaging(false);
     	MainActivity.mMapViewFragment.zoomInMap();

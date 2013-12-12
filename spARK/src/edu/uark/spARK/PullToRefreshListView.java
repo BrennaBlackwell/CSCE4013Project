@@ -272,15 +272,15 @@ public class PullToRefreshListView extends ListView {
         reverseFlipAnimation.setFillAfter(true);
 
 	    mapHeader = new View(c);
+
 	    
 //	    TextView footerView =  new TextView(c);
 //	    footerView.setBackgroundColor(Color.RED);
-	    
+
 	    final float scale = getContext().getResources().getDisplayMetrics().density;
 	    int pixels = (int) (100 * scale + 0.5f);
-	    
 	    mapHeader.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, pixels));
-        
+
 
 	    headerContainer.setBackgroundColor(Color.TRANSPARENT);
 	    headerContainer.setOnClickListener(new OnClickListener() {
