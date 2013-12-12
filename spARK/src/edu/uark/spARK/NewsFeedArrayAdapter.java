@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
@@ -289,6 +290,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				((MainActivity) fragment.getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
 				fragment.getFragmentManager().beginTransaction().detach(MainActivity.mMapViewFragment)
 		        .add(R.id.fragment_frame, profileFragment).addToBackStack("Profile").commit();
+				((MainActivity) fragment.getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 		        MainActivity.mPager.setVisibility(View.GONE);		           
 			}			
 		});

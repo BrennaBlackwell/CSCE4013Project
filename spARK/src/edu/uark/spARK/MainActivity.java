@@ -358,6 +358,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	            .replace(R.id.fragment_frame, new MyProfile_Fragment())
 	            .addToBackStack("Profile").commit();
 	            mPager.setVisibility(View.GONE);
+	            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 	            break;
 	    	case 1:
 	            fragmentManager.beginTransaction().attach(mMapViewFragment)
@@ -599,6 +600,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 			else if (backEntry.getName() == "Profile") {
     			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
     			mPager.setVisibility(View.VISIBLE);
+    			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
 			}
 			super.onBackPressed();
@@ -610,5 +612,8 @@ public class MainActivity extends Activity implements AsyncResponse {
 	public ActionBarDrawerToggle getDrawerToggle() {
 		return this.mDrawerToggle;
 	}
-	
+
+	public DrawerLayout getDrawerLayout() {
+		return mDrawerLayout;
+	}
 }

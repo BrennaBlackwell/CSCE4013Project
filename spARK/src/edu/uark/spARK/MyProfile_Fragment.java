@@ -25,7 +25,7 @@ public class MyProfile_Fragment extends Fragment implements AsyncResponse {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    
 	    //update the actionbar to show the up caret
 	    getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     	getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
