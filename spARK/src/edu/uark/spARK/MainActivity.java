@@ -260,15 +260,9 @@ public class MainActivity extends Activity implements AsyncResponse {
         case R.id.post:
         	Intent intent = new Intent(getApplicationContext(), CreateContentActivity.class);
         	try {
-        		if (MainActivity.mBulletinFragment.isVisible()) {
-        			intent.putExtra("contentType", "bulletins");
-        		} else if (MainActivity.mDiscussionFragment.isVisible()) { 
-        			intent.putExtra("contentType", "discussions");
-        		} else if (getFragmentManager().findFragmentByTag("Groups").isVisible()) {
-        			intent.putExtra("contentType", "Groups");
-        		}
+        		intent.putExtra("contentType", getActionBar().getSelectedTab().getText());
         	} catch (Exception e) {
-        		
+        		intent.putExtra("contentType", "Groups");
         	}
         	
         	Location loc = mMapViewFragment.getLocationClient().getLastLocation();
