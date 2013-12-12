@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
@@ -373,4 +374,6 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
     	MainActivity.mMapViewFragment.zoomInMap();
 
 	}
+	
+
 }

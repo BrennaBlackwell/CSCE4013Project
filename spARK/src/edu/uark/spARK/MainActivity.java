@@ -318,6 +318,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 				else if (mNewDrawerPosition == 0) {
 					mDrawerToggle.setDrawerIndicatorEnabled(false);
 					selectItem(mNewDrawerPosition);
+					mOldDrawerPosition = mNewDrawerPosition;
 					return;
 				}
 				else if (mOldDrawerPosition != mNewDrawerPosition) {

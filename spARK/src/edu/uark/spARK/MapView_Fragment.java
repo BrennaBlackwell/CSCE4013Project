@@ -84,7 +84,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
      * */
     private void initializeMap() {
     		map = getMap();
-            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             map.setMyLocationEnabled(true);
             map.setInfoWindowAdapter(new MyInfoWindowAdapter());
             map.setOnMarkerClickListener(new OnMarkerClickListener() {

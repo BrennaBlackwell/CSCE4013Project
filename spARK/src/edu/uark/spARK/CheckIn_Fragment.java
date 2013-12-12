@@ -23,13 +23,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.*;
 
 import com.google.android.gms.maps.MapFragment;
 
 
 
-public class CheckIn_Fragment extends Fragment{
+public class CheckIn_Fragment extends MapView_Fragment{
 
     private String latitude;
     private String longitude;
@@ -52,7 +53,7 @@ public class CheckIn_Fragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
     	View rootView = inflater.inflate(R.layout.fragment_check_in, container, false);
-        getFragmentManager().beginTransaction().add(R.id.checkin_map_frame, new MapFragment()).commit();
+        getFragmentManager().beginTransaction().add(R.id.checkin_map_frame, new MapView_Fragment()).commit();
         myContext = container.getContext();
 
         LocationManager locationManager = (LocationManager) myContext.getSystemService(
@@ -90,7 +91,10 @@ public class CheckIn_Fragment extends Fragment{
         super.onDestroyView();
     }
 
-
+	@Override
+    public void setMapPadding(int padding){
+		
+    }
 
 
 
