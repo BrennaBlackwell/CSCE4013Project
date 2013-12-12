@@ -50,11 +50,13 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		*/
 	    String contentType = getIntent().getStringExtra("contentType");
-	    for(int i=0; i < options.length; i++) {
-	    	if(contentType.equalsIgnoreCase(options[i] + "S")) {
-	    		actionBar.setSelectedNavigationItem(i);
-	    		break;
-	    	}
+	    if(contentType != null) {
+		    for(int i=0; i < options.length; i++) {
+		    	if(contentType.equalsIgnoreCase(options[i] + "S")) {
+		    		actionBar.setSelectedNavigationItem(i);
+		    		break;
+		    	}
+		    }
 	    }
 	}
 

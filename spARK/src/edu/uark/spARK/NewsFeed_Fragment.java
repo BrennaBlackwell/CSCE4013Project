@@ -1,41 +1,23 @@
 package edu.uark.spARK;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.*;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.HapticFeedbackConstants;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import edu.uark.spARK.JSONQuery.AsyncResponse;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
-import edu.uark.spARK.entities.Bulletin;
-import edu.uark.spARK.entities.Comment;
-import edu.uark.spARK.entities.Content;
-import edu.uark.spARK.entities.Discussion;
-import edu.uark.spARK.entities.Group;
-import edu.uark.spARK.entities.User;
+import edu.uark.spARK.entities.*;
 
 
 public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
@@ -317,9 +299,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 				}
 				mAdapter.notifyDataSetChanged();
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		

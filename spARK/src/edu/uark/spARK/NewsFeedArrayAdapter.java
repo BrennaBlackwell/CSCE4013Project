@@ -357,10 +357,10 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			int deleteSuccess = result.getInt("deleteSuccess");
 			if (deleteSuccess == 1) {
 				int position = result.getInt("position");
-				mContent.remove(mContent.get(position));
+				mContent.remove(position);
 				notifyDataSetChanged();
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 //		try { 

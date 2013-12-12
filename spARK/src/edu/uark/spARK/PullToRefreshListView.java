@@ -3,32 +3,14 @@ package edu.uark.spARK;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.view.*;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.animation.Animation;
+import android.view.animation.*;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.OvershootInterpolator;
-import android.view.animation.RotateAnimation;
-import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 
 /**
  * A generic, customizable Android ListView implementation that has 'Pull to Refresh' functionality.
@@ -272,15 +254,17 @@ public class PullToRefreshListView extends ListView {
         reverseFlipAnimation.setFillAfter(true);
 
 	    mapHeader = new View(c);
-
 	    
 //	    TextView footerView =  new TextView(c);
 //	    footerView.setBackgroundColor(Color.RED);
-
+	    
 	    final float scale = getContext().getResources().getDisplayMetrics().density;
 	    int pixels = (int) (100 * scale + 0.5f);
-	    mapHeader.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, pixels));
-
+	    
+	    try {
+	    	mapHeader.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, pixels));
+	    } catch (Exception e) { }
+        
 
 	    headerContainer.setBackgroundColor(Color.TRANSPARENT);
 	    headerContainer.setOnClickListener(new OnClickListener() {
@@ -352,12 +336,16 @@ public class PullToRefreshListView extends ListView {
                         case RELEASE_TO_REFRESH:
                             setState(State.REFRESHING);
                             bounceBackHeader();
-                            MainActivity.mMapViewFragment.resetView();
+                            try {
+                            	MainActivity.mMapViewFragment.resetView();
+                            } catch (Exception e) { }
                             break;
 
                         case PULL_TO_REFRESH:
                             resetHeader();
-                            MainActivity.mMapViewFragment.resetView();
+                            try {
+                            	MainActivity.mMapViewFragment.resetView();
+                            } catch (Exception e) { }
                             break;
                     };
                 	
@@ -376,7 +364,10 @@ public class PullToRefreshListView extends ListView {
 
                     if(newHeaderPadding != headerPadding && state != State.REFRESHING){
                         setHeaderPadding(newHeaderPadding);
-                		MainActivity.mMapViewFragment.setMapPadding(newHeaderPadding + header.getHeight());
+                        try {
+                        	MainActivity.mMapViewFragment.setMapPadding(newHeaderPadding + header.getHeight());
+                        } catch (Exception e) { }
+                        
                         if(state == State.PULL_TO_REFRESH && headerPadding > 0){
                             setState(State.RELEASE_TO_REFRESH);
 
@@ -430,7 +421,9 @@ public class PullToRefreshListView extends ListView {
             bounceBackHeader = true;
         }else{
             bounceBackHeader();
-            MainActivity.mMapViewFragment.bounceBackMap();
+            try {
+            	MainActivity.mMapViewFragment.bounceBackMap();
+            } catch (Exception e) { }
         }
     }
 
