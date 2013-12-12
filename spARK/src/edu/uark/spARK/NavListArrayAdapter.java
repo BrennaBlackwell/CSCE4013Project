@@ -79,6 +79,9 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 		//}	
 		TextView textview = (TextView) convertView.findViewById(R.id.navListOptionTextView);
 		String s = MENU[position];
+		if (position == 0) {
+			s = MainActivity.myUsername;
+		}
 		textview.setText(s);
 		return convertView;
 	}

@@ -24,7 +24,8 @@
         android:layout_marginTop="25dp"
         android:text="Recent Activity"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText" 
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/profileImageView"

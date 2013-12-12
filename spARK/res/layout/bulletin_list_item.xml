@@ -241,8 +241,7 @@
                         android:layout_height="25dp"
                         android:layout_margin="5dp"
                         android:background="@drawable/btn_pinpoint"
-                        android:gravity="center"
-                        android:visibility="gone" />
+                        android:gravity="center"/>
 
                     <ToggleButton
                         android:id="@+id/favoriteBtn"
