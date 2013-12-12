@@ -267,7 +267,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 						b.setTotalRating(totalRating);
 						b.setUserRating(userRating);
 						if (b.hasLocation()) {
-							MainActivity.mMapViewFragment.addContent(b);
+							MainActivity.mMapViewFragment.addContent(b, true);
 						}
 						arrayListContent.add(b);
 					} else if (contentType.equals("Discussion")) {
@@ -292,7 +292,7 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 						d.setTotalRating(totalRating);
 						d.setUserRating(userRating);
 						if (d.hasLocation()) {
-							MainActivity.mMapViewFragment.addContent(d);
+							MainActivity.mMapViewFragment.addContent(d, true);
 						}
 						arrayListContent.add(d);
 					}
@@ -302,9 +302,8 @@ public class NewsFeed_Fragment extends Fragment implements AsyncResponse {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		((MainActivity)getActivity()).updateMapMarkers();
 		mListView.onRefreshComplete();
-		
 	}
 	
 	public PullToRefreshListView getListView() {

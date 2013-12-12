@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Dialog;
@@ -163,21 +165,18 @@ public class MainActivity extends Activity implements AsyncResponse {
 
 			@Override
 			public void onTabReselected(Tab tab, FragmentTransaction ft) {
-				// TODO Auto-generated method stub
-				System.out.println("on tab reselected");
+
 			}
 
 			@Override
 			public void onTabSelected(Tab tab, FragmentTransaction ft) {
 				mPager.setCurrentItem(tab.getPosition());
-				System.out.println("on tab selected");
 				mMapViewFragment.updateMarkers(tab.getPosition());
 			}
 
 			@Override
 			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-				//mMapViewFragment.hideMarkers(tab.getText().toString());
-				System.out.println("on tab unselected");
+			
 			}
         	
         };
@@ -211,7 +210,6 @@ public class MainActivity extends Activity implements AsyncResponse {
         	} else if (position == 1) {
         		mBulletinFragment = NewsFeed_Fragment.newInstance(position);
         		return mBulletinFragment;
-        	
         	}
 			return null;
         }        
@@ -272,10 +270,13 @@ public class MainActivity extends Activity implements AsyncResponse {
         	} catch (Exception e) {
         		
         	}
-        		
-        	Location loc = mMapViewFragment.getLocationClient().getLastLocation();
-        	intent.putExtra("latitude", String.valueOf(loc.getLatitude()));
-        	intent.putExtra("longitude", String.valueOf(loc.getLongitude()));
+        	
+        	LatLng latLng = mMapViewFragment.getCurrentLatLng();
+        	if (latLng != null) {
+     	    	intent.putExtra("latitude", String.valueOf(latLng.latitude));
+            	intent.putExtra("longitude", String.valueOf(latLng.longitude));
+     	    }
+        	
         	startActivityForResult(intent, CREATE_CONTENT_ACTIVITY);
         	break;
         }
@@ -496,7 +497,7 @@ public class MainActivity extends Activity implements AsyncResponse {
         		//mListBulletinFragment.arrayListContent.add(0, bulletin);
         		mAdapter.getItem(1).arrayListContent.add(0, bulletin);
         		if(bulletin.hasLocation()) {
-        			mMapViewFragment.addContent(bulletin, getActionBar().getSelectedTab().getPosition());
+        			mMapViewFragment.addContent(bulletin, getActionBar().getSelectedTab().getPosition() == 1);
         		}
         		
         		JSONQuery jquery = new JSONQuery(this);
@@ -512,7 +513,7 @@ public class MainActivity extends Activity implements AsyncResponse {
         		//mListDiscussionFragment.arrayListContent.add(0, discussion);
         		mAdapter.getItem(0).arrayListContent.add(0, discussion);
         		if(discussion.hasLocation()) {
-        			mMapViewFragment.addContent(discussion, getActionBar().getSelectedTab().getPosition());
+        			mMapViewFragment.addContent(discussion, getActionBar().getSelectedTab().getPosition() == 0);
         		}
         		
         		JSONQuery jquery = new JSONQuery(this);
@@ -526,7 +527,7 @@ public class MainActivity extends Activity implements AsyncResponse {
         		Group group = (Group) intent.getSerializableExtra("group");
 				JSONQuery jquery = new JSONQuery(this);
 				if(group.hasLocation()) {
-					mMapViewFragment.addContent(group, -1);
+					mMapViewFragment.addContent(group, false);
 				}
 				
 				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", 
@@ -623,7 +624,9 @@ public class MainActivity extends Activity implements AsyncResponse {
 		return mDrawerLayout;
 	}
 	
-	
+	public void updateMapMarkers() {
+		mMapViewFragment.updateMarkers(getActionBar().getSelectedTab().getPosition());
+	}
 	
 	
 	

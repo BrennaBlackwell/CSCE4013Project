@@ -137,9 +137,7 @@ public class Groups_Fragment extends Fragment implements AsyncResponse {
 				}
 				mAdapter.notifyDataSetChanged();
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		

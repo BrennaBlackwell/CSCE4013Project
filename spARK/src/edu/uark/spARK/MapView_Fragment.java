@@ -183,14 +183,10 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	public void onConnected(Bundle dataBundle) {
 	    // Display the connection status
 	    //Toast.makeText(this.getActivity(), "Connected to gps services", Toast.LENGTH_SHORT).show();
-	    LatLng latLng;
-	    Location location;
-	    if (map.getMyLocation() == null) {
-	    	location = mLocationClient.getLastLocation();
-	    	latLng = new LatLng(location.getLatitude(), location.getLongitude());
-	    }
-	    else
+	    LatLng latLng = getCurrentLatLng();
+	    if (latLng == null) {
 	    	latLng = map.getCameraPosition().target;
+	    }
 	    CameraPosition cameraPosition = new CameraPosition.Builder()
 		.target(latLng)
 		.zoom(16)
@@ -288,10 +284,11 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		return mLocationClient;
 	}
 	
-	public void addContent(Content c) {
+	public void addContent(Content c, boolean visible) {
 		LatLng latLng = new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()));
 		MarkerOptions markerOptions = new MarkerOptions()
 		.position(latLng)
+		.visible(visible)
 		.title(c.getTitle());
 		
 		Marker marker = map.addMarker(markerOptions);
@@ -310,9 +307,18 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	}
 	
 	public void clearMarkers() {
-//		discussionMarkers.clear();
-//		bulletinMarkers.clear();
-//		groupMarkers.clear();
+		for(Marker marker : discussionMarkers) {
+			marker.remove();
+		}
+		for(Marker marker : bulletinMarkers) {
+			marker.remove();
+		}
+		for(Marker marker : groupMarkers) {
+			marker.remove();
+		}
+		discussionMarkers.clear();
+		bulletinMarkers.clear();
+		groupMarkers.clear();
 	}
 	
 	public void updateMarkers(int position) {
@@ -389,9 +395,15 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		}
 		
 	}
-
-	public void addContent(Content content, int position) {
-		addContent(content);
-		updateMarkers(position);	
+	
+	public LatLng getCurrentLatLng() {
+		Location location;
+		LatLng latLng = null;
+		if (map.getMyLocation() == null) {
+		    location = mLocationClient.getLastLocation();
+		    latLng = new LatLng(location.getLatitude(), location.getLongitude());
+		}
+		
+		return latLng;
 	}
 }
