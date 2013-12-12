@@ -1,99 +1,48 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"  
-        android:id="@+id/activity_main_frame"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <!-- The main content view -->
+        <!-- Our current fragment goes within the frame layout -->
 
-<android.support.v4.widget.DrawerLayout         
-
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <!-- The main content view -->
-    <!--  Our current fragment goes within the frame layout -->
-     <FrameLayout
-        android:id="@+id/fragment_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >   
-        </FrameLayout> 
-
- 	
-        <FrameLayout   
-        android:id="@+id/map_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" > 
+        <FrameLayout
+            android:id="@+id/fragment_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
         </FrameLayout>
-        
-           <edu.uark.spARK.SelectiveViewPager
+
+        <FrameLayout
+            android:id="@+id/map_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </FrameLayout>
+
+        <edu.uark.spARK.SelectiveViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-                        </edu.uark.spARK.SelectiveViewPager>  
-                       
-            
-<!--                 <android.support.v4.view.PagerTitleStrip -->
-<!--         android:id="@+id/pager_title_strip" -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_gravity="top" -->
-<!--         android:background="#33b5e5" -->
-<!--         android:textColor="#fff" -->
-<!--         android:paddingTop="4dp" -->
-<!--         android:paddingBottom="4dp" /> -->
+            android:layout_height="match_parent" >
+        </edu.uark.spARK.SelectiveViewPager>
 
-
-            
-		<ImageView
-                android:id="@+id/handle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:src="@drawable/drawer_tab"/>
-		<!-- 
-		<SlidingDrawer
-		     android:id="@+id/map_drawer"
-		     android:layout_width="match_parent"
-		     android:layout_height="300dp"
-		     android:handle="@+id/map_handle"
-		     android:layout_gravity="top|center_horizontal"
-		     android:orientation="vertical"
-		     android:content="@+id/mapFragment"
-		     android:rotation="180">
-		
-			<ImageView
-                android:id="@+id/map_handle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
-                android:src="@drawable/map_tab"
-                android:rotation="180"/>
- 		</SlidingDrawer>
- 		-->
-
-    
         <!-- The navigation drawer -->
 
-    <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@android:color/white"
-        android:listSelector="@drawable/list_selector"
-        android:choiceMode="singleChoice"
-        android:divider="@color/red"
-        android:dividerHeight="1dp" />
-
-<!--  	<fragment -->
-<!--         android:id="@+id/right_drawer" -->
-<!--         android:name="edu.uark.spARK.ClusterView_Fragment" -->
-<!-- 	    android:layout_gravity="end" -->
-<!-- 	    android:layout_width="match_parent" -->
-<!-- 	    android:layout_height="match_parent" /> -->
- 	
-
-</android.support.v4.widget.DrawerLayout>
+        <ListView
+            android:id="@+id/left_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@android:color/white"
+            android:choiceMode="singleChoice"
+            android:divider="@color/red"
+            android:dividerHeight="1dp"
+            android:listSelector="@drawable/list_selector" />
+    </android.support.v4.widget.DrawerLayout>
 
     <RelativeLayout
         android:id="@+id/darkenScreenTop"
@@ -103,7 +52,8 @@
         android:alpha="0"
         android:background="@android:color/black"
         android:contentDescription="Popup Fade out"
-        android:gravity="center" >
+        android:gravity="center"
+        tools:ignore="HardcodedText" >
 
         <TextView
             android:id="@+id/locationTextView"
@@ -111,20 +61,20 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
-            android:text="&lt;&lt; Swipe to Hide! &gt;&gt;"
+            android:text="&lt;&lt; Swipe to Hide! >>"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/red"
             android:textSize="28sp" />
-
     </RelativeLayout>
-    
-        <ImageView
-            android:id="@+id/darkenScreenBottom"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|center"
-            android:alpha="0"
-            android:background="@android:color/black"
-            android:contentDescription="Popup Fade out"/>
-    
-</FrameLayout>      
+
+    <ImageView
+        android:id="@+id/darkenScreenBottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|center"
+        android:alpha="0"
+        android:background="@android:color/black"
+        android:contentDescription="Popup Fade out"
+        tools:ignore="HardcodedText" />
+
+</FrameLayout>

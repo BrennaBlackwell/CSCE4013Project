@@ -7,7 +7,6 @@ public class Comment extends Content {
 	
 	public Comment(int id, String text) {
 		super(id, null, text);
-		
 	}
 	
 	public Comment(int id, String text, User creator) {

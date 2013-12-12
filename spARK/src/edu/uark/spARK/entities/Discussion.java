@@ -2,8 +2,6 @@ package edu.uark.spARK.entities;
 
 import java.util.*;
 
-import com.google.android.gms.maps.model.LatLng;
-
 
 @SuppressWarnings("serial")
 public class Discussion extends Content {
