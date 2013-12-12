@@ -110,7 +110,13 @@ public class Content extends Entity {
 	}
 	
 	public boolean hasLocation() {
-		return (latitude != null && longitude != null && !latitude.contains("null") && !longitude.contains("null"));
+		try {
+			Double.parseDouble(latitude);
+			Double.parseDouble(longitude);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	public int getTotalRating() {
