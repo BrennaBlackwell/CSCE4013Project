@@ -259,25 +259,27 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			
 		});
 		
-		holder.favoriteBtn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
-				ToggleButton button = (ToggleButton) v;
-				
-				if (button.isChecked()) {
-					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "favorite");
-					holder.favoriteBtn.setChecked(true);	
-					update();
-				} else {
-					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "unfavorite");
-					holder.favoriteBtn.setChecked(false);	
-					update();
-				}
-			}
-			
-		});
+		
+//		TODO: Uncomment later. Need to get server more disk space
+//		holder.favoriteBtn.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
+//				ToggleButton button = (ToggleButton) v;
+//				
+//				if (button.isChecked()) {
+//					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "favorite");
+//					holder.favoriteBtn.setChecked(true);	
+//					update();
+//				} else {
+//					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "unfavorite");
+//					holder.favoriteBtn.setChecked(false);	
+//					update();
+//				}
+//			}
+//			
+//		});
 		
 		holder.userProfileIcon.setOnClickListener(new OnClickListener() {
 
