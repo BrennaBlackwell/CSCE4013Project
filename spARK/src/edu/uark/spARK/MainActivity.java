@@ -271,10 +271,10 @@ public class MainActivity extends Activity implements AsyncResponse {
         		
         	}
         	
-        	LatLng latLng = mMapViewFragment.getCurrentLatLng();
-        	if (latLng != null) {
-     	    	intent.putExtra("latitude", String.valueOf(latLng.latitude));
-            	intent.putExtra("longitude", String.valueOf(latLng.longitude));
+        	Location loc = mMapViewFragment.getLocationClient().getLastLocation();
+        	if (loc != null) {
+     	    	intent.putExtra("latitude", String.valueOf(loc.getLatitude()));
+            	intent.putExtra("longitude", String.valueOf(loc.getLongitude()));
      	    }
         	
         	startActivityForResult(intent, CREATE_CONTENT_ACTIVITY);
