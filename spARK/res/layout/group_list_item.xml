@@ -53,7 +53,9 @@
                         android:layout_height="wrap_content"
                         android:text="Yesterday"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textSize="13dp" />
+                        android:textSize="13dp"
+                        tools:ignore="HardcodedText" />
+
                 </LinearLayout>
             </LinearLayout>
         </TableRow>
@@ -165,40 +167,10 @@
                 android:layout_weight="1"
                 android:gravity="right" >
 
-                <Button
-                    android:id="@+id/overflowBtn"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/ic_menu_moreoverflow_normal_holo_light"
-                    android:gravity="right|center_vertical|center_horizontal" />
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_toLeftOf="@+id/overflowBtn" >
-
-                    <Button
-                        android:id="@+id/expandBtn"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/btn_comment"
-                        android:visibility="invisible"
-                        tools:ignore="ButtonStyle" />
-
-                    <Button
-                        android:id="@+id/pinpointBtn"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/btn_pinpoint"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        tools:ignore="ButtonStyle" />
+                    android:layout_alignParentTop="true" >
 
                     <Button
                         android:id="@+id/trashBtn"
@@ -209,6 +181,7 @@
                         android:gravity="center"
                         android:visibility="gone" />
                 </LinearLayout>
+
             </RelativeLayout>
         </TableRow>
     </TableLayout>

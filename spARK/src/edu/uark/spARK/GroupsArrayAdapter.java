@@ -55,7 +55,7 @@ public class GroupsArrayAdapter extends ArrayAdapter<Group> implements AsyncResp
 //			holder.totalScoreTextView = (TextView) convertView.findViewById(R.id.totalScoreTextView);
 //			holder.likeBtn = (ToggleButton) convertView.findViewById(R.id.likeBtn);
 //			holder.dislikeBtn = (ToggleButton) convertView.findViewById(R.id.dislikeBtn);
-			holder.pinpointBtn = (Button) convertView.findViewById(R.id.pinpointBtn);
+//			holder.pinpointBtn = (Button) convertView.findViewById(R.id.pinpointBtn);
 			holder.deleteBtn = (Button) convertView.findViewById(R.id.trashBtn);
 			holder.deleteBtn.setVisibility(View.GONE);
 //			holder.scoreRadioGroup = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
@@ -236,7 +236,7 @@ public class GroupsArrayAdapter extends ArrayAdapter<Group> implements AsyncResp
 //			RadioGroup scoreRadioGroup;
 //			ToggleButton likeBtn;
 //			ToggleButton dislikeBtn;
-			Button pinpointBtn;
+//			Button pinpointBtn;
 			Button deleteBtn;
 			int position;
 		}

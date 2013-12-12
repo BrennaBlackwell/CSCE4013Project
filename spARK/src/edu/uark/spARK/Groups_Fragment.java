@@ -125,11 +125,11 @@ public class Groups_Fragment extends Fragment implements AsyncResponse {
 					boolean visible = g.getString(ServerUtil.TAG_VISIBILITY).equalsIgnoreCase("Visible");
 					
 					// Group Creator
-//					int contentUserID = g.getInt(ServerUtil.TAG_USER_ID);
+					int contentUserID = g.getInt(ServerUtil.TAG_USER_ID);
 					String contentUsername = g.getString(ServerUtil.TAG_USER_NAME).trim();
 					String contentUserFullName = g.getString(ServerUtil.TAG_USER_FULL_NAME).trim();
 					String contentUserDesc = g.getString(ServerUtil.TAG_USER_DESC).trim();
-					User user = new User(/*contentUserID*/0, contentUsername, "", contentUserFullName, contentUserDesc, 0);
+					User user = new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0);
 					
 					Group group = new Group(groupID, groupName, groupDesc, user, latitude, longitude, open, visible);
 					
