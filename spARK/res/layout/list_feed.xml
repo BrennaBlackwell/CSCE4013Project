@@ -1,9 +1,9 @@
-<edu.uark.spARK.FragmentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<edu.uark.spARK.view.FragmentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewsFeed_Fragment" >
+    tools:context=".NewsFeedFragment" >
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -28,4 +28,4 @@
 <!--                   android:layout_gravity="bottom" -->
 <!--                   android:background="@color/list_item_bg" /> -->
 
-</edu.uark.spARK.FragmentFrameLayout>
+</edu.uark.spARK.view.FragmentFrameLayout>

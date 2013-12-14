@@ -7,7 +7,7 @@
     <FrameLayout
         android:id="@+id/ptr_id_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/ptr_id_image"

@@ -5,16 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
     	
-    <fragment
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="edu.uark.spARK.MapView_Fragment" />
+<!--     <fragment -->
+<!--         android:id="@+id/map" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         class="edu.uark.spARK.MapView_Fragment" /> -->
     
-    <fragment
-        android:id="@+id/listfeed"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="edu.uark.spARK.NewsFeed_Fragment" />
+<!--     <fragment -->
+<!--         android:id="@+id/listfeed" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         class="edu.uark.spARK.fragment.NewsFeedFragment" /> -->
         
 </FrameLayout>

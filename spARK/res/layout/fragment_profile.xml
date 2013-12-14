@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:background="@android:color/white"
-    tools:context=".Profile_Fragment"
+    tools:context=".ProfileFragment"
     tools:ignore="Deprecated" >
 
     

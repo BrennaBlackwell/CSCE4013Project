@@ -3,6 +3,12 @@ package edu.uark.spARK;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import edu.uark.spARK.R;
+import edu.uark.spARK.R.id;
+import edu.uark.spARK.R.layout;
+import edu.uark.spARK.R.string;
+import edu.uark.spARK.activity.MainActivity;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
@@ -253,41 +259,11 @@ public class PullToRefreshListView extends ListView {
         reverseFlipAnimation.setDuration(ROTATE_ARROW_ANIMATION_DURATION);
         reverseFlipAnimation.setFillAfter(true);
 
-	    mapHeader = new View(c);
-	    
-//	    TextView footerView =  new TextView(c);
-//	    footerView.setBackgroundColor(Color.RED);
-	    
-	    final float scale = getContext().getResources().getDisplayMetrics().density;
-	    int pixels = (int) (100 * scale + 0.5f);
-	    
-	    try {
-	    	mapHeader.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, pixels));
-	    } catch (Exception e) { }
-        
-
+     
 	    headerContainer.setBackgroundColor(Color.TRANSPARENT);
-	    headerContainer.setOnClickListener(new OnClickListener() {
-	        @Override
-	        public void onClick(View v) {
-	        	//set focus to the map fragment
-//	        	MapView_Fragment f = (MapView_Fragment) c.getFragmentManager().findFragmentById(R.id.map_fragment);
-//	        	NewsFeed_Fragment n = (NewsFeed_Fragment) getFragmentManager().findFragmentById(R.id.news_fragment);
-//
-//	        	FragmentManager fm = c.g
-//	        	FragmentManager fm = getFragmentManager();
-//	        	FragmentTransaction ft = fm.beginTransaction();
-//	        	ft.addToBackStack(null);
-//	        	//animations are ordered (enter, exit, popEnter, popExit)
-//	        	ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, 
-//	        			android.R.animator.fade_in, android.R.animator.fade_out)
-//	        	.hide(n).commit();
-	                                                                        }
-	    }); 
         
-        addHeaderView(headerContainer);
-	    addHeaderView(mapHeader);
-	    mapHeader.setBackgroundColor(Color.TRANSPARENT);
+        addHeaderView(headerContainer, "Refresh", false);
+        addMapHeader(c);
 //	    addFooterView(footerView);
 //	    footerView.setText("Loading more data...");
         
@@ -301,6 +277,18 @@ public class PullToRefreshListView extends ListView {
         super.setOnItemLongClickListener(new PTROnItemLongClickListener());
     }
 
+	public void addMapHeader(Context c) {
+	    mapHeader = new View(c);    
+	    final float scale = getContext().getResources().getDisplayMetrics().density;
+	    int pixels = (int) (100 * scale + 0.5f);
+	    
+	    try {
+	    	mapHeader.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, pixels));
+	    } catch (Exception e) { }
+	    addHeaderView(mapHeader);
+	    mapHeader.setBackgroundColor(Color.TRANSPARENT);
+	}
+	
     private void setHeaderPadding(int padding){
         headerPadding = padding;
 
@@ -375,7 +363,6 @@ public class PullToRefreshListView extends ListView {
                             image.startAnimation(flipAnimation);
                         }else if(state == State.RELEASE_TO_REFRESH && headerPadding < 0){
                             setState(State.PULL_TO_REFRESH);
-
                             image.clearAnimation();
                             image.startAnimation(reverseFlipAnimation);
                         }

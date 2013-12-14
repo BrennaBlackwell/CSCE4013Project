@@ -3,12 +3,12 @@
     android:id="@+id/FrameLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapView_Fragment" >
+    tools:context=".MapViewFragment" >
 
-    <fragment
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="edu.uark.spARK.MapView_Fragment" />
+<!--     <fragment -->
+<!--         android:id="@+id/map" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         class="edu.uark.spARK.MapView_Fragment" /> -->
     	
 </FrameLayout>

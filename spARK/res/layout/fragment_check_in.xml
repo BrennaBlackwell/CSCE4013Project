@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CheckIn_Fragment" 
+    tools:context=".CheckInFragment" 
     >
 <!--     <fragment -->
 <!--         android:id="@+id/checkin_map" -->
@@ -31,6 +31,9 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="false"
             android:layout_weight=".5"
+            android:divider="@null"
+            android:listSelector="@drawable/selector"
+            android:dividerHeight="0dp"
             android:clickable="false" >
         </ListView>
     </LinearLayout>
@@ -42,7 +45,7 @@
         android:text="Scan QR Code"
         android:onClick="onClick"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:id="@+id/txtScanResult"
@@ -54,13 +57,13 @@
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/updateButton"
-        android:layout_above="@+id/txtScanResult"
-        android:layout_alignParentLeft="true" />
+<!--     <Button -->
+<!--         style="?android:attr/buttonStyleSmall" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:text="New Button" -->
+<!--         android:id="@+id/updateButton" -->
+<!--         android:layout_above="@+id/txtScanResult" -->
+<!--         android:layout_alignParentLeft="true" /> -->
 
 </RelativeLayout>
