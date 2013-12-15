@@ -132,7 +132,6 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1.0"
-                    android:enabled="false"
                     android:maxLines="4"
                     android:text="http://www.google.com"
                     android:textAppearance="?android:attr/textAppearanceSmall"
