@@ -40,7 +40,7 @@ The following open source files were copied and modified for use:
 Test Environment
 	Samsung Galaxy S4 (SCH-I545) - Android 4.4.2
 	Samsung Galaxy S4 - Android 4.3 
-            Samsung Galaxy S3 (SGH-1747) - Android 4.1.2
+	Samsung Galaxy S3 (SGH-1747) - Android 4.3
 	Samsung Galaxy Nexus - Android 4.3
 	Samsung Galaxy Express - Android 4.3
 	iPhone 5 - iOS 7.0.4
