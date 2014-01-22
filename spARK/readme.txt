@@ -2,11 +2,11 @@ Project:
 	spark (spARK)
 
 Members:
-	Alex Adamec - 010518360
-	Brenna Blackwell - 004681541
-	Matt McClelland - 010527313
-	JD Pack - 010546047
-	Chandramohan Sol - 010584040
+	Alex Adamec
+	Brenna Blackwell
+	Matt McClelland
+	JD Pack
+	Chandramohan Sol
 	
 Video URL:
 	http://www.youtube.com/watch?v=OSH1wMW2PMA&feature=youtu.be
