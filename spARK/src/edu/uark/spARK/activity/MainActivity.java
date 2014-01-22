@@ -129,7 +129,6 @@ public class MainActivity extends Activity implements AsyncResponse {
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-
         ActionBar bar = getActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_HOME_AS_UP);
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

@@ -28,7 +28,7 @@
 
     <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid"> 
         <item name="android:icon">@drawable/ic_menu_home</item>
-        <item name="android:background">@drawable/ab_solid_bg</item>
+        <item name="android:background">@drawable/ab_solid_bg2</item>
         <item name="android:backgroundStacked">@drawable/ab_solid_stacked</item>
         <item name="android:backgroundSplit">@drawable/ab_solid_bottom</item>  
 		<item name="android:progressBarStyle">@style/ProgressBar</item>
