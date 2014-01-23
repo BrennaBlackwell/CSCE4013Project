@@ -437,7 +437,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	            	public Dialog onCreateDialog(Bundle savedInstanceState) {
 						
 	            		return new CustomDialogBuilder(MainActivity.this)
-	                    .setIcon(R.drawable.ic_menu_home)
+	                    .setIcon(R.drawable.ic_menu_about)
 	                    .setTitle("About spark")
 	                    .setTitleColor(getResources().getColor(R.color.red))
 	                    .setDividerColor(getResources().getColor(R.color.red))
@@ -458,7 +458,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	            	}
 	            }.show(getFragmentManager(), "About");
 	        	break;
-	        case 7:
+	        case 8:
 	            SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 	            SharedPreferences.Editor editor = preferences.edit();
 	            //editor.remove("currentUsername");

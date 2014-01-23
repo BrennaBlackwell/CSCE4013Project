@@ -1,5 +1,7 @@
 package edu.uark.spARK.arrayadapter;
 
+import java.util.Map;
+
 import edu.uark.spARK.R;
 import edu.uark.spARK.R.drawable;
 import edu.uark.spARK.R.id;
@@ -18,8 +20,10 @@ import android.widget.TextView;
 public class NavListArrayAdapter extends ArrayAdapter<String>{
 	private static final String tag = "NavListArrayAdapter";
 	private static final String MENU[] = 
-		{MainActivity.myUsername, "Home", "Check In", "Groups", "Bookmarks", "Settings", "About", "Logout"};
-	
+		{MainActivity.myUsername, "Home", "Discussions", "Bulletins", "Events", "Groups", "Favorites", "Settings", "Logout"};
+	private static Drawable MENU_ICON[] = new Drawable[MENU.length];
+	//private static ArrayList<String,Drawable> MENU = new ArrayList<String,Drawable>();
+	private static Map<Integer, Drawable> menuMap;
 	private LayoutInflater mInflater;
 	private Context context;
 	private int resourceID;
@@ -30,64 +34,39 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.context = context;
 		this.resourceID = layoutid;
+		
+		MENU_ICON[0] = context.getResources().getDrawable(R.drawable.ic_menu_profile);
+		MENU_ICON[1] = context.getResources().getDrawable(R.drawable.drawer_home);
+		MENU_ICON[2] = context.getResources().getDrawable(R.drawable.drawer_discussion);
+		MENU_ICON[3] = context.getResources().getDrawable(R.drawable.drawer_bulletin);
+		MENU_ICON[4] = context.getResources().getDrawable(R.drawable.drawer_event);
+		MENU_ICON[5] = context.getResources().getDrawable(R.drawable.drawer_group);
+		MENU_ICON[6] = context.getResources().getDrawable(R.drawable.drawer_favorites);
+		MENU_ICON[7] = context.getResources().getDrawable(R.drawable.drawer_preferences);
+		MENU_ICON[8] = context.getResources().getDrawable(R.drawable.drawer_logout);
+
 	}
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Drawable icon;
+		String s;
 		//if statement to determine if the position is the account, which requires different layout
 		//if (convertView == null) {
-			switch (position) {
-				case 0:	//profile
-					convertView = mInflater.inflate(R.layout.drawer_account, null);
-					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_profile);
-					break;
-				case 1: //home
-					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.drawer_home);
-					break;
-				case 2:	//check in
-					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.ic_menu_checkin);
-					break;
-				case 3:	//groups
-					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.drawer_group);
-					break;
-				case 4:	//bookmarks
-					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.drawer_bookmarks);
-					break;
-				case 5:	//settings
-					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.drawer_preferences);
-					break;
-				case 6:	//about
-					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.drawer_about);
-					break;
-				case 7:	//logout
-					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.drawer_logout);
-					break;
-				default:
-					convertView = mInflater.inflate(R.layout.drawer_list_item, null);
-					icon = convertView.getResources().getDrawable(R.drawable.drawer_logout);
-					break;
-			}
-			ImageView imageview = (ImageView) convertView.findViewById(R.id.navListOptionIcon);
-			imageview.setImageDrawable (icon);
-			convertView.setTag(position);
-		//}
-		//else {
-			
-		//}	
-		TextView textview = (TextView) convertView.findViewById(R.id.navListOptionTextView);
-		String s = MENU[position];
 		if (position == 0) {
-			s = MainActivity.myUsername;
+				convertView = mInflater.inflate(R.layout.drawer_account, null);
+				s = MainActivity.myUsername;
 		}
-		textview.setText(s);
+		else {
+				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+				s = MENU[position];
+		}
+
+		ImageView imageview = (ImageView) convertView.findViewById(R.id.navListOptionIcon);
+		imageview.setImageDrawable (MENU_ICON[position]);
+		convertView.setTag(position);
+
+		TextView tv = (TextView) convertView.findViewById(R.id.navListOptionTextView);
+		tv.setText(s);
 		return convertView;
 	}
 	
