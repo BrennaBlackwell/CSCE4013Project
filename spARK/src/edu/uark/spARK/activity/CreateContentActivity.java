@@ -1,28 +1,48 @@
 package edu.uark.spARK.activity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.*;
+import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.RadioButton;
+import android.widget.Spinner;
+import android.widget.TextView;
 import edu.uark.spARK.R;
-import edu.uark.spARK.R.id;
-import edu.uark.spARK.R.layout;
-import edu.uark.spARK.R.menu;
-import edu.uark.spARK.entity.*;
+import edu.uark.spARK.dialog.CustomDialogBuilder;
+import edu.uark.spARK.entity.Bulletin;
+import edu.uark.spARK.entity.Discussion;
+import edu.uark.spARK.entity.Group;
+import edu.uark.spARK.entity.User;
 
 @SuppressLint("ValidFragment")
 public class CreateContentActivity extends FragmentActivity implements OnNavigationListener {
 	
-	private String[] options = new String[]{ "BULLETIN", "DISCUSSION", "GROUP" };
+	private String[] options = new String[]{ "BULLETIN", "DISCUSSION", "GROUP", "EVENT" };
 //	SectionsPagerAdapter mSectionsPagerAdapter;
 //	ViewPager mViewPager;
 
@@ -116,12 +136,71 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			fragment = new NewDiscussionFragment();
 		} else if (position == 2) {
 			fragment = new NewGroupFragment();
+		} else if (position == 3) {
+			fragment = new NewEventFragment();
 		}
 		getFragmentManager().beginTransaction().replace(R.id.create_content_frame, fragment).commit();
 		return false;
 	}
 	
 	
+	private final class NewEventFragment extends Fragment implements OnClickListener {
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			View v = inflater.inflate(R.layout.fragment_new_event, container, false); 
+			Button btnStartDate = (Button) v.findViewById(R.id.new_event_date_start);
+			Button btnEndDate = (Button) v.findViewById(R.id.new_event_date_end);
+			//Spinner etStartTime = (Spinner) v.findViewById(R.id.new_event_time_start);
+			SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy"); 
+			btnStartDate.setText( sdf.format(new Date()));
+			//etStartTime.setText("12:00 AM");
+			//etStartTime.set		
+			btnStartDate.setOnClickListener(this);
+			btnEndDate.setOnClickListener(this);
+			return v;
+		}
+
+		@Override
+		public void onClick(final View v) {
+			switch (v.getId()) {
+			case R.id.new_event_date_start: case R.id.new_event_date_end:
+				DialogFragment dateFragment = new DatePickerFragment() {
+					@Override
+					public void onDateSet(DatePicker view, int year, int month, int day) {
+						Button btnDate = (Button) v; 
+						btnDate.setText(new SimpleDateFormat("MMMM d, yyyy").format(new Date(year-1900, month, day)));
+					}
+				};
+				dateFragment.show(getFragmentManager(), "datePicker");
+				break;
+			}
+			
+		}
+	}
+
+	public static class DatePickerFragment extends DialogFragment
+    	implements DatePickerDialog.OnDateSetListener {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current date as the default date in the picker
+			final Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+	
+			return new DatePickerDialog(getActivity(), this, year, month, day) {
+				
+			};
+			// Create a new instance of DatePickerDialog and return it
+		}
+	
+		public void onDateSet(DatePicker view, int year, int month, int day) {
+			// Do something with the date chosen by the user
+		}
+		
+	}
+
 	public class NewBulletinFragment extends Fragment {
 
 		@Override

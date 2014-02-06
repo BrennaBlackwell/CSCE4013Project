@@ -126,10 +126,10 @@ public class MainActivity extends Activity implements AsyncResponse {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     	mOldDrawerPosition=1;	//default value
     	mNewDrawerPosition=1;	//default value
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        // enable ActionBar app icon to behave as action to toggle nav drawer        
         ActionBar bar = getActionBar();
+    	bar.setDisplayHomeAsUpEnabled(true);
+        bar.setHomeButtonEnabled(true);
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_HOME_AS_UP);
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         bar.setDisplayShowTitleEnabled(true);
