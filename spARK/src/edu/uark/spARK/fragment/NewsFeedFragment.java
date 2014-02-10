@@ -245,7 +245,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 					String contentBody = content.getString(ServerUtil.TAG_BODY).trim();
 					String contentType = content.getString(ServerUtil.TAG_TYPE).trim(); 
 					Date contentTimestamp = Timestamp.valueOf(content.getString(ServerUtil.TAG_TIMESTAMP).trim());
-					//boolean favorited = content.getBoolean(ServerUtil.TAG_FAVORITE); 
+					boolean favorited = content.getBoolean(ServerUtil.TAG_FAVORITE); 
 					String latitude = content.getString(ServerUtil.TAG_LATITUDE).trim();     
 					String longitude = content.getString(ServerUtil.TAG_LONGITUDE).trim(); 
 					int totalRating = 0;
@@ -278,7 +278,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 					
 					
 					if (contentType.equals("Bulletin")) {
-						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, user, contentTimestamp, latitude, longitude, group);
+						Bulletin b = new Bulletin(contentID, contentTitle, contentBody, user, contentTimestamp, latitude, longitude, group, favorited);
 						b.setTotalRating(totalRating);
 						b.setUserRating(userRating);
 						if (b.hasLocation()) {
@@ -303,7 +303,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 							commentsList.add(c);
 						}
 						
-						Discussion d = new Discussion(contentID, contentTitle, contentBody, user, contentTimestamp, latitude, longitude, commentsList, group);
+						Discussion d = new Discussion(contentID, contentTitle, contentBody, user, contentTimestamp, latitude, longitude, commentsList, group, favorited);
 						d.setTotalRating(totalRating);
 						d.setUserRating(userRating);
 						if (d.hasLocation()) {

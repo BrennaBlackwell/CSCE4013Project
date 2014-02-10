@@ -216,11 +216,11 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	        public void onCheckedChanged(final RadioGroup radioGroup, final int i) {
 	            for (int j = 0; j < radioGroup.getChildCount(); j++) {
 	            	if (radioGroup.getChildAt(j).isEnabled()) {
-	            		final ToggleButton view = (ToggleButton) radioGroup.getChildAt(j);
-	            		if (view.getId() == i) {
-	            			view.setChecked(true);
+	            		final ToggleButton button = (ToggleButton) radioGroup.getChildAt(j);
+	            		if (button.getId() == i) {
+	            			button.setChecked(true);
 	            		} else {
-	            			view.setChecked(false);
+	            			button.setChecked(false);
 	            		}
 	            	}
 	            }
@@ -274,27 +274,26 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			
 		});
 		
-		
-//		TODO: Uncomment later. Need to get server more disk space
-//		holder.favoriteBtn.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
-//				ToggleButton button = (ToggleButton) v;
-//				
-//				if (button.isChecked()) {
-//					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "favorite");
-//					holder.favoriteBtn.setChecked(true);	
-//					update();
-//				} else {
-//					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "unfavorite");
-//					holder.favoriteBtn.setChecked(false);	
-//					update();
-//				}
-//			}
-//			
-//		});
+		// TODO: Favorite button not refreshing immediately
+		holder.favoriteBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				JSONQuery jquery = new JSONQuery(NewsFeedArrayAdapter.this);
+				ToggleButton button = (ToggleButton) v;
+				
+				if (button.isChecked()) {
+					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "favorite");
+					button.setChecked(true);	
+					update();
+				} else {
+					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "unfavorite");
+					button.setChecked(false);	
+					update();
+				}
+			}
+			
+		});
 		
 		holder.userProfileIcon.setOnClickListener(new OnClickListener() {
 
@@ -380,14 +379,14 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-//		try { 
-//			int favoriteSuccess = result.getInt("favoriteSuccess");
-//			if (favoriteSuccess == 1) {
-//				// Do something for favoriting later
-//			}
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
+		try { 
+			int favoriteSuccess = result.getInt("favoriteSuccess");
+			if (favoriteSuccess == 1) {
+				// Do something for favoriting later
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//use this to load items, saving performance from not having to lookup id
