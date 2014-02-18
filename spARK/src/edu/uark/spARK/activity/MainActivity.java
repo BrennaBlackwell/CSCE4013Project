@@ -222,12 +222,29 @@ public class MainActivity extends Activity implements AsyncResponse {
 			}
         	
         };
-        ActionBar.Tab discussionTab = bar.newTab().setText("Discussions");
-        ActionBar.Tab bulletinTab = bar.newTab().setText("Bulletins");
-        discussionTab.setTabListener(tabListener);
-        bulletinTab.setTabListener(tabListener);
-        bar.addTab(discussionTab);
-        bar.addTab(bulletinTab);     
+        //ActionBar.Tab discussionTab = bar.newTab().setText("Discussions");
+        //ActionBar.Tab bulletinTab = bar.newTab().setText("Bulletins");
+        ActionBar.Tab t0 = bar.newTab().setText("Recommended");
+        ActionBar.Tab t1 = bar.newTab().setText("Recent");
+        ActionBar.Tab t2 = bar.newTab().setText("Nearby");
+        ActionBar.Tab t3 = bar.newTab().setText("Popular");
+        ActionBar.Tab t4 = bar.newTab().setText("Favorites");
+        //discussionTab.setTabListener(tabListener);
+        //bulletinTab.setTabListener(tabListener);
+        t0.setTabListener(tabListener);
+        t1.setTabListener(tabListener);
+        t2.setTabListener(tabListener);
+        t3.setTabListener(tabListener);
+        t4.setTabListener(tabListener);
+
+        bar.addTab(t0);
+        bar.addTab(t1);
+        bar.addTab(t2);
+        bar.addTab(t3);
+        bar.addTab(t4);
+
+        //bar.addTab(discussionTab);
+        //bar.addTab(bulletinTab);     
 	}
     public static class MyAdapter extends FragmentPagerAdapter {
         	

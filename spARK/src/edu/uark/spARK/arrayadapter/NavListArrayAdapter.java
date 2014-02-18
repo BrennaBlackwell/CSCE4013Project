@@ -20,7 +20,7 @@ import android.widget.TextView;
 public class NavListArrayAdapter extends ArrayAdapter<String>{
 	private static final String tag = "NavListArrayAdapter";
 	private static final String MENU[] = 
-		{MainActivity.myUsername, "Home", "Discussions", "Bulletins", "Events", "Groups", "Favorites", "Settings", "Logout"};
+		{MainActivity.myUsername, "Home", "Headlines", "Events", "Groups", "Discussions", "Settings", "Logout"};
 	private static Drawable MENU_ICON[] = new Drawable[MENU.length];
 	//private static ArrayList<String,Drawable> MENU = new ArrayList<String,Drawable>();
 	private static Map<Integer, Drawable> menuMap;
@@ -37,13 +37,12 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 		
 		MENU_ICON[0] = context.getResources().getDrawable(R.drawable.ic_menu_profile);
 		MENU_ICON[1] = context.getResources().getDrawable(R.drawable.drawer_home);
-		MENU_ICON[2] = context.getResources().getDrawable(R.drawable.drawer_discussion);
-		MENU_ICON[3] = context.getResources().getDrawable(R.drawable.drawer_bulletin);
-		MENU_ICON[4] = context.getResources().getDrawable(R.drawable.drawer_event);
-		MENU_ICON[5] = context.getResources().getDrawable(R.drawable.drawer_group);
-		MENU_ICON[6] = context.getResources().getDrawable(R.drawable.drawer_favorites);
-		MENU_ICON[7] = context.getResources().getDrawable(R.drawable.drawer_preferences);
-		MENU_ICON[8] = context.getResources().getDrawable(R.drawable.drawer_logout);
+		MENU_ICON[2] = context.getResources().getDrawable(R.drawable.drawer_headlines);
+		MENU_ICON[3] = context.getResources().getDrawable(R.drawable.drawer_event);
+		MENU_ICON[4] = context.getResources().getDrawable(R.drawable.drawer_group);
+		MENU_ICON[5] = context.getResources().getDrawable(R.drawable.drawer_discussion);
+		MENU_ICON[6] = context.getResources().getDrawable(R.drawable.drawer_preferences);
+		MENU_ICON[7] = context.getResources().getDrawable(R.drawable.drawer_logout);
 
 	}
 	

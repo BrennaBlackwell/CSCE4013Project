@@ -11,6 +11,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -92,7 +93,12 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		if (c.getLatitude().compareTo("") != 0 && c.getLatitude().compareTo("") != 0) {
 			holder.locationLinearLayout.setVisibility(View.VISIBLE);
 			//holder.locationImageButton
-			holder.locationTextView.setText(c.getLatitude() + ", " + c.getLongitude());
+			Location cur = MainActivity.mMapViewFragment.getLocationClient().getLastLocation();
+			float[] results = new float[3];
+			Location.distanceBetween(cur.getLatitude(), cur.getLongitude(), Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()), results);
+			//holder.locationTextView.setText(c.getLatitude() + ", " + c.getLongitude());
+			holder.locationTextView.setText(results[0] + " m.");
+
 			//holder.locationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
 			holder.locationTextView.setOnClickListener(new OnClickListener() {
