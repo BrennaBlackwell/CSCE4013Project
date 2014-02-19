@@ -17,7 +17,7 @@ import edu.uark.spARK.activity.MainActivity;
 public class NavListArrayAdapter extends ArrayAdapter<String>{
 	private static final String tag = "NavListArrayAdapter";
 	private static final String MENU[] = 
-		{"My Profile", "Home", "Discussions", "Bulletins", "Events", "Groups", "Favorites", "Settings", "Logout"};
+		{"My Profile", "Home", "Headlines", "Events", "Groups", "Discussions", "Settings", "Logout"};
 	private static Drawable MENU_ICON[] = new Drawable[MENU.length];
 	//private static ArrayList<String,Drawable> MENU = new ArrayList<String,Drawable>();
 	private static Map<Integer, Drawable> menuMap;
