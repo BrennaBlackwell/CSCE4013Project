@@ -93,12 +93,13 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		if (c.getLatitude().compareTo("") != 0 && c.getLatitude().compareTo("") != 0) {
 			holder.locationLinearLayout.setVisibility(View.VISIBLE);
 			//holder.locationImageButton
-			Location cur = MainActivity.mMapViewFragment.getLocationClient().getLastLocation();
-			float[] results = new float[3];
-			Location.distanceBetween(cur.getLatitude(), cur.getLongitude(), Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()), results);
-			//holder.locationTextView.setText(c.getLatitude() + ", " + c.getLongitude());
-			holder.locationTextView.setText(results[0] + " m.");
-
+			if (MainActivity.mMapViewFragment.getLocationClient().isConnected()) {
+				Location cur = MainActivity.mMapViewFragment.getLocationClient().getLastLocation();
+				float[] results = new float[3];
+				Location.distanceBetween(cur.getLatitude(), cur.getLongitude(), Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()), results);
+				//holder.locationTextView.setText(c.getLatitude() + ", " + c.getLongitude());
+				holder.locationTextView.setText(results[0] + " m.");
+			}
 			//holder.locationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
 			holder.locationTextView.setOnClickListener(new OnClickListener() {
