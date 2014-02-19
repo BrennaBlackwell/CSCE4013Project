@@ -98,7 +98,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				float[] results = new float[3];
 				Location.distanceBetween(cur.getLatitude(), cur.getLongitude(), Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()), results);
 				//holder.locationTextView.setText(c.getLatitude() + ", " + c.getLongitude());
-				holder.locationTextView.setText(results[0] + " m.");
+				holder.locationTextView.setText(String.format("%.1f", results[0]*0.000621371) + " mi.");
 			}
 			//holder.locationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 

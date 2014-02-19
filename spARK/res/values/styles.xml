@@ -14,7 +14,7 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="android:windowBackground">@color/grey_bg</item>
+        <item name="android:windowBackground">@color/white_menu</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="android:actionBarItemBackground">@drawable/selector</item>  
         <item name="android:actionModeBackground">@drawable/cab_background_top_apptheme</item>
@@ -66,4 +66,8 @@
   <style name="ImageButtonAppTheme" parent="android:Widget.ImageButton">
 	  <item name="android:background">@drawable/btn_default_holo_light</item>
   </style>
+  
+  <style name="myStylr" parent="@android:style/Widget.DeviceDefault.DatePicker">
+   <item name="android:divider">@drawable/divider</item>
+ </style>
 </resources>

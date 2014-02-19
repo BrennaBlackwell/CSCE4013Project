@@ -1,10 +1,10 @@
 package edu.uark.spARK.activity;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -14,10 +14,15 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.content.Context;
+import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources.NotFoundException;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.DateFormat;
+import android.text.format.Time;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,11 +34,15 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import edu.uark.spARK.R;
-import edu.uark.spARK.dialog.CustomDialogBuilder;
 import edu.uark.spARK.entity.Bulletin;
 import edu.uark.spARK.entity.Discussion;
 import edu.uark.spARK.entity.Group;
@@ -150,6 +159,9 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			View v = inflater.inflate(R.layout.fragment_new_event, container, false); 
 			Button btnStartDate = (Button) v.findViewById(R.id.new_event_date_start);
 			Button btnEndDate = (Button) v.findViewById(R.id.new_event_date_end);
+			Button btnStartTime = (Button) v.findViewById(R.id.new_event_time_start);
+			Button btnEndTime = (Button) v.findViewById(R.id.new_event_time_end);
+
 			//Spinner etStartTime = (Spinner) v.findViewById(R.id.new_event_time_start);
 			SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy"); 
 			btnStartDate.setText( sdf.format(new Date()));
@@ -157,6 +169,8 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			//etStartTime.set		
 			btnStartDate.setOnClickListener(this);
 			btnEndDate.setOnClickListener(this);
+			btnStartTime.setOnClickListener(this);
+			btnEndTime.setOnClickListener(this);
 			return v;
 		}
 
@@ -173,6 +187,17 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 				};
 				dateFragment.show(getFragmentManager(), "datePicker");
 				break;
+			case R.id.new_event_time_start: case R.id.new_event_time_end:
+				DialogFragment timeFragment = new TimePickerFragment() {
+					@Override
+					public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+						Button btnTime = (Button) v;
+						btnTime.setText(new SimpleDateFormat("h:mm a").format(new Date(0, 0, 0, hourOfDay, minute, 0)));
+					}
+				};
+				System.out.println("this");
+				timeFragment.show(getFragmentManager(), "timePicker");
+				break;
 			}
 			
 		}
@@ -188,17 +213,142 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			int year = c.get(Calendar.YEAR);
 			int month = c.get(Calendar.MONTH);
 			int day = c.get(Calendar.DAY_OF_MONTH);
-	
-			return new DatePickerDialog(getActivity(), this, year, month, day) {
-				
-			};
+			
+			DatePickerDialog newFragment = new DatePickerDialog(getActivity(), this, year, month, day);
 			// Create a new instance of DatePickerDialog and return it
+			newFragment.setTitle(""); 
+
+		    // Divider changing:
+		    DatePicker dpView = newFragment.getDatePicker(); 
+		    LinearLayout llFirst = (LinearLayout) dpView.getChildAt(0);
+		    LinearLayout llSecond = (LinearLayout) llFirst.getChildAt(0);
+		    for (int i = 0; i < llSecond.getChildCount(); i++) {
+		        NumberPicker picker = (NumberPicker) llSecond.getChildAt(i); // Numberpickers in llSecond
+		        // reflection - picker.setDividerDrawable(divider); << didn't seem to work.
+		        Field[] pickerFields = NumberPicker.class.getDeclaredFields();
+		        for (Field pf : pickerFields) {
+		            if (pf.getName().equals("mSelectionDivider")) {
+		                pf.setAccessible(true);
+		                try {
+		                    pf.set(picker, getResources().getDrawable(R.drawable.selection_divider_red));
+		                } catch (IllegalArgumentException e) {
+		                    e.printStackTrace();
+		                } catch (NotFoundException e) {
+		                    e.printStackTrace();
+		                } catch (IllegalAccessException e) {
+		                    e.printStackTrace();
+		                }
+		                break;
+		            }
+		        }
+		    }
+		    // Container:
+		    LinearLayout llTitleBar = new LinearLayout(getActivity());
+		    llTitleBar.setOrientation(LinearLayout.VERTICAL);
+		    llTitleBar.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+
+		    // TextView Title:
+		    TextView tvTitle = new TextView(getActivity());
+		    tvTitle.setText("Select a date");
+		    tvTitle.setGravity(Gravity.CENTER);
+		    tvTitle.setPadding(10, 20, 10, 20);
+		    tvTitle.setTextSize(24);
+		    tvTitle.setTextColor(Color.BLACK);
+		    tvTitle.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		    llTitleBar.addView(tvTitle);
+
+		    // View line:
+		    View vTitleDivider = new View(getActivity());
+		    final float scale = getActivity().getResources().getDisplayMetrics().density;
+		    int pixels = (int) (2 * scale + 0.5f);
+		    vTitleDivider.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, pixels));
+		    vTitleDivider.setBackgroundColor(getResources().getColor(R.color.red));
+		    llTitleBar.addView(vTitleDivider);
+
+		    dpView.addView(llTitleBar);
+		    FrameLayout.LayoutParams lp = (android.widget.FrameLayout.LayoutParams) llFirst.getLayoutParams();
+		    lp.setMargins(0, 90, 0, 0);
+		    return newFragment;
 		}
 	
 		public void onDateSet(DatePicker view, int year, int month, int day) {
 			// Do something with the date chosen by the user
 		}
 		
+	}
+	
+	public static class TimePickerFragment extends DialogFragment
+    	implements TimePickerDialog.OnTimeSetListener {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current time as the default values for the picker
+			final Calendar c = Calendar.getInstance();
+			int hour = c.get(Calendar.HOUR_OF_DAY);
+			int minute = c.get(Calendar.MINUTE);
+			
+			// Create a new instance of TimePickerDialog and return it
+			TimePickerDialog newFragment = new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity())) {
+				
+			};
+			//newFragment.setTitle(""); 
+
+		    // Divider changing:
+//		    DatePicker dpView = newFragment.findViewById(R.layout.time_picker_dialog);
+//		    LinearLayout llFirst = (LinearLayout) dpView.getChildAt(0);
+//		    LinearLayout llSecond = (LinearLayout) llFirst.getChildAt(0);
+//		    for (int i = 0; i < llSecond.getChildCount(); i++) {
+//		        NumberPicker picker = (NumberPicker) llSecond.getChildAt(i); // Numberpickers in llSecond
+//		        // reflection - picker.setDividerDrawable(divider); << didn't seem to work.
+//		        Field[] pickerFields = NumberPicker.class.getDeclaredFields();
+//		        for (Field pf : pickerFields) {
+//		            if (pf.getName().equals("mSelectionDivider")) {
+//		                pf.setAccessible(true);
+//		                try {
+//		                    pf.set(picker, getResources().getDrawable(R.drawable.selection_divider_red));
+//		                } catch (IllegalArgumentException e) {
+//		                    e.printStackTrace();
+//		                } catch (NotFoundException e) {
+//		                    e.printStackTrace();
+//		                } catch (IllegalAccessException e) {
+//		                    e.printStackTrace();
+//		                }
+//		                break;
+//		            }
+//		        }
+//		    }
+//		    // Container:
+//		    LinearLayout llTitleBar = new LinearLayout(getActivity());
+//		    llTitleBar.setOrientation(LinearLayout.VERTICAL);
+//		    llTitleBar.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+//
+//		    // TextView Title:
+//		    TextView tvTitle = new TextView(getActivity());
+//		    tvTitle.setText("Select a date");
+//		    tvTitle.setGravity(Gravity.CENTER);
+//		    tvTitle.setPadding(10, 20, 10, 20);
+//		    tvTitle.setTextSize(24);
+//		    tvTitle.setTextColor(Color.BLACK);
+//		    tvTitle.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+//		    llTitleBar.addView(tvTitle);
+//
+//		    // View line:
+//		    View vTitleDivider = new View(getActivity());
+//		    final float scale = getActivity().getResources().getDisplayMetrics().density;
+//		    int pixels = (int) (2 * scale + 0.5f);
+//		    vTitleDivider.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, pixels));
+//		    vTitleDivider.setBackgroundColor(getResources().getColor(R.color.red));
+//		    llTitleBar.addView(vTitleDivider);
+//
+//		    dpView.addView(llTitleBar);
+//		    FrameLayout.LayoutParams lp = (android.widget.FrameLayout.LayoutParams) llFirst.getLayoutParams();
+//		    lp.setMargins(0, 90, 0, 0);
+		    return newFragment;
+		}
+		
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			// Do something with the time chosen by the user
+		}
 	}
 
 	public class NewBulletinFragment extends Fragment {
@@ -223,14 +373,12 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 
 				@Override
 				public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-					// TODO Auto-generated method stub
-					
+					// TODO Auto-generated method stub	
 				}
 
 				@Override
 				public void onNothingSelected(AdapterView<?> arg0) {
 					// TODO Auto-generated method stub
-					
 				}
 				
 			});
