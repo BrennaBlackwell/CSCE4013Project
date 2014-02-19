@@ -6,7 +6,7 @@
     android:layout_margin="5dp"
     android:orientation="vertical" >
 
-    <QuickContactBadge
+    <ImageView
         android:id="@+id/userQuickContactBadge"
         android:layout_width="52dp"
         android:layout_height="52dp"

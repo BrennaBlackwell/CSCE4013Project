@@ -396,7 +396,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					if(desc == null || desc.trim().isEmpty()){
 						return; // do not add blank input to list
 					}
-					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0);
+					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
 					int position = groups.getSelectedItemPosition();
 					
 					int itemSelected = 0;
@@ -492,7 +492,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					if(desc == null || desc.trim().isEmpty()){
 						return; // do not add blank input to list
 					}
-					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0);
+					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
 					int position = groups.getSelectedItemPosition();
 
 					int itemSelected = 0;
@@ -546,7 +546,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					RadioButton privacy = (RadioButton)findViewById(R.id.radio_open);
 					RadioButton visibility = (RadioButton)findViewById(R.id.radio_visible);
 							
-					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0);
+					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
 					
 					String lat = intent.getStringExtra("latitude");
 					String lng = intent.getStringExtra("longitude");

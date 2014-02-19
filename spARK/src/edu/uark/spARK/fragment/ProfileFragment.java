@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import edu.uark.spARK.R;
 import edu.uark.spARK.R.id;
@@ -41,8 +42,6 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
     	
     	//set options menu w/back caret
 	    setHasOptionsMenu(true);
-
-   
     }
     
     @Override
@@ -65,9 +64,12 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
  	final User u = (User) getArguments().getSerializable("ContentCreator");
     	
 		View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
+		ImageView imageView = (ImageView) profileView.findViewById(R.id.profileImageView);
 		TextView userName = (TextView)profileView.findViewById(R.id.userName);
 		TextView userFullName = (TextView)profileView.findViewById(R.id.userFullName);
 		TextView aboutMeField = (TextView)profileView.findViewById(R.id.aboutMeField);
+		
+		imageView.setImageBitmap(u.getBitmap());
 		userName.setText(u.getName());
 		userFullName.setText(u.getFullname());
 		aboutMeField.setText(u.getDesc());

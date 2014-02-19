@@ -2,25 +2,22 @@ package edu.uark.spARK.arrayadapter;
 
 import java.util.Map;
 
-import edu.uark.spARK.R;
-import edu.uark.spARK.R.drawable;
-import edu.uark.spARK.R.id;
-import edu.uark.spARK.R.layout;
-import edu.uark.spARK.activity.MainActivity;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import edu.uark.spARK.R;
+import edu.uark.spARK.activity.MainActivity;
 
 public class NavListArrayAdapter extends ArrayAdapter<String>{
 	private static final String tag = "NavListArrayAdapter";
 	private static final String MENU[] = 
-		{MainActivity.myUsername, "Home", "Headlines", "Events", "Groups", "Discussions", "Settings", "Logout"};
+		{"My Profile", "Home", "Discussions", "Bulletins", "Events", "Groups", "Favorites", "Settings", "Logout"};
 	private static Drawable MENU_ICON[] = new Drawable[MENU.length];
 	//private static ArrayList<String,Drawable> MENU = new ArrayList<String,Drawable>();
 	private static Map<Integer, Drawable> menuMap;
@@ -35,7 +32,12 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 		this.context = context;
 		this.resourceID = layoutid;
 		
-		MENU_ICON[0] = context.getResources().getDrawable(R.drawable.drawer_profile);
+		if (MainActivity.myProfilePicture != null) {
+			Drawable drawable = new BitmapDrawable(context.getResources(), MainActivity.myProfilePicture);
+			MENU_ICON[0] = drawable;
+		} else {
+			MENU_ICON[0] = context.getResources().getDrawable(R.drawable.drawer_profile);
+		}
 		MENU_ICON[1] = context.getResources().getDrawable(R.drawable.drawer_home);
 		MENU_ICON[2] = context.getResources().getDrawable(R.drawable.drawer_headlines);
 		MENU_ICON[3] = context.getResources().getDrawable(R.drawable.drawer_event);
@@ -44,6 +46,7 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 		MENU_ICON[6] = context.getResources().getDrawable(R.drawable.drawer_preferences);
 		MENU_ICON[7] = context.getResources().getDrawable(R.drawable.drawer_logout);
 
+		
 	}
 	
 	@Override
@@ -53,9 +56,15 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 		//if (convertView == null) {
 		if (position == 0) {
 				convertView = mInflater.inflate(R.layout.drawer_account, null);
-				s = MainActivity.myUsername;
-		}
-		else {
+				//s = MainActivity.myUsername;
+				s = MENU[position];
+				if (MainActivity.myProfilePicture != null) {
+					Drawable drawable = new BitmapDrawable(context.getResources(), MainActivity.myProfilePicture);
+					MENU_ICON[0] = drawable;
+				}  else {
+					MENU_ICON[0] = context.getResources().getDrawable(R.drawable.drawer_profile);
+				}
+		} else {
 				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
 				s = MENU[position];
 		}

@@ -12,17 +12,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import edu.uark.spARK.R;
-import edu.uark.spARK.R.id;
-import edu.uark.spARK.R.layout;
-import edu.uark.spARK.activity.EditAccountActivity;
+import edu.uark.spARK.activity.EditProfileActivity;
 import edu.uark.spARK.activity.MainActivity;
-import edu.uark.spARK.data.JSONQuery;
 import edu.uark.spARK.data.JSONQuery.AsyncResponse;
 
 public class MyProfileFragment extends Fragment implements AsyncResponse {
-    public static final String ARG_FRAGMENT_TYPE = "fragment_type";
+	private static final int EDIT_PROFILE = 1;
+	public static final String ARG_FRAGMENT_TYPE = "fragment_type";
 
     public MyProfileFragment() {
         // Empty constructor required for fragment subclasses
@@ -36,29 +35,30 @@ public class MyProfileFragment extends Fragment implements AsyncResponse {
 	    getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     	getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 	    
-    	setHasOptionsMenu(true);
-   
+    	setHasOptionsMenu(true);   
     }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	
     	View profileView = inflater.inflate(R.layout.fragment_myprofile, container, false);
-		TextView userName = (TextView)profileView.findViewById(R.id.userName);
+		ImageView imageView = (ImageView) profileView.findViewById(R.id.profileImageView);
+    	TextView userName = (TextView)profileView.findViewById(R.id.userName);
 		TextView userFullName = (TextView)profileView.findViewById(R.id.userFullName);
 		TextView aboutMeField = (TextView)profileView.findViewById(R.id.aboutMeField);
+		
+		imageView.setImageBitmap(MainActivity.myProfilePicture);
 		userName.setText(MainActivity.myUsername);
 		userFullName.setText(MainActivity.myFullName);
 		aboutMeField.setText(MainActivity.myDesc);
 		
-		Button editButton = (Button) profileView.findViewById(R.id.EditAccount);
+		Button editButton = (Button) profileView.findViewById(R.id.EditProfile);
     	editButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), EditAccountActivity.class);
-			//	i.putExtra(name, value);
-				startActivityForResult(i, 1);
+				Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+				startActivityForResult(intent, EDIT_PROFILE);
 			}
 		});
 		
@@ -80,11 +80,16 @@ public class MyProfileFragment extends Fragment implements AsyncResponse {
     }
     
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    	if (resultCode == 0) {
-    		getFragmentManager().beginTransaction().replace(R.id.fragment_frame, new MyProfileFragment()).commit();
-        } else {
-        	// Handle cancel
-        }
+    	super.onActivityResult(requestCode, resultCode, intent);
+    	switch(requestCode) { 
+        case EDIT_PROFILE:
+	    	if (resultCode == 0) {
+	    		getFragmentManager().beginTransaction().replace(R.id.fragment_frame, new MyProfileFragment()).commit();
+	        } else {
+	        	// Handle cancel
+	        }
+	    	break;
+    	}
     }
     
 	@Override

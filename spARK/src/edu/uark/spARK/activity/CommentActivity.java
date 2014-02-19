@@ -18,24 +18,23 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.QuickContactBadge;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import edu.uark.spARK.R;
-import edu.uark.spARK.R.id;
-import edu.uark.spARK.R.layout;
-import edu.uark.spARK.R.menu;
 import edu.uark.spARK.arrayadapter.CommentArrayAdapter;
 import edu.uark.spARK.arrayadapter.NewsFeedArrayAdapter;
 import edu.uark.spARK.arrayadapter.NewsFeedArrayAdapter.ViewHolder;
 import edu.uark.spARK.data.JSONQuery;
-import edu.uark.spARK.data.ServerUtil;
 import edu.uark.spARK.data.JSONQuery.AsyncResponse;
+import edu.uark.spARK.data.ServerUtil;
 import edu.uark.spARK.entity.Comment;
 import edu.uark.spARK.entity.Discussion;
 import edu.uark.spARK.entity.User;
+import edu.uark.spARK.fragment.MyProfileFragment;
+import edu.uark.spARK.fragment.ProfileFragment;
 
 public class CommentActivity extends Activity implements AsyncResponse{
 
@@ -46,8 +45,7 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		holder.titleTextView.setText(mDiscussion.getTitle());
 		holder.descTextView.setText(mDiscussion.getText());
 		holder.groupAndDateTextView.setVisibility(View.GONE);
-		// TODO: What would userProfileIcon set to onRefresh?
-		//holder.userProfileIcon.setImageAlpha(??);
+		holder.userProfileIcon.setImageBitmap(mDiscussion.getCreator().getBitmap());
 		holder.usernameTextView.setText(mDiscussion.getCreator().getName());
 		holder.totalScoreTextView.setText(String.valueOf(mDiscussion.getTotalRating()));
 		holder.commentTextView.setText(mDiscussion.getNumComments() + " comments");		
@@ -85,7 +83,7 @@ public class CommentActivity extends Activity implements AsyncResponse{
 		    }
 		});
 		holder.groupAndDateTextView = (TextView) findViewById(R.id.groupAndDateTextView);
-		holder.userProfileIcon = (QuickContactBadge) findViewById(R.id.userQuickContactBadge);
+		holder.userProfileIcon = (ImageView) findViewById(R.id.userQuickContactBadge);
 		holder.usernameTextView = (TextView) findViewById(R.id.usernameTextView);
 		holder.totalScoreTextView = (TextView) findViewById(R.id.totalScoreTextView);		
 		holder.likeBtn = (ToggleButton) findViewById(R.id.likeBtn);	
@@ -179,9 +177,9 @@ public class CommentActivity extends Activity implements AsyncResponse{
 //			@Override
 //			public void onClick(View v) {
 //				// TODO: Need to implement addToBackStack on Profiles
-//				Fragment profileFragment;
+//				MyProfileFragment myProfileFragment;
 //				if (MainActivity.myUserID == mDiscussion.getCreator().getId()) {
-//					profileFragment = new MyProfile_Fragment() {
+//					myProfileFragment = new MyProfileFragment() {
 //						@Override
 //					    public void onCreate(Bundle savedInstanceState) {
 //						    super.onCreate(savedInstanceState);
@@ -191,7 +189,7 @@ public class CommentActivity extends Activity implements AsyncResponse{
 //						    }
 //					};
 //				} else {
-//					profileFragment = new Profile_Fragment();
+//					ProfileFragment profileFragment = new ProfileFragment();
 //					Bundle args = new Bundle();
 //					args.putSerializable("ContentCreator", (User) mDiscussion.getCreator());
 //		            profileFragment.setArguments(args);
@@ -254,7 +252,7 @@ public class CommentActivity extends Activity implements AsyncResponse{
 					JSONQuery jquery = new JSONQuery(CommentActivity.this);
 					jquery.execute(ServerUtil.URL_POST_COMMENT, Integer.toString(MainActivity.myUserID), Integer.toString(mDiscussion.getId()), body);
 					
-					User u = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0);
+					User u = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
 					Comment c = new Comment(0, body, u);
 					mDiscussion.addComment(c);
 					e.setText("");
