@@ -39,10 +39,11 @@
 
         <Button
             android:id="@+id/new_event_date_start"
-            android:layout_width="128dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="0"
-            android:layout_gravity="bottom"
+            android:layout_columnSpan="2"
+            android:layout_gravity="fill_horizontal|bottom"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:layout_row="0"
             android:background="@drawable/date_selector"
@@ -51,32 +52,12 @@
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/new_event_time_start"
-            android:layout_width="80dp"
-            android:layout_column="1"
-            android:layout_gravity="left|bottom"
-            android:layout_row="0"
-            android:background="@drawable/date_selector"
-            android:text="12:00 AM"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/new_event_time_end"
-            android:layout_width="80dp"
-            android:layout_column="1"
-            android:layout_gravity="left|top"
-            android:layout_row="1"
-            android:background="@drawable/date_selector"
-            android:ems="10"
-            android:hint="End Time"
-            android:textSize="12sp" />
-
-        <Button
             android:id="@+id/new_event_date_end"
-            android:layout_width="128dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="0"
-            android:layout_gravity="left|top"
+            android:layout_columnSpan="2"
+            android:layout_gravity="fill_horizontal|top"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:layout_row="1"
             android:background="@drawable/date_selector"
@@ -85,24 +66,70 @@
             android:inputType="datetime"
             android:textSize="12sp" />
 
+        <Button
+            android:id="@+id/new_event_time_end"
+            android:layout_width="108dp"
+            android:layout_column="3"
+            android:layout_gravity="left|top"
+            android:layout_row="1"
+            android:background="@drawable/date_selector"
+            android:ems="10"
+            android:hint="End Time"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/new_event_time_start"
+            android:layout_width="108dp"
+            android:layout_column="3"
+            android:layout_gravity="left|bottom"
+            android:layout_row="0"
+            android:background="@drawable/date_selector"
+            android:text="12:00 AM"
+            android:textSize="12sp" />
+
     </GridLayout>
 
-    <EditText
-        android:id="@+id/EditText02"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:ems="10"
-        android:hint="Location (optional)"
-        android:inputType="textMultiLine" />
+        android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/new_group_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:text="@string/submit" />
+        <EditText
+            android:id="@+id/new_event_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_toRightOf="@+id/imageView1"
+            android:cursorVisible="false"
+            android:editable="false"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:ems="10"
+            android:hint="Location (optional)"
+            android:inputType="none|textMultiLine"
+            android:singleLine="true"/>
+
+        <Button
+            android:id="@+id/new_event_location_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_alignBottom="@id/new_event_location"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/new_event_location"
+            android:layout_margin="5dp"
+            android:layout_toRightOf="@+id/imageView1"
+            android:background="@drawable/selector" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/new_event_location"
+            android:src="@drawable/btn_location" />
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/new_group_cancel"

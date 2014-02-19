@@ -10,11 +10,13 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Color;
@@ -34,6 +36,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
@@ -42,7 +45,9 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import edu.uark.spARK.R;
+import edu.uark.spARK.dialog.CustomDialogBuilder;
 import edu.uark.spARK.entity.Bulletin;
 import edu.uark.spARK.entity.Discussion;
 import edu.uark.spARK.entity.Group;
@@ -161,6 +166,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			Button btnEndDate = (Button) v.findViewById(R.id.new_event_date_end);
 			Button btnStartTime = (Button) v.findViewById(R.id.new_event_time_start);
 			Button btnEndTime = (Button) v.findViewById(R.id.new_event_time_end);
+			Button btnLocation = (Button) v.findViewById(R.id.new_event_location_btn);
 
 			//Spinner etStartTime = (Spinner) v.findViewById(R.id.new_event_time_start);
 			SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy"); 
@@ -171,6 +177,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			btnEndDate.setOnClickListener(this);
 			btnStartTime.setOnClickListener(this);
 			btnEndTime.setOnClickListener(this);
+			btnLocation.setOnClickListener(this);
 			return v;
 		}
 
@@ -195,8 +202,22 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 						btnTime.setText(new SimpleDateFormat("h:mm a").format(new Date(0, 0, 0, hourOfDay, minute, 0)));
 					}
 				};
-				System.out.println("this");
 				timeFragment.show(getFragmentManager(), "timePicker");
+				break;
+			case R.id.new_event_location_btn:
+				final CharSequence[] items = {"Use Current Location", "Other", "Cancel"};
+			    CustomDialogBuilder builder = new CustomDialogBuilder(getActivity());
+			    builder.setTitle("Pick a location")
+	                    .setTitleColor(getResources().getColor(R.color.red))
+	                    .setDividerColor(getResources().getColor(R.color.red))
+			           .setItems(items, new DialogInterface.OnClickListener() {
+			               public void onClick(DialogInterface dialog, int which) {
+			               // The 'which' argument contains the index position
+			               // of the selected item
+			            Toast.makeText(getActivity(), items [which], Toast.LENGTH_SHORT).show();
+			           }
+			    });
+			    builder.create().show();
 				break;
 			}
 			
