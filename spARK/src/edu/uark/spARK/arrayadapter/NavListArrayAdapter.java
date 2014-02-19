@@ -35,7 +35,7 @@ public class NavListArrayAdapter extends ArrayAdapter<String>{
 		this.context = context;
 		this.resourceID = layoutid;
 		
-		MENU_ICON[0] = context.getResources().getDrawable(R.drawable.ic_menu_profile);
+		MENU_ICON[0] = context.getResources().getDrawable(R.drawable.drawer_profile);
 		MENU_ICON[1] = context.getResources().getDrawable(R.drawable.drawer_home);
 		MENU_ICON[2] = context.getResources().getDrawable(R.drawable.drawer_headlines);
 		MENU_ICON[3] = context.getResources().getDrawable(R.drawable.drawer_event);

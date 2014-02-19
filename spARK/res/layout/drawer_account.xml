@@ -14,7 +14,8 @@
             android:id="@+id/navListOptionIcon"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@drawable/ic_menu_profile" />
+            android:layout_margin="5dp"
+            android:src="@drawable/drawer_profile" />
         
 <!-- You'll come back another day  :(
 
