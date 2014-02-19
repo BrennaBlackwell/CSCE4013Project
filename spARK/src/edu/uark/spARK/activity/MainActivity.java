@@ -418,7 +418,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	        	}
 	            break;
 	            
-	        case 3:
+	        case 4:
 	        	//groups
 	        	if (mNewDrawerPosition != mOldDrawerPosition) {
 		        	f = new GroupFragment();
@@ -429,7 +429,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 		            mOldDrawerPosition = mNewDrawerPosition;
 	        	}
 	            break;
-	        case 4:
+	        case 5:
 	        	//bookmarks
 	        	if (mNewDrawerPosition != mOldDrawerPosition) {
 		        	f = new Fragment();
@@ -440,7 +440,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 		            mOldDrawerPosition = mNewDrawerPosition;
 	        	}
 	            break;
-	        case 5:
+	        case 3:
 	        	//settings we could make another activity/fragment/whatever
 	        	if (mNewDrawerPosition != mOldDrawerPosition) {
 		        	f = new Fragment();
@@ -479,7 +479,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	            	}
 	            }.show(getFragmentManager(), "About");
 	        	break;
-	        case 8:
+	        case 7:
 	            SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 	            SharedPreferences.Editor editor = preferences.edit();
 	            //editor.remove("currentUsername");

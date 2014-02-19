@@ -217,10 +217,16 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                     }
                 }
                 if (mDownView != null) {
- 
                     mDownView = mDownView.findViewById(R.id.table);
                     mDownX = motionEvent.getRawX();
-                    mDownPosition = mListView.getPositionForView(mDownView);
+                    //TODO: really need to figure out why npe is happening here
+                    try {
+                    mDownPosition = mListView.getPositionForView(mDownView); 
+                    }
+                    catch (NullPointerException npe) {
+                    	//why does this keep happening?
+                    	npe.printStackTrace();
+                    }
                     if (mCallbacks.canDismiss(mDownPosition)) {
                         mVelocityTracker = VelocityTracker.obtain();
                         mVelocityTracker.addMovement(motionEvent);
