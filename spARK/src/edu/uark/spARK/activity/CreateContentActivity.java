@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -14,7 +13,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -33,7 +31,6 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import edu.uark.spARK.R;
-import edu.uark.spARK.dialog.CustomDialogBuilder;
 import edu.uark.spARK.entity.Bulletin;
 import edu.uark.spARK.entity.Discussion;
 import edu.uark.spARK.entity.Group;
@@ -248,7 +245,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					if(desc == null || desc.trim().isEmpty()){
 						return; // do not add blank input to list
 					}
-					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0);
+					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
 					int position = groups.getSelectedItemPosition();
 					
 					int itemSelected = 0;
@@ -344,7 +341,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					if(desc == null || desc.trim().isEmpty()){
 						return; // do not add blank input to list
 					}
-					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0);
+					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
 					int position = groups.getSelectedItemPosition();
 
 					int itemSelected = 0;
@@ -398,7 +395,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					RadioButton privacy = (RadioButton)findViewById(R.id.radio_open);
 					RadioButton visibility = (RadioButton)findViewById(R.id.radio_visible);
 							
-					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0);
+					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
 					
 					String lat = intent.getStringExtra("latitude");
 					String lng = intent.getStringExtra("longitude");

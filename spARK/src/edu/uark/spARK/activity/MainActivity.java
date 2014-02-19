@@ -1,20 +1,17 @@
 package edu.uark.spARK.activity;
 
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.FragmentManager.OnBackStackChangedListener;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -24,6 +21,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +32,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,10 +49,12 @@ import android.widget.TextView;
 import edu.uark.spARK.R;
 import edu.uark.spARK.arrayadapter.NavListArrayAdapter;
 import edu.uark.spARK.data.JSONQuery;
-import edu.uark.spARK.data.ServerUtil;
 import edu.uark.spARK.data.JSONQuery.AsyncResponse;
+import edu.uark.spARK.data.ServerUtil;
 import edu.uark.spARK.dialog.CustomDialogBuilder;
-import edu.uark.spARK.entity.*;
+import edu.uark.spARK.entity.Bulletin;
+import edu.uark.spARK.entity.Discussion;
+import edu.uark.spARK.entity.Group;
 import edu.uark.spARK.fragment.CheckInFragment;
 import edu.uark.spARK.fragment.GroupFragment;
 import edu.uark.spARK.fragment.MapViewFragment;
@@ -68,6 +70,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	public static List<Group> myGroups = new ArrayList();
 	public static String myFullName;
 	public static String myDesc;
+	public static Bitmap myProfilePicture;
 	
     private static final int PROFILE_FRAGMENT = 0;
     private static final int NEWSFEED_FRAGMENT = 1;
@@ -386,6 +389,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	        FragmentManager fragmentManager = getFragmentManager(); 
 	        switch(position) {
 	    	
+	        // TODO:  Need to fix positions. What I click and what I go to are not the same..
 	    	case 0:  	
 	            fragmentManager.beginTransaction().detach(mMapViewFragment)
 	            .replace(R.id.fragment_frame, new MyProfileFragment(), "My Profile")
@@ -458,7 +462,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	                    .setTitle("About spark")
 	                    .setTitleColor(getResources().getColor(R.color.red))
 	                    .setDividerColor(getResources().getColor(R.color.red))
-	                    .setMessage("Created by: \n\nAlex Adamec \nBrenna Blackwell \nMatt McClelland \nJD Pack \nChandramohan Sol")
+	                    .setMessage("Created by: \n\nAlex Adamec \nMatt McClelland \nJD Pack \nJaCarri Tolette")
 	                    .setPositiveButton("Send Feedback", new DialogInterface.OnClickListener() {
 	                       @Override
 	                       public void onClick(DialogInterface dialog, int id) {
@@ -482,6 +486,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	            editor.remove("currentPassword");
 	            editor.remove("autoLogin");
 	            editor.commit();
+	            myProfilePicture = null;
 	            Intent backToLogin = new Intent(MainActivity.this, LogInActivity.class).putExtra("Logout", true);
 	            startActivity(backToLogin);
 	            finish();        	   
@@ -599,8 +604,15 @@ public class MainActivity extends Activity implements AsyncResponse {
 			if (success == 1) {
 				MyContents = result.getJSONArray(ServerUtil.TAG_GROUPS);
 				myUserID = result.getInt(ServerUtil.TAG_USER_ID);
-				myFullName = result.getString(ServerUtil.TAG_USER_FULL_NAME);
-				myDesc = result.getString(ServerUtil.TAG_USER_DESC);
+				myFullName = result.getString(ServerUtil.TAG_USER_FULL_NAME).trim();
+				myDesc = result.getString(ServerUtil.TAG_USER_DESC).trim();
+				String base64Image = result.getString(ServerUtil.TAG_USER_PIC).trim();
+				if (!base64Image.isEmpty()) {
+					byte[] rawImage = Base64.decode(base64Image, Base64.DEFAULT);
+					myProfilePicture = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
+				} else {
+					myProfilePicture = BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.drawer_profile);
+				}
 				
 				for (int i = 0; i < MyContents.length(); i++) {
 					JSONObject content = MyContents.getJSONObject(i);

@@ -1,11 +1,14 @@
 package edu.uark.spARK.entity;
 
+import android.graphics.Bitmap;
+
 @SuppressWarnings("serial")
 public class User extends Entity {
 
 	private int points;
 	private String fullname = "";
 	private String desc = "";
+	private Bitmap profilePicture;
 	
 	public User(int id, String name, String rank) {
 		super(id, name, rank);
@@ -17,12 +20,13 @@ public class User extends Entity {
 		this.points = points;
 	}
 	
-	public User(int id, String name, String rank, String fullname, String desc, int points) {
+	public User(int id, String name, String rank, String fullname, String desc, int points, Bitmap profilePicture) {
 		this(id, name, rank);
 		this.setFullname(fullname);
 		this.setDesc(desc);
+		this.setPicture(profilePicture);
 	}
-	
+
 	public String getName() {
 		return getTitle();
 	}
@@ -61,6 +65,14 @@ public class User extends Entity {
 	
 	public void setPoints(int points) {
 		this.points = points;
+	}
+	
+	public Bitmap getBitmap() {
+		return profilePicture;
+	}
+	
+	public void setPicture(Bitmap profilePicture) {
+		this.profilePicture = profilePicture;
 	}
 	
 }

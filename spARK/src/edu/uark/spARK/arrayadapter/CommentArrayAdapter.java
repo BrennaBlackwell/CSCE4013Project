@@ -61,7 +61,7 @@ public class CommentArrayAdapter extends ArrayAdapter {
 	static class ViewHolder {
 		TextView commentTextView;
 		TextView usernameTextView;
-		QuickContactBadge userQuickContactBadge;
+		ImageView userQuickContactBadge;
 
 		int position;
 	}

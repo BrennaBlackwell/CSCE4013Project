@@ -27,6 +27,7 @@ public class ServerUtil {
 	public static final String TAG_USER_NAME = "username";
 	public static final String TAG_USER_FULL_NAME = "fullname";
 	public static final String TAG_USER_DESC = "description";
+	public static final String TAG_USER_PIC = "profilepicture";
 	
 	public static final String TAG_RATING_TOTAL = "rating_total";
 	public static final String TAG_RATING_TOTAL_FLAG = "rating_total_flag";
@@ -44,7 +45,7 @@ public class ServerUtil {
 	
 	public static final String URL_VERIFY = SERVER_ADDR + "verify.php";
 	
-	public static final String URL_LOAD_ALL_POSTS = SERVER_ADDR + "loadnewsfeed.php";
+	public static final String URL_LOAD_ALL_POSTS = SERVER_ADDR + "loadcontent.php";
 	
 	public static final String URL_POST_COMMENT = SERVER_ADDR + "postcomment.php";
 	

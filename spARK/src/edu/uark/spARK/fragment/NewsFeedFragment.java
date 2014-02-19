@@ -1,35 +1,49 @@
 package edu.uark.spARK.fragment;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.*;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.*;
+import android.util.Base64;
+import android.view.HapticFeedbackConstants;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewGroup.MarginLayoutParams;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import edu.uark.spARK.PullToRefreshListView;
+import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
 import edu.uark.spARK.R;
 import edu.uark.spARK.SwipeDismissListViewTouchListener;
-import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
-import edu.uark.spARK.R.animator;
-import edu.uark.spARK.R.id;
-import edu.uark.spARK.R.layout;
-import edu.uark.spARK.SwipeDismissListViewTouchListener.DismissCallbacks;
 import edu.uark.spARK.activity.MainActivity;
 import edu.uark.spARK.arrayadapter.NewsFeedArrayAdapter;
 import edu.uark.spARK.data.JSONQuery;
-import edu.uark.spARK.data.ServerUtil;
 import edu.uark.spARK.data.JSONQuery.AsyncResponse;
-import edu.uark.spARK.entity.*;
+import edu.uark.spARK.data.ServerUtil;
+import edu.uark.spARK.entity.Bulletin;
+import edu.uark.spARK.entity.Comment;
+import edu.uark.spARK.entity.Content;
+import edu.uark.spARK.entity.Discussion;
+import edu.uark.spARK.entity.Group;
+import edu.uark.spARK.entity.User;
 import edu.uark.spARK.view.SelectiveViewPager;
 
 
@@ -262,12 +276,19 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 					String contentUsername = content.getString(ServerUtil.TAG_USER_NAME).trim();
 					String contentUserFullName = content.getString(ServerUtil.TAG_USER_FULL_NAME).trim();
 					String contentUserDesc = content.getString(ServerUtil.TAG_USER_DESC).trim();
+					String contentBase64Image = content.getString(ServerUtil.TAG_USER_PIC).trim();
+					Bitmap contentProfilePicture = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.drawer_profile);
+					if (!contentBase64Image.isEmpty()) {
+						byte[] rawImage = Base64.decode(contentBase64Image, Base64.DEFAULT);
+						contentProfilePicture = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
+					} 
+					
 					if (content.getInt(ServerUtil.TAG_USER_RATING_FLAG) == 1) {
 						if (content.getString(ServerUtil.TAG_USER_RATING) != null) {
 							userRating = content.getInt(ServerUtil.TAG_USER_RATING);
 						}
 					}
-					User user = new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0);
+					User user = new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0, contentProfilePicture);
 					
 					
 					// Group Attached
@@ -296,10 +317,17 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 							String commentUsername = comment.getString(ServerUtil.TAG_USER_NAME).trim();
 							String commentUserFullName = content.getString(ServerUtil.TAG_USER_FULL_NAME).trim();
 							String commentUserDesc = content.getString(ServerUtil.TAG_USER_DESC).trim();
+							String commentBase64Image = content.getString(ServerUtil.TAG_USER_PIC).trim();
+							Bitmap commentProfilePicture = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.drawer_profile);
+							if (!commentBase64Image.isEmpty()) {
+								byte[] rawImage = Base64.decode(commentBase64Image, Base64.DEFAULT);
+								commentProfilePicture = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
+							}
+							
 							String commentBody = comment.getString(ServerUtil.TAG_BODY).trim();
 							Date commentTimestamp = Timestamp.valueOf(content.getString(ServerUtil.TAG_TIMESTAMP).trim());
 							
-							Comment c = new Comment(commentID, commentBody, new User(commentUserID, commentUsername,  commentUserFullName, commentUserDesc, "", 0), commentTimestamp);
+							Comment c = new Comment(commentID, commentBody, new User(commentUserID, commentUsername, "", commentUserFullName, commentUserDesc, 0, commentProfilePicture), commentTimestamp);
 							commentsList.add(c);
 						}
 						

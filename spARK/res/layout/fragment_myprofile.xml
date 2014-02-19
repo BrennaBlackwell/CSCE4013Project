@@ -7,15 +7,6 @@
     android:background="@android:color/white"
     tools:ignore="Deprecated" >
 
-    <ListView
-        android:id="@+id/myRecentsList"
-        android:layout_width="wrap_content"
-        android:layout_height="122dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/myRecentsText"
-        android:layout_marginTop="14dp" >
-    </ListView>
-
     <TextView
         android:id="@+id/myRecentsText"
         android:layout_width="wrap_content"
@@ -100,12 +91,12 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#336699"
         android:clickable="true"
-        android:onClick="EditAccount"
+        android:onClick="EditProfile"
         tools:ignore="HardcodedText" /> 
 -->
 
     <Button
-        android:id="@+id/EditAccount"
+        android:id="@+id/EditProfile"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

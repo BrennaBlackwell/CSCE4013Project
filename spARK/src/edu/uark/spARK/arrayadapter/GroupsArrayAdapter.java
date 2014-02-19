@@ -58,7 +58,7 @@ public class GroupsArrayAdapter extends ArrayAdapter<Group> implements AsyncResp
 			holder.titleTextView.setTag(position);
 			holder.descTextView = (TextView) convertView.findViewById(R.id.descTextView);	
 			holder.creationDateTextView = (TextView) convertView.findViewById(R.id.creationDateTextView);
-			holder.userProfileIcon = (QuickContactBadge) convertView.findViewById(R.id.userQuickContactBadge);
+			holder.userProfileIcon = (ImageView) convertView.findViewById(R.id.userQuickContactBadge);
 			holder.usernameTextView = (TextView) convertView.findViewById(R.id.usernameTextView);
 			holder.usernameTextView.setTag(position);
 //			holder.totalScoreTextView = (TextView) convertView.findViewById(R.id.totalScoreTextView);
@@ -81,6 +81,7 @@ public class GroupsArrayAdapter extends ArrayAdapter<Group> implements AsyncResp
 			//holder.locationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		}
 
+		holder.userProfileIcon.setImageBitmap(g.getCreator().getBitmap());
 		holder.titleTextView.setText(g.getTitle());
 		holder.descTextView.setText(g.getText());
 		holder.descTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -237,7 +238,7 @@ public class GroupsArrayAdapter extends ArrayAdapter<Group> implements AsyncResp
 			TextView titleTextView;
 			TextView descTextView;
 			TextView creationDateTextView;
-			QuickContactBadge userProfileIcon;
+			ImageView userProfileIcon;
 			TextView usernameTextView;
 //			TextView totalScoreTextView;
 //			TextView commentTextView;

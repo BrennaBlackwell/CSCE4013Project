@@ -8,11 +8,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.view.*;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -157,7 +160,13 @@ public class GroupFragment extends Fragment implements AsyncResponse {
 					String contentUsername = g.getString(ServerUtil.TAG_USER_NAME).trim();
 					String contentUserFullName = g.getString(ServerUtil.TAG_USER_FULL_NAME).trim();
 					String contentUserDesc = g.getString(ServerUtil.TAG_USER_DESC).trim();
-					User user = new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0);
+					String base64Image = g.getString(ServerUtil.TAG_USER_PIC).trim();
+					Bitmap groupProfilePicture = BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.drawer_profile);;
+					if (!base64Image.isEmpty()) {
+						byte[] rawImage = Base64.decode(base64Image, Base64.DEFAULT);
+						groupProfilePicture = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
+					}
+					User user = new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0, groupProfilePicture);
 					
 					Group group = new Group(groupID, groupName, groupDesc, user, latitude, longitude, open, visible);
 					

@@ -73,7 +73,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.titleTextView.setTag(position);
 			holder.descTextView = (TextView) convertView.findViewById(R.id.descTextView);	
 			holder.groupAndDateTextView = (TextView) convertView.findViewById(R.id.groupAndDateTextView);
-			holder.userProfileIcon = (QuickContactBadge) convertView.findViewById(R.id.userQuickContactBadge);
+			holder.userProfileIcon = (ImageView) convertView.findViewById(R.id.userQuickContactBadge);
 			holder.usernameTextView = (TextView) convertView.findViewById(R.id.usernameTextView);
 			holder.usernameTextView.setTag(position);
 			holder.totalScoreTextView = (TextView) convertView.findViewById(R.id.totalScoreTextView);
@@ -136,6 +136,8 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			//this means no group was attached and it is public
 			e.printStackTrace();
 		}
+		
+		holder.userProfileIcon.setImageBitmap(c.getCreator().getBitmap());
 		holder.usernameTextView.setText(c.getCreator().getTitle());
 		holder.totalScoreTextView.setText(String.valueOf(c.getTotalRating()));
 		if (c instanceof Discussion) {
@@ -176,6 +178,10 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.deleteBtn.setVisibility(View.VISIBLE);
 		} else {
 			holder.deleteBtn.setVisibility(View.GONE);
+		}
+		
+		if (c.getCreator().getId() == MainActivity.myUserID) {
+			holder.deleteBtn.setVisibility(View.VISIBLE);
 		}
 		//generic idea for expanding ellipsized text
 //		holder.descTV.setOnClickListener(new OnClickListener() {
@@ -405,7 +411,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		public TextView titleTextView;
 		public TextView descTextView;
 		public TextView groupAndDateTextView;
-		public QuickContactBadge userProfileIcon;
+		public ImageView userProfileIcon;
 		public TextView usernameTextView;
 		public TextView totalScoreTextView;
 		public TextView commentTextView;
