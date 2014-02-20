@@ -1,140 +1,146 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/locationLinearLayout"
+    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/activity_vertical_margin"
-    android:layout_marginRight="@dimen/activity_vertical_margin"
-    tools:context=".NewGroupFragment" >
+    android:layout_marginRight="@dimen/activity_vertical_margin" >
 
-    <EditText
-        android:id="@+id/new_event_title"
+    <LinearLayout
+        android:id="@+id/locationLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:ems="10"
-        android:hint="Event Title"
-        android:inputType="textShortMessage"
-        android:singleLine="true" >
-
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/new_event_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:ems="10"
-        android:hint="Description"
-        android:inputType="textMultiLine" />
-
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="4" >
-
-        <Space />
-
-        <Button
-            android:id="@+id/new_event_date_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnSpan="2"
-            android:layout_gravity="fill_horizontal|bottom"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:layout_row="0"
-            android:background="@drawable/date_selector"
-            android:ems="10"
-            android:inputType="datetime"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/new_event_date_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnSpan="2"
-            android:layout_gravity="fill_horizontal|top"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:layout_row="1"
-            android:background="@drawable/date_selector"
-            android:ems="10"
-            android:hint="Ends (optional)"
-            android:inputType="datetime"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/new_event_time_end"
-            android:layout_width="108dp"
-            android:layout_column="3"
-            android:layout_gravity="left|top"
-            android:layout_row="1"
-            android:background="@drawable/date_selector"
-            android:ems="10"
-            android:hint="End Time"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/new_event_time_start"
-            android:layout_width="108dp"
-            android:layout_column="3"
-            android:layout_gravity="left|bottom"
-            android:layout_row="0"
-            android:background="@drawable/date_selector"
-            android:text="12:00 AM"
-            android:textSize="12sp" />
-
-    </GridLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:orientation="vertical"
+        tools:context=".NewGroupFragment" >
 
         <EditText
-            android:id="@+id/new_event_location"
+            android:id="@+id/new_event_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:layout_toRightOf="@+id/imageView1"
-            android:cursorVisible="false"
-            android:editable="false"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
             android:ems="10"
-            android:hint="Location (optional)"
-            android:inputType="none|textMultiLine"
-            android:singleLine="true"/>
+            android:hint="Event Title"
+            android:inputType="textShortMessage"
+            android:singleLine="true" >
 
-        <Button
-            android:id="@+id/new_event_location_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_alignBottom="@id/new_event_location"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/new_event_location"
-            android:layout_margin="5dp"
-            android:layout_toRightOf="@+id/imageView1"
-            android:background="@drawable/selector" />
+            <requestFocus />
+        </EditText>
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignTop="@+id/new_event_location"
-            android:src="@drawable/btn_location" />
+        <EditText
+            android:id="@+id/new_event_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:ems="10"
+            android:hint="Description"
+            android:inputType="textMultiLine" />
 
-    </RelativeLayout>
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="4" >
 
-    <Button
-        android:id="@+id/new_group_cancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@android:string/cancel" />
+            <Space />
 
-</LinearLayout>
+            <Button
+                android:id="@+id/new_event_date_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:layout_gravity="fill_horizontal|bottom"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_row="0"
+                android:background="@drawable/date_selector"
+                android:ems="10"
+                android:inputType="datetime"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/new_event_date_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:layout_gravity="fill_horizontal|top"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:layout_row="1"
+                android:background="@drawable/date_selector"
+                android:ems="10"
+                android:hint="Ends (optional)"
+                android:inputType="datetime"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/new_event_time_end"
+                android:layout_width="108dp"
+                android:layout_column="3"
+                android:layout_gravity="left|top"
+                android:layout_row="1"
+                android:background="@drawable/date_selector"
+                android:ems="10"
+                android:hint="End Time"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/new_event_time_start"
+                android:layout_width="108dp"
+                android:layout_column="3"
+                android:layout_gravity="left|bottom"
+                android:layout_row="0"
+                android:background="@drawable/date_selector"
+                android:text="12:00 AM"
+                android:textSize="12sp" />
+        </GridLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <EditText
+                android:id="@+id/new_event_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_toRightOf="@+id/imageView1"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:editable="false"
+                android:ems="10"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="Location (optional)"
+                android:inputType="none|textMultiLine"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/new_event_location_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_alignBottom="@id/new_event_location"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/new_event_location"
+                android:layout_margin="5dp"
+                android:layout_toRightOf="@+id/imageView1"
+                android:background="@drawable/selector" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignBottom="@+id/new_event_location_btn"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/btn_location" />
+        </RelativeLayout>
+
+        <Spinner
+            android:id="@+id/bulletin_group_selection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"
+            tools:listitem="@android:layout/simple_spinner_dropdown_item" />
+    </LinearLayout>
+
+</ScrollView>

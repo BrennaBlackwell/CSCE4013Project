@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 public class CustomDialogBuilder extends AlertDialog.Builder {
 
+		private Context mContext;
         private View mView;
         private TextView mTitle;
         private ImageView mIcon;
@@ -31,7 +32,7 @@ public class CustomDialogBuilder extends AlertDialog.Builder {
         
     public CustomDialogBuilder(Context context) {
         super(context);
-
+        mContext = context;
         mView = View.inflate(context, R.layout.alert_dialog_holo, null);
         setView(mView);
 
@@ -39,7 +40,6 @@ public class CustomDialogBuilder extends AlertDialog.Builder {
         mIcon = (ImageView) mView.findViewById(R.id.icon);
         mDivider = mView.findViewById(R.id.titleDivider);
         mMessage = (TextView) mView.findViewById(R.id.message);
-        mItems = (ListView) mView.findViewById(R.id.items);
 
         }
 
@@ -83,19 +83,8 @@ public class CustomDialogBuilder extends AlertDialog.Builder {
         return this;
     }
     
-    @Override
-    public CustomDialogBuilder setItems(CharSequence[] items, final OnClickListener listener) {
-//    	mAdapter = new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_list_item_1, items);
-//    	mItems.setAdapter(mAdapter);
-//    	mItems.setOnItemClickListener(new OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View v, int position,
-//					long id) {
-//				listener.onClick(AlertDialog this, position);
-//			}
-//    		
-//    	});
-    	return this;
+    public View getView() {
+    	return mView;
     }
 
     public CustomDialogBuilder setCustomView(int resId, Context context) {
@@ -104,11 +93,22 @@ public class CustomDialogBuilder extends AlertDialog.Builder {
             return this;
     }
     
+    public CustomDialogBuilder setCustomView(View v, Context context) {
+        ((FrameLayout)mView.findViewById(R.id.customPanel)).addView(v);
+        return this;
+    }
+    
+    public FrameLayout getCustomView() {     
+        return ((FrameLayout)mView.findViewById(R.id.customPanel));
+    }
+    
     @Override
     public AlertDialog show() {
             if (mTitle.getText().equals("")) 
             	mView.findViewById(R.id.topPanel).setVisibility(View.GONE);
             return super.show();
     }
+    
+    
 
 }
