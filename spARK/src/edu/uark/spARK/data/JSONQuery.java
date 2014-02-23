@@ -14,13 +14,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
 
 public class JSONQuery extends AsyncTask<String, Void, String> {
-
 		private AsyncResponse delegate = null;
 		private InputStream is = null;
 	    private JSONObject jObj = null;

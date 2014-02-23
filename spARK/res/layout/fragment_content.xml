@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edu.uark.spARK.view.FragmentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_content_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <edu.uark.spARK.view.SelectiveViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <edu.uark.spARK.view.FragmentPagerTabStrip
+            android:id="@+id/pager_tab_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="#AA000000"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:textColor="#fff" />
+
+    </edu.uark.spARK.view.SelectiveViewPager>
+
+    
+</edu.uark.spARK.view.FragmentFrameLayout>

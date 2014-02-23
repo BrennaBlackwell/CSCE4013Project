@@ -32,7 +32,7 @@ import edu.uark.spARK.entity.*;
 
 
 
-public class MapViewFragment extends MapFragment implements 
+public class MapViewFragment extends SupportMapFragment implements 
 GooglePlayServicesClient.ConnectionCallbacks, 
 GooglePlayServicesClient.OnConnectionFailedListener {
 
@@ -234,21 +234,24 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	    }
 	}
 	
+	//TODO: Fix map movement functions
 	//setMapPadding is called in PullToRefreshListView on EVENT_MOVE to move slightly slower than the listview padding size
     public void setMapPadding(int padding){
-        final float scale = this.getResources().getDisplayMetrics().density;
-        final int pixels = (int) (100 * scale + 0.5f);
-        MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) getView().getLayoutParams();
-        mlp.setMargins(0, padding, 0, 0);
-        mlp.topMargin = padding;
-    	this.getView().setY((-getView().getHeight()/2 + pixels/2) + (float) (padding * .72));
+//        final float scale = this.getResources().getDisplayMetrics().density;
+//        final int pixels = (int) (100 * scale + 0.5f);
+//        MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) getView().getLayoutParams();
+//        mlp.setMargins(0, padding, 0, 0);
+//        mlp.topMargin = padding;
+//    	getView().setY((-getView().getHeight()/2 + pixels/2) + (float) (padding * .72));
+    	//getView().animate().y((-getView().getHeight()/2 + pixels/2) + (float) (padding * .72)).setDuration(250);
     }
 
     //resets the framelayout when listview is done refreshing
 	public void resetView() {
-        final float scale = this.getResources().getDisplayMetrics().density;
-        final int pixels = (int) (100 * scale + 0.5f);
-		this.getView().setY((-getView().getHeight()/2 + pixels/2));
+//        final float scale = this.getResources().getDisplayMetrics().density;
+//        final int pixels = (int) (100 * scale + 0.5f);
+//		//this.getView().setY((-getView().getHeight()/2 + pixels/2));
+//        getView().animate().y(-getView().getHeight()/2 + pixels/2).setDuration(250);
 	}
 
 	public void bounceBackMap() {
@@ -269,7 +272,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	public void zoomOutMap() {
     	if (lastClicked != null)
     		lastClicked.hideInfoWindow();
-		getView().animate().y((-getView().getHeight()/2 + pixels/2)).setDuration(250);
+		//getView().animate().y((-getView().getHeight()/2 + pixels/2)).setDuration(250);
 	    Location location = mLocationClient.getLastLocation();
 	    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 	    CameraPosition cameraPosition = new CameraPosition.Builder()

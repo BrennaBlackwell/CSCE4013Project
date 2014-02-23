@@ -8,13 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,11 +22,10 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -55,14 +50,12 @@ import edu.uark.spARK.dialog.CustomDialogBuilder;
 import edu.uark.spARK.entity.Bulletin;
 import edu.uark.spARK.entity.Discussion;
 import edu.uark.spARK.entity.Group;
-import edu.uark.spARK.fragment.CheckInFragment;
-import edu.uark.spARK.fragment.GroupFragment;
+import edu.uark.spARK.fragment.ContentFragment;
+import edu.uark.spARK.fragment.HomeFragment;
 import edu.uark.spARK.fragment.MapViewFragment;
 import edu.uark.spARK.fragment.MyProfileFragment;
-import edu.uark.spARK.fragment.NewsFeedFragment;
-import edu.uark.spARK.view.SelectiveViewPager;
 
-public class MainActivity extends Activity implements AsyncResponse {
+public class MainActivity extends FragmentActivity implements AsyncResponse {
 	
 	// TODO: Need to create a Current/myUser Class for these variables
 	public static int myUserID;
@@ -71,218 +64,107 @@ public class MainActivity extends Activity implements AsyncResponse {
 	public static String myFullName;
 	public static String myDesc;
 	public static Bitmap myProfilePicture;
-	
-    private static final int PROFILE_FRAGMENT = 0;
-    private static final int NEWSFEED_FRAGMENT = 1;
-    private static final int CHECKIN_FRAGMENT = 2;
-    private static final int CREATE_CONTENT_ACTIVITY = 3;
+    private JSONArray MyContents = null;
 
-    private int page = -1;
-
-
-    private DrawerLayout mDrawerLayout;
-    private Handler mHandler = new Handler();	//using this for smoother drawer animation
+    private DrawerLayout mNavDrawerLayout;
+    private MainDrawerListener mNavDrawerListener;
     private NavListArrayAdapter mNavListArrayAdapter;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    private CharSequence mDrawerTitle;
+    private ListView mNavDrawerList;
+    private ActionBarDrawerToggle mNavDrawerToggle;
     private CharSequence mTitle;
-    private String[] mListTitles;	//option titles
+    private String[] mNavDrawerTitles;	//option titles
     private Menu mMenu;
 
-    private JSONArray MyContents = null;
-    
-	public static MapViewFragment mMapViewFragment;
-	public static NewsFeedFragment mDiscussionFragment;
-	public static NewsFeedFragment mBulletinFragment;
-	private static Fragment f;
-	
-	public MyAdapter mAdapter;
-
-	public static int mOldDrawerPosition;	//default value
-	public static int mNewDrawerPosition;	//default value
-	public static SelectiveViewPager mPager;
-	
+	private final int CREATE_CONTENT_ACTIVITY = 3;   
+	private MapViewFragment mMapViewFragment;
     
 	@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);       
-        setContentView(R.layout.activity_main);
-        
-        SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-        myUsername = preferences.getString("currentUsername", "");
-        
-        JSONQuery jquery = new JSONQuery(this);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+		myUsername = preferences.getString("currentUsername", "");
+
+		JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, myUsername);
-        
-        mTitle = mDrawerTitle = getTitle();
-        mListTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        // set a custom shadow that overlays the main content when the drawer opens
-        // set a new custom arrayadapter
-        mNavListArrayAdapter = new NavListArrayAdapter(getApplicationContext(), R.layout.drawer_list_item);
-        // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(mNavListArrayAdapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-    	mOldDrawerPosition=1;	//default value
-    	mNewDrawerPosition=1;	//default value
-        // enable ActionBar app icon to behave as action to toggle nav drawer        
-        ActionBar bar = getActionBar();
-    	bar.setDisplayHomeAsUpEnabled(true);
-        bar.setHomeButtonEnabled(true);
-        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_HOME_AS_UP);
-        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setDisplayShowTitleEnabled(true);
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
-        ) {
-            public void onDrawerClosed(View view) {
-                //getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
+		mTitle = getTitle();
+		mNavDrawerTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
+		mNavDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mNavDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-            public void onDrawerOpened(View drawerView) {
-                //getActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerLayout.setDrawerListener(new MainDrawerListener());
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
-    	if (savedInstanceState == null) {
-            mMapViewFragment= new MapViewFragment() {
-        		@Override
-        		public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        			final View v = super.onCreateView(inflater, container, savedInstanceState);
-        			final float scale = this.getResources().getDisplayMetrics().density;
-        		    final int pixels = (int) (100 * scale + 0.5f);
-        		    final ViewTreeObserver observer = v.getViewTreeObserver();
-        		    observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-        		        @Override
-        		        public void onGlobalLayout() {
-        		            v.setY((int) (-v.getHeight()/2 + pixels/2));
-        		            v.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-        		            //this will be called as the layout is finished, prior to displaying.
-        		        }
-        		    });
-        		    return v;
-        		}
-        		
-        		@Override
-        		public void onConfigurationChanged(Configuration newConfig) {
-        		    super.onConfigurationChanged(newConfig);
-        		    resetView();
-        		  }
-        	};
-    		getFragmentManager().beginTransaction().add(R.id.map_frame, mMapViewFragment).commit();
-    	}
-
-        mPager = (SelectiveViewPager) findViewById(R.id.pager);
-
-        mAdapter = new MyAdapter(getFragmentManager());
-        mPager.setAdapter(mAdapter);
-        
-        mPager.setOnPageChangeListener(new OnPageChangeListener() {
-
-  			@Override
-  			public void onPageScrollStateChanged(int state) { }
-
-  			@Override
-  			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
-
-  			@Override
-  			public void onPageSelected(int position) {
-  				getActionBar().getTabAt(position).select();
-  			}
-        	
-        });
-
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            
-            @Override
-			public void onTabReselected(Tab tab, FragmentTransaction ft) {
-
+		// set a custom shadow that overlays the main content when the drawer
+		// opens
+		// set a new custom arrayadapter
+		mNavListArrayAdapter = new NavListArrayAdapter(getApplicationContext(), R.layout.drawer_list_item);
+		// set up the drawer's list view with items and click listener
+		mNavDrawerList.setAdapter(mNavListArrayAdapter);
+		mNavDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+		// enable ActionBar app icon to behave as action to toggle nav drawer
+		ActionBar bar = getActionBar();
+		bar.setDisplayHomeAsUpEnabled(true);
+		bar.setHomeButtonEnabled(true);
+		bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP);
+		bar.setDisplayShowTitleEnabled(true);
+		// ActionBarDrawerToggle ties together the the proper interactions
+		// between the sliding drawer and the action bar app icon
+		mNavDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+		mNavDrawerLayout, /* DrawerLayout object */
+		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+		R.string.drawer_open, /* "open drawer" description for accessibility */
+		R.string.drawer_close /* "close drawer" description for accessibility */
+		) {
+			public void onDrawerClosed(View view) {
+				// getActionBar().setTitle(mTitle);
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
 			}
 
-			@Override
-			public void onTabSelected(Tab tab, FragmentTransaction ft) {
-				mPager.setCurrentItem(tab.getPosition());
-				mMapViewFragment.updateMarkers(tab.getPosition());
+			public void onDrawerOpened(View view) {
+				// getActionBar().setTitle(mDrawerTitle);
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
 			}
+		};
+		mNavDrawerListener = new MainDrawerListener();
+		mNavDrawerLayout.setDrawerListener(mNavDrawerListener);
+		mNavDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-			@Override
-			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-			
-			}
-        	
-        };
-        //ActionBar.Tab discussionTab = bar.newTab().setText("Discussions");
-        //ActionBar.Tab bulletinTab = bar.newTab().setText("Bulletins");
-        ActionBar.Tab t0 = bar.newTab().setText("Recommended");
-        ActionBar.Tab t1 = bar.newTab().setText("Recent");
-        ActionBar.Tab t2 = bar.newTab().setText("Nearby");
-        ActionBar.Tab t3 = bar.newTab().setText("Popular");
-        ActionBar.Tab t4 = bar.newTab().setText("Favorites");
-        //discussionTab.setTabListener(tabListener);
-        //bulletinTab.setTabListener(tabListener);
-        t0.setTabListener(tabListener);
-        t1.setTabListener(tabListener);
-        t2.setTabListener(tabListener);
-        t3.setTabListener(tabListener);
-        t4.setTabListener(tabListener);
+		getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, new HomeFragment()).commit();
+		if (savedInstanceState == null) {
+			// TODO: Place the map initialization code somewhere after things have been loaded from the server, or just find a way to hide it until data appears
+			//this won't really be a problem now since you can't see the map behind the home screen
+			mMapViewFragment = new MapViewFragment() {
+				@Override
+				public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+					final View v = super.onCreateView(inflater, container, savedInstanceState);
+					final float scale = this.getResources().getDisplayMetrics().density;
+					final int pixels = (int) (100 * scale + 0.5f);
+					final ViewTreeObserver observer = v.getViewTreeObserver();
+					observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+						@Override
+						public void onGlobalLayout() {
+							//v.setY((int) (-v.getHeight() / 2 + pixels / 2));
+							//v.animate().y((-v.getHeight() / 2 + pixels / 2)).setDuration(250);
+							//v.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+							// this will be called as the layout is finished,
+							// prior to displaying.
+						}
+					});
+					return v;
+				}
 
-        bar.addTab(t0);
-        bar.addTab(t1);
-        bar.addTab(t2);
-        bar.addTab(t3);
-        bar.addTab(t4);
-
-        //bar.addTab(discussionTab);
-        //bar.addTab(bulletinTab);     
+				@Override
+				public void onConfigurationChanged(Configuration newConfig) {
+					super.onConfigurationChanged(newConfig);
+					resetView();
+				}
+			};
+			getSupportFragmentManager().beginTransaction().add(R.id.map_frame, mMapViewFragment).commit();
+		}    
 	}
-    public static class MyAdapter extends FragmentPagerAdapter {
-        	
-    	private FragmentManager mFragmentManager;
-		public MyAdapter(FragmentManager fm) {
-            super(fm);
-            mFragmentManager = fm;
-        }
 
-        @Override
-        public int getCount() {
-        	return 2;
-        }
-        
-        @Override
-        public NewsFeedFragment getItem(int position) {
-        	if (position == 0) {
-        		mDiscussionFragment = NewsFeedFragment.newInstance(position);
-        		return mDiscussionFragment;
-        	} else if (position == 1) {
-        		mBulletinFragment = NewsFeedFragment.newInstance(position);
-        		return mBulletinFragment;
-        	}
-			return null;
-        }        
-        
-        public NewsFeedFragment getActiveFragment(ViewPager container, int position) {
-        	String name = makeFragmentName(container.getId(), position);
-        		return  (NewsFeedFragment) mFragmentManager.findFragmentByTag(name);
-        	}
-
-        	private static String makeFragmentName(int viewId, int index) {
-        	    return "android:switcher:" + viewId + ":" + index;
-        	}
-    }  	
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -312,7 +194,7 @@ public class MainActivity extends Activity implements AsyncResponse {
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
         // ActionBarDrawerToggle will take care of this.
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        if (mNavDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         // Handle action buttons
@@ -332,7 +214,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 	     	    }
         	} catch (Exception e) { }
         	
-        	startActivityForResult(intent, CREATE_CONTENT_ACTIVITY);
+        	startActivityForResult(intent, CREATE_CONTENT_ACTIVITY );
         	break;
         }
 
@@ -344,115 +226,94 @@ public class MainActivity extends Activity implements AsyncResponse {
     	
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            mNewDrawerPosition = position;
-            mDrawerList.setItemChecked(position, true);
+            mNavDrawerListener.newPos = position;
+            mNavDrawerList.setItemChecked(position, true);
             view.setSelected(true);
-            mDrawerLayout.closeDrawer(mDrawerList);
+            mNavDrawerListener.wasItemSelected = true;
+            mNavDrawerLayout.closeDrawer(mNavDrawerList);
         }
         
     }
     
     private class MainDrawerListener implements DrawerLayout.DrawerListener {
     	private int mDrawerState;
-//    	public MainDrawerListener() {
-//    		mDrawerState = DrawerLayout.STATE_IDLE;
-//    	}
+    	public boolean wasItemSelected;
+    	public int oldPos, newPos;
+    	public MainDrawerListener() {
+    		//initialize start position to home
+    		oldPos = 1;
+    	}
 		@Override
 		public void onDrawerClosed(View drawerView) {
-			mDrawerToggle.onDrawerClosed(drawerView);
-			if (mNewDrawerPosition != -1) {
-				selectItem(mNewDrawerPosition);
-			}
+			mNavDrawerToggle.onDrawerClosed(drawerView);
+        	if (wasItemSelected && (oldPos != newPos)) {
+        		//this case exists because we're choosing the profile to be added to back stack
+        		if (newPos != 0) {
+        			oldPos = newPos;
+        		}
+        		selectItem(newPos);
+        	}
+
 		}
 
 		@Override
 		public void onDrawerOpened(View drawerView) {
-			mDrawerToggle.onDrawerOpened(drawerView);
-			mNewDrawerPosition = -1;
+			mNavDrawerToggle.onDrawerOpened(drawerView);
+			wasItemSelected = false;
 		}
 
 		@Override
 		public void onDrawerSlide(View drawerView, float offset) {
-			mDrawerToggle.onDrawerSlide(drawerView, offset);
+			mNavDrawerToggle.onDrawerSlide(drawerView, offset);
 		}
 
 		@Override
 		public void onDrawerStateChanged(int newState) {
 			mDrawerState = newState;
-			mDrawerToggle.onDrawerStateChanged(mDrawerState);
+			mNavDrawerToggle.onDrawerStateChanged(mDrawerState);
 		}
 
     }
 
     private void selectItem(final int position) {  	
-    		
-	        FragmentManager fragmentManager = getFragmentManager(); 
-	        switch(position) {
-	    	
-	        // TODO:  Need to fix positions. What I click and what I go to are not the same..
+    		setTitle(mNavDrawerTitles[position]);
+	        FragmentManager fm = getSupportFragmentManager();
+	        switch(position) {    	
 	    	case 0:  	
-	            fragmentManager.beginTransaction().detach(mMapViewFragment)
+	    		//Profile fragment
+	            fm.beginTransaction().detach(mMapViewFragment)
 	            .replace(R.id.fragment_frame, new MyProfileFragment(), "My Profile")
 	            .addToBackStack("Profile").commit();
-	            mPager.setVisibility(View.GONE);
-	            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-	            mDrawerToggle.setDrawerIndicatorEnabled(false);
+	            mNavDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+	            mNavDrawerToggle.setDrawerIndicatorEnabled(false);
 	            break;
 	    	case 1:
-	    		if (mNewDrawerPosition != mOldDrawerPosition) {
-		            fragmentManager.beginTransaction().attach(mMapViewFragment)
-	    				.detach(f).commit();
-		            mPager.setVisibility(View.VISIBLE);
-		            getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		            mOldDrawerPosition = mNewDrawerPosition;
-	    		}
+	    		//Home fragment
+		            fm.beginTransaction()
+		            .replace(R.id.fragment_frame, new HomeFragment(), "Home").commit();
 	            break;
 	        case 2:
-	        	if (mNewDrawerPosition != mOldDrawerPosition) {
-		        	f = new CheckInFragment();
-		            fragmentManager.beginTransaction().detach(mMapViewFragment)
-		            .replace(R.id.fragment_frame, f, "Check In").commit(); 
-		            mPager.setVisibility(View.GONE);
-		            getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		            mOldDrawerPosition = mNewDrawerPosition;
-	        	}
-	            break;
-	            
-	        case 4:
-	        	//groups
-	        	if (mNewDrawerPosition != mOldDrawerPosition) {
-		        	f = new GroupFragment();
-		            fragmentManager.beginTransaction().detach(mMapViewFragment)
-		            .replace(R.id.fragment_frame, f, "Groups").commit();
-		            mPager.setVisibility(View.GONE);
-		            getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		            mOldDrawerPosition = mNewDrawerPosition;
-	        	}
-	            break;
-	        case 5:
-	        	//bookmarks
-	        	if (mNewDrawerPosition != mOldDrawerPosition) {
-		        	f = new Fragment();
-		            fragmentManager.beginTransaction().detach(mMapViewFragment)
-		            .replace(R.id.fragment_frame, f, "Bookmarks").commit();
-		            mPager.setVisibility(View.GONE);
-		            getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		            mOldDrawerPosition = mNewDrawerPosition;
-	        	}
+	        	//Headlines fragment
+		            fm.beginTransaction()
+		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Headlines").commit(); 
 	            break;
 	        case 3:
-	        	//settings we could make another activity/fragment/whatever
-	        	if (mNewDrawerPosition != mOldDrawerPosition) {
-		        	f = new Fragment();
-		            fragmentManager.beginTransaction().detach(mMapViewFragment)
-		            .replace(R.id.fragment_frame, f, "Settings").commit();
-		            mPager.setVisibility(View.GONE);
-		            getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		            mOldDrawerPosition = mNewDrawerPosition;
-	        	}
+	        	//Events fragment
+		            fm.beginTransaction()
+		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Events").commit();
+	            break;
+	        case 4:
+	        	//Groups fragment
+		            fm.beginTransaction()
+		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Groups").commit();
+	            break;
+	        case 5:
+	        	//Discussions fragment
+		            fm.beginTransaction()
+		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Discussions").commit();
 	        	break;
 	        case 6:
-	        	//dialog
+	        	//Settings fragment
 	            new DialogFragment() {
 	            	@Override
 	            	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -512,14 +373,14 @@ public class MainActivity extends Activity implements AsyncResponse {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        mNavDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        mNavDrawerToggle.onConfigurationChanged(newConfig);
     }
 
 
@@ -534,6 +395,7 @@ public class MainActivity extends Activity implements AsyncResponse {
         }
     }
 
+    //TODO: clean up return code, especially since bulletins don't exist anymore
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
     	if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
@@ -549,7 +411,8 @@ public class MainActivity extends Activity implements AsyncResponse {
         	if(intent.hasExtra("bulletin")) {
         		Bulletin bulletin = (Bulletin) intent.getSerializableExtra("bulletin");
         		int groupSelected = intent.getIntExtra("groupSelected", 0);
-        		mBulletinFragment.arrayListContent.add(0, bulletin);
+        		//TODO: add new content locally
+        		//mBulletinFragment.arrayListContent.add(0, bulletin);
         		if(bulletin.hasLocation()) {
         			mMapViewFragment.addContent(bulletin, getActionBar().getSelectedTab().getPosition() == 1);
         		}
@@ -560,11 +423,12 @@ public class MainActivity extends Activity implements AsyncResponse {
 						bulletin.getTitle(), bulletin.getText(), 
 						Integer.toString(groupSelected),
 						bulletin.getLatitude(), bulletin.getLongitude());
-				mBulletinFragment.getListAdapter().notifyDataSetChanged();
+				//mBulletinFragment.getListAdapter().notifyDataSetChanged();
         	} else if (intent.hasExtra("discussion")) {
         		Discussion discussion = (Discussion) intent.getSerializableExtra("discussion");
         		int groupSelected = intent.getIntExtra("groupSelected", 0);
-        		mDiscussionFragment.arrayListContent.add(0, discussion);
+        		//TODO: add new content locally
+        		//mDiscussionFragment.arrayListContent.add(0, discussion);
         		if(discussion.hasLocation()) {
         			mMapViewFragment.addContent(discussion, getActionBar().getSelectedTab().getPosition() == 0);
         		}
@@ -575,7 +439,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 						discussion.getTitle(), discussion.getText(), 
 						Integer.toString(groupSelected), 
 						discussion.getLatitude(), discussion.getLongitude());
-				mDiscussionFragment.getListAdapter().notifyDataSetChanged();
+				//mDiscussionFragment.getListAdapter().notifyDataSetChanged();
         	} else if (intent.hasExtra("group")) {
         		Group group = (Group) intent.getSerializableExtra("group");
 				JSONQuery jquery = new JSONQuery(this);
@@ -638,6 +502,7 @@ public class MainActivity extends Activity implements AsyncResponse {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+
 	}
     
     @Override
@@ -657,19 +522,16 @@ public class MainActivity extends Activity implements AsyncResponse {
 	
 	@Override
 	public void onBackPressed() {
-		FragmentManager fm = getFragmentManager();
+		FragmentManager fm = getSupportFragmentManager();
 		if (fm.getBackStackEntryCount() != 0) {
 			getDrawerToggle().setDrawerIndicatorEnabled(true);
-			FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount()-1);
+			FragmentManager.BackStackEntry backEntry = fm.getBackStackEntryAt(fm.getBackStackEntryCount()-1);
 			if (backEntry.getName() == "Map") {
 				mMapViewFragment.zoomOutMap();
-				mPager.setPaging(true);
 			}
 			else if (backEntry.getName() == "Profile") {
-    			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-    			mPager.setVisibility(View.VISIBLE);
-    			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-
+    			mNavDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    			setTitle(mNavDrawerTitles[mNavDrawerListener.oldPos]);
 			}
 			super.onBackPressed();
 		}
@@ -678,15 +540,16 @@ public class MainActivity extends Activity implements AsyncResponse {
 	}
 	
 	public ActionBarDrawerToggle getDrawerToggle() {
-		return this.mDrawerToggle;
+		return this.mNavDrawerToggle;
 	}
 
 	public DrawerLayout getDrawerLayout() {
-		return mDrawerLayout;
+		return mNavDrawerLayout;
 	}
 	
+	//TODO: grab markers based on content being viewed
 	public void updateMapMarkers() {
-		mMapViewFragment.updateMarkers(getActionBar().getSelectedTab().getPosition());
+		//mMapViewFragment.updateMarkers(getActionBar().getSelectedTab().getPosition());
 	}
 
     @Override

@@ -8,6 +8,7 @@ import edu.uark.spARK.R.id;
 import edu.uark.spARK.R.layout;
 import edu.uark.spARK.R.string;
 import edu.uark.spARK.activity.MainActivity;
+import edu.uark.spARK.fragment.MapViewFragment;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -325,14 +326,16 @@ public class PullToRefreshListView extends ListView {
                             setState(State.REFRESHING);
                             bounceBackHeader();
                             try {
-                            	MainActivity.mMapViewFragment.resetView();
+                            	//MainActivity.mMapViewFragment.resetView();
+                            	((MapViewFragment) ((MainActivity) getContext()).getSupportFragmentManager().findFragmentById(R.id.map_frame)).resetView();
                             } catch (Exception e) { }
                             break;
 
                         case PULL_TO_REFRESH:
                             resetHeader();
                             try {
-                            	MainActivity.mMapViewFragment.resetView();
+                            	//MainActivity.mMapViewFragment.resetView();
+                            	((MapViewFragment) ((MainActivity) getContext()).getSupportFragmentManager().findFragmentById(R.id.map_frame)).resetView();
                             } catch (Exception e) { }
                             break;
                     };
@@ -353,7 +356,8 @@ public class PullToRefreshListView extends ListView {
                     if(newHeaderPadding != headerPadding && state != State.REFRESHING){
                         setHeaderPadding(newHeaderPadding);
                         try {
-                        	MainActivity.mMapViewFragment.setMapPadding(newHeaderPadding + header.getHeight());
+                        	//MainActivity.mMapViewFragment.setMapPadding(newHeaderPadding + header.getHeight());
+                        	//((MapViewFragment) ((MainActivity) getContext()).getSupportFragmentManager().findFragmentById(R.id.map_frame)).setMapPadding(newHeaderPadding + header.getHeight());
                         } catch (Exception e) { }
                         
                         if(state == State.PULL_TO_REFRESH && headerPadding > 0){
@@ -409,7 +413,8 @@ public class PullToRefreshListView extends ListView {
         }else{
             bounceBackHeader();
             try {
-            	MainActivity.mMapViewFragment.bounceBackMap();
+            	//MainActivity.mMapViewFragment.bounceBackMap();
+            	((MapViewFragment) ((MainActivity) getContext()).getSupportFragmentManager().findFragmentById(R.id.map_frame)).bounceBackMap();
             } catch (Exception e) { }
         }
     }

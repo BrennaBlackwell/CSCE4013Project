@@ -35,7 +35,7 @@ public class CommentArrayAdapter extends ArrayAdapter {
 		// TODO Auto-generated method stub
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = mInflater.inflate(R.layout.comment_list_item, null);
+			convertView = mInflater.inflate(R.layout.content_list_item_comment, null);
 			
 			holder.commentTextView = (TextView) convertView.findViewById(R.id.commentTextView);
 			holder.usernameTextView = (TextView) convertView.findViewById(R.id.usernameTextView);

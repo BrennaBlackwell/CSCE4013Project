@@ -33,7 +33,7 @@
             android:divider="@drawable/divider"
             android:dividerHeight="2px"
             android:drawSelectorOnTop="true"
-            tools:listitem="@layout/comment_list_item" >
+            tools:listitem="@layout/content_list_item_comment" >
 
         </ListView>
 

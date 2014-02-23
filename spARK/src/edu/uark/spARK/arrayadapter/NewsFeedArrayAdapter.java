@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +33,7 @@ import edu.uark.spARK.entity.*;
 import edu.uark.spARK.fragment.MyProfileFragment;
 import edu.uark.spARK.fragment.NewsFeedFragment;
 import edu.uark.spARK.fragment.ProfileFragment;
+import edu.uark.spARK.fragment.MapViewFragment;
 
 public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements AsyncResponse{
 	
@@ -57,12 +58,12 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		if (convertView == null) {
 			holder = new ViewHolder();
 			if (c instanceof Discussion) {
-				convertView = mInflater.inflate(R.layout.discussion_list_item, null);
+				convertView = mInflater.inflate(R.layout.content_list_item_discussion, null);
 				holder.commentTextView = (TextView) convertView.findViewById(R.id.commentTextView);
 				holder.commentLinearLayout = (LinearLayout) holder.commentTextView.getParent();
 			}
 			if (c instanceof Bulletin) {
-				convertView = mInflater.inflate(R.layout.bulletin_list_item, null);
+				convertView = mInflater.inflate(R.layout.content_list_item_bulletin, null);
 			}
 			
 			holder.mainFL = (FrameLayout) convertView.findViewById(R.id.list_discussionMainFrame);
@@ -93,8 +94,8 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		if (c.getLatitude().compareTo("") != 0 && c.getLatitude().compareTo("") != 0) {
 			holder.locationLinearLayout.setVisibility(View.VISIBLE);
 			//holder.locationImageButton
-			if (MainActivity.mMapViewFragment.getLocationClient().isConnected()) {
-				Location cur = MainActivity.mMapViewFragment.getLocationClient().getLastLocation();
+			if (((MapViewFragment) fragment.getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).getLocationClient().isConnected()) {
+				Location cur = ((MapViewFragment) fragment.getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).getLocationClient().getLastLocation();
 				float[] results = new float[3];
 				Location.distanceBetween(cur.getLatitude(), cur.getLongitude(), Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()), results);
 				//holder.locationTextView.setText(c.getLatitude() + ", " + c.getLongitude());
@@ -107,7 +108,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				@Override
 				public void onClick(View v) {
 					fragment.hideFragment();
-					MainActivity.mMapViewFragment.moveCameraToLatLng(new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude())));
+					((MapViewFragment) fragment.getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).moveCameraToLatLng(new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude())));
 				}
 				
 			});
@@ -117,7 +118,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				@Override
 				public void onClick(View v) {
 					fragment.hideFragment();
-					MainActivity.mMapViewFragment.moveCameraToLatLng(new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude())));
+					((MapViewFragment) fragment.getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).moveCameraToLatLng(new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude())));
 				}
 				
 			});
@@ -333,9 +334,8 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 	            
 				//fragment.getFragmentManager().beginTransaction().add(fragment.getView().getId(), profileFragment).commit();
 				((MainActivity) fragment.getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
-				fragment.getFragmentManager().beginTransaction().detach(MainActivity.mMapViewFragment)
-		        .add(R.id.fragment_frame, profileFragment).addToBackStack("Profile").commit();
-		        MainActivity.mPager.setVisibility(View.GONE);		           
+				fragment.getParentFragment().getFragmentManager().beginTransaction().detach(((MapViewFragment) fragment.getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)))
+		        .replace(R.id.fragment_frame, profileFragment, "Profile").addToBackStack("Profile").commit();
 			}			
 		});
 		

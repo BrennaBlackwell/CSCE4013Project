@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import com.google.android.gms.common.data.c;
+
 import android.app.ActionBar;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
@@ -48,7 +50,7 @@ public class GroupsArrayAdapter extends ArrayAdapter<Group> implements AsyncResp
 		final Group g = (Group) mGroups.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = mInflater.inflate(R.layout.group_list_item, null);
+			convertView = mInflater.inflate(R.layout.content_list_item_group, null);
 			
 			holder.mainFL = (FrameLayout) convertView.findViewById(R.id.list_group_main_frame);
 			holder.locationLinearLayout = (LinearLayout) convertView.findViewById(R.id.locationLinearLayout);
@@ -196,7 +198,6 @@ public class GroupsArrayAdapter extends ArrayAdapter<Group> implements AsyncResp
 				((MainActivity) fragment.getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
 				fragment.getFragmentManager().beginTransaction().add(R.id.fragment_frame, profileFragment)
 				.addToBackStack("Profile").commit();
-		        MainActivity.mPager.setVisibility(View.GONE);		           
 			}			
 		});
 		

@@ -9,21 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <!-- The main content view -->
-        <!-- Our current fragment goes within the frame layout -->
 
+        <!-- The map view -->
         <FrameLayout
             android:id="@+id/map_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </FrameLayout>
 
-        <edu.uark.spARK.view.SelectiveViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-        </edu.uark.spARK.view.SelectiveViewPager>
-
+        <!-- Our current fragment goes within the frame layout -->
         <FrameLayout
             android:id="@+id/fragment_frame"
             android:layout_width="match_parent"

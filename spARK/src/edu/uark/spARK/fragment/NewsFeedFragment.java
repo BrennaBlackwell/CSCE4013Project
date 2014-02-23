@@ -9,10 +9,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.Dialog;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -24,11 +27,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import edu.uark.spARK.PullToRefreshListView;
 import edu.uark.spARK.PullToRefreshListView.OnRefreshListener;
 import edu.uark.spARK.R;
@@ -54,6 +60,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 	private SelectiveViewPager mPager;
 	private NewsFeedArrayAdapter mAdapter; 
     private PullToRefreshListView mListView;
+    private RelativeLayout loadScreen;
     
     public ArrayList<Content> arrayListContent = new ArrayList<Content>();
     private JSONArray contents = null;
@@ -86,10 +93,10 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-	    mAdapter = new NewsFeedArrayAdapter(getActivity(), R.layout.discussion_list_item, arrayListContent, this);
+	    mAdapter = new NewsFeedArrayAdapter(getActivity(), R.layout.content_list_item_discussion, arrayListContent, this);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnRefreshListener(new OnRefreshListener() {
-
+		
 			@Override
 			public void onRefresh() {
 				loadContent();
@@ -98,8 +105,9 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 			}
 			
 		});
+		//TODO: move loadContent to onCreate() so it's not being called every time, still trying to create a proper loading screen that doesnt' happen
+		//every time onActivityCreated is called
         loadContent();
-        
         final SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(mListView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
                public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                    for (int position : reverseSortedPositions) {
@@ -170,6 +178,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 	
 	@Override
@@ -180,7 +189,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		
+	
 		View v = inflater.inflate(R.layout.list_feed, container, false);
 		
         mPager = (SelectiveViewPager) getActivity().findViewById(R.id.pager);
@@ -194,6 +203,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 				hideFragment();
 	        }
 	    });
+		loadScreen = (RelativeLayout) v.findViewById(R.id.load_screen);
 	    final float scale = v.getContext().getResources().getDisplayMetrics().density;
 	    int pixels = (int) (100 * scale + 0.5f);
 		return v;
@@ -237,15 +247,17 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 		}	
 		JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, contentType);
+		
 	}
 	
 	@Override
 	public void processFinish(JSONObject result) {
+    	loadScreen.animate().alpha(0).setDuration(500);
 		try {
 			int success = result.getInt(ServerUtil.TAG_SUCCESS);
 
 			if (success == 1) {
-				//MainActivity.mMapViewFragment.clearMarkers();
+				((MapViewFragment) getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).clearMarkers();
 				arrayListContent.clear();
 				// Get Array of discussions
 				contents = result.getJSONArray(ServerUtil.TAG_CONTENTS);
@@ -303,7 +315,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 						b.setTotalRating(totalRating);
 						b.setUserRating(userRating);
 						if (b.hasLocation()) {
-							MainActivity.mMapViewFragment.addContent(b, true);
+							((MapViewFragment) getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).addContent(b, true);
 						}
 						arrayListContent.add(b);
 					} else if (contentType.equals("Discussion")) {
@@ -335,7 +347,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 						d.setTotalRating(totalRating);
 						d.setUserRating(userRating);
 						if (d.hasLocation()) {
-							MainActivity.mMapViewFragment.addContent(d, true);
+							((MapViewFragment) getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).addContent(d, true);
 						}
 						arrayListContent.add(d);
 					}
@@ -345,7 +357,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		((MainActivity)getActivity()).updateMapMarkers();
+		((MainActivity)getParentFragment().getActivity()).updateMapMarkers();
 		mListView.onRefreshComplete();
 	}
 	
@@ -403,19 +415,14 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 	}
 	
 	public void hideFragment() {
-    	FragmentManager fm = getFragmentManager();
+    	FragmentManager fm = this.getParentFragment().getFragmentManager();
+    	ContentFragment curFragment = (ContentFragment) fm.findFragmentById(R.id.fragment_frame);
     	FragmentTransaction ft = fm.beginTransaction();
-    	
     	//animations are ordered (enter, exit, popEnter, popExit)
-    	ft.setCustomAnimations(R.animator.slide_up, R.animator.slide_down, 
-    			R.animator.slide_up, R.animator.slide_down)
-    			.hide(MainActivity.mDiscussionFragment)
-    			.hide(MainActivity.mBulletinFragment).addToBackStack("Map").commit();
-    	fm.executePendingTransactions();
-    	mPager.setPaging(false);
-    	MainActivity.mMapViewFragment.zoomInMap();
+    	ft.setCustomAnimations(R.anim.slide_up, R.anim.slide_down, 
+    			R.anim.slide_up, R.anim.slide_down)
+    			.hide(curFragment).addToBackStack("Map").commit();
+    	((MapViewFragment) getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).zoomInMap();
 
 	}
-	
-
 }
