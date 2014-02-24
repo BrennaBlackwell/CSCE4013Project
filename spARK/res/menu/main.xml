@@ -12,4 +12,10 @@
     	android:showAsAction="always"
     	android:title="New Post">
     </item>
+        <item 
+        android:id="@+id/notification"
+    	android:icon="@drawable/ic_menu_notification"
+    	android:showAsAction="ifRoom"
+    	android:title="Notifications">
+    </item>
 </menu>

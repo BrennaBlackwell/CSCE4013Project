@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <android.support.v4.widget.DrawerLayout
+   <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -36,6 +36,19 @@
             android:divider="@color/grey_bg"
             android:dividerHeight="1dp"
             android:listSelector="@drawable/list_selector" />
+         
+         <!-- The notification drawer -->
+         <ListView
+            android:id="@+id/right_drawer"
+            android:layout_width="260dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@color/white"
+            android:choiceMode="singleChoice"
+            android:divider="@color/grey_bg"
+            android:dividerHeight="1dp"
+            android:listSelector="@drawable/list_selector" />
+
 
     </android.support.v4.widget.DrawerLayout>
 
@@ -71,5 +84,23 @@
         android:background="@android:color/black"
         android:contentDescription="Popup Fade out"
         tools:ignore="HardcodedText" />
+
+<!--     <android.support.v4.widget.DrawerLayout -->
+<!--         android:id="@+id/DrawerLayout01" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" > -->
+        
+<!--                 The notification drawer -->
+<!--          <ListView -->
+<!--             android:id="@+id/right_drawer" -->
+<!--             android:layout_width="240dp" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:layout_gravity="end" -->
+<!--             android:background="@color/white" -->
+<!--             android:choiceMode="singleChoice" -->
+<!--             android:divider="@color/grey_bg" -->
+<!--             android:dividerHeight="1dp" -->
+<!--             android:listSelector="@drawable/list_selector" /> -->
+<!--     </android.support.v4.widget.DrawerLayout> -->
 
 </FrameLayout>

@@ -56,7 +56,7 @@ public class ContentFragment extends Fragment {
         mPager = (SelectiveViewPager) v.findViewById(R.id.pager);
         PagerTabStrip mPagerTabStrip = (PagerTabStrip) v.findViewById(R.id.pager_tab_strip);
         mPagerTabStrip.setDrawFullUnderline(true);
-        mPagerTabStrip.setDrawingCacheBackgroundColor(Color.TRANSPARENT);
+        mPagerTabStrip.setTabIndicatorColorResource(R.color.tabstrip);
         mAdapter = new MyAdapter(getChildFragmentManager());   
         mPager.setAdapter(mAdapter);
         mPager.setCurrentItem(1);

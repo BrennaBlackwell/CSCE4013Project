@@ -19,6 +19,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +30,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +41,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -70,6 +74,7 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
     private MainDrawerListener mNavDrawerListener;
     private NavListArrayAdapter mNavListArrayAdapter;
     private ListView mNavDrawerList;
+    private ListView mNotificationList;
     private ActionBarDrawerToggle mNavDrawerToggle;
     private CharSequence mTitle;
     private String[] mNavDrawerTitles;	//option titles
@@ -93,7 +98,11 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 		mNavDrawerTitles = getResources().getStringArray(R.array.nav_drawer_title_array);
 		mNavDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mNavDrawerList = (ListView) findViewById(R.id.left_drawer);
-
+		mNotificationList = (ListView) findViewById(R.id.right_drawer);
+		TextView tvTest = new TextView(this);
+		tvTest.setText("No new notifications");
+		tvTest.setTextColor(Color.BLACK);
+		mNotificationList.addHeaderView(tvTest);
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
 		// set a new custom arrayadapter
@@ -101,6 +110,7 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 		// set up the drawer's list view with items and click listener
 		mNavDrawerList.setAdapter(mNavListArrayAdapter);
 		mNavDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+		mNotificationList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[] {"Test", "Test 2"}));
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		ActionBar bar = getActionBar();
 		bar.setDisplayHomeAsUpEnabled(true);
@@ -116,22 +126,26 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 		R.string.drawer_close /* "close drawer" description for accessibility */
 		) {
 			public void onDrawerClosed(View view) {
-				// getActionBar().setTitle(mTitle);
 				invalidateOptionsMenu(); // creates call to
-											// onPrepareOptionsMenu()
+										// onPrepareOptionsMenu()
+				mNavDrawerToggle.syncState();
 			}
 
 			public void onDrawerOpened(View view) {
-				// getActionBar().setTitle(mDrawerTitle);
 				invalidateOptionsMenu(); // creates call to
-											// onPrepareOptionsMenu()
+				// onPrepareOptionsMenu()
+				mNavDrawerToggle.syncState();
 			}
 		};
+		
 		mNavDrawerListener = new MainDrawerListener();
 		mNavDrawerLayout.setDrawerListener(mNavDrawerListener);
+		
 		mNavDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-		getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, new HomeFragment()).commit();
+		//initialize content to home
+		selectItem(1);
+		
 		if (savedInstanceState == null) {
 			// TODO: Place the map initialization code somewhere after things have been loaded from the server, or just find a way to hide it until data appears
 			//this won't really be a problem now since you can't see the map behind the home screen
@@ -174,6 +188,10 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     	SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+    	searchView.setBackgroundResource(R.drawable.searchview_background);
+        int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
+        searchView.findViewById(searchPlateId).setBackgroundColor(Color.TRANSPARENT);
+    	searchView.setBaselineAligned(true);
     	searchView.setQueryHint("Search for discussions and bulletins...");
     	searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         //configure search info, add listeners
@@ -195,6 +213,8 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
         // The action bar home/up action should open or close the drawer.
         // ActionBarDrawerToggle will take care of this.
         if (mNavDrawerToggle.onOptionsItemSelected(item)) {
+        	if (mNavDrawerLayout.isDrawerOpen(mNotificationList))
+        		mNavDrawerLayout.closeDrawer(mNotificationList);
             return true;
         }
         // Handle action buttons
@@ -215,6 +235,15 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
         	} catch (Exception e) { }
         	
         	startActivityForResult(intent, CREATE_CONTENT_ACTIVITY );
+        	break;
+        case R.id.notification:
+        	if (mNavDrawerLayout.isDrawerOpen((mNotificationList)))
+        		mNavDrawerLayout.closeDrawer(mNotificationList);
+        	else {
+        		mNavDrawerLayout.openDrawer(mNotificationList);
+            	if (mNavDrawerLayout.isDrawerOpen(mNavDrawerList))
+            		mNavDrawerLayout.closeDrawer(mNavDrawerList);
+        	}
         	break;
         }
 
@@ -247,8 +276,9 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 		public void onDrawerClosed(View drawerView) {
 			mNavDrawerToggle.onDrawerClosed(drawerView);
         	if (wasItemSelected && (oldPos != newPos)) {
-        		//this case exists because we're choosing the profile to be added to back stack
-        		if (newPos != 0) {
+        		//case 0 exists because we're choosing the profile to be added to back stack
+        		//case 6 is the settings activity
+        		if (newPos != 0 && newPos != 6) {
         			oldPos = newPos;
         		}
         		selectItem(newPos);
@@ -276,7 +306,6 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
     }
 
     private void selectItem(final int position) {  	
-    		setTitle(mNavDrawerTitles[position]);
 	        FragmentManager fm = getSupportFragmentManager();
 	        switch(position) {    	
 	    	case 0:  	
@@ -286,59 +315,68 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 	            .addToBackStack("Profile").commit();
 	            mNavDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 	            mNavDrawerToggle.setDrawerIndicatorEnabled(false);
+	    		setTitle(mNavDrawerTitles[position]);
 	            break;
 	    	case 1:
 	    		//Home fragment
 		            fm.beginTransaction()
 		            .replace(R.id.fragment_frame, new HomeFragment(), "Home").commit();
+		    		setTitle(mNavDrawerTitles[position]);
 	            break;
 	        case 2:
 	        	//Headlines fragment
 		            fm.beginTransaction()
 		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Headlines").commit(); 
+		    		setTitle(mNavDrawerTitles[position]);
 	            break;
 	        case 3:
 	        	//Events fragment
 		            fm.beginTransaction()
 		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Events").commit();
+		    		setTitle(mNavDrawerTitles[position]);
 	            break;
 	        case 4:
 	        	//Groups fragment
 		            fm.beginTransaction()
 		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Groups").commit();
+		    		setTitle(mNavDrawerTitles[position]);
 	            break;
 	        case 5:
 	        	//Discussions fragment
 		            fm.beginTransaction()
 		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Discussions").commit();
+		    		setTitle(mNavDrawerTitles[position]);
 	        	break;
 	        case 6:
 	        	//Settings fragment
-	            new DialogFragment() {
-	            	@Override
-	            	public Dialog onCreateDialog(Bundle savedInstanceState) {
-						
-	            		return new CustomDialogBuilder(MainActivity.this)
-	                    .setIcon(R.drawable.ic_menu_about)
-	                    .setTitle("About spark")
-	                    .setTitleColor(getResources().getColor(R.color.red))
-	                    .setDividerColor(getResources().getColor(R.color.red))
-	                    .setMessage("Created by: \n\nAlex Adamec \nMatt McClelland \nJD Pack \nJaCarri Tolette")
-	                    .setPositiveButton("Send Feedback", new DialogInterface.OnClickListener() {
-	                       @Override
-	                       public void onClick(DialogInterface dialog, int id) {
-
-	                       }
-	                    })
-	                    .setNegativeButton("Help", new DialogInterface.OnClickListener() {
-	                       @Override
-	                       public void onClick(DialogInterface dialog, int id) {
-
-	                       }
-	                    })
-	                   .create();
-	            	}
-	            }.show(getFragmentManager(), "About");
+	        	//since we're using compatibility library, we have to use activity instead of fragment...grrr
+	        	Intent intent = new Intent(this, SettingsActivity.class);
+	        	startActivity(intent);
+//	            new DialogFragment() {
+//	            	@Override
+//	            	public Dialog onCreateDialog(Bundle savedInstanceState) {
+//						
+//	            		return new CustomDialogBuilder(MainActivity.this)
+//	                    .setIcon(R.drawable.ic_menu_about)
+//	                    .setTitle("About spark")
+//	                    .setTitleColor(getResources().getColor(R.color.red))
+//	                    .setDividerColor(getResources().getColor(R.color.red))
+//	                    .setMessage("Created by: \n\nAlex Adamec \nMatt McClelland \nJD Pack \nJaCarri Tolette")
+//	                    .setPositiveButton("Send Feedback", new DialogInterface.OnClickListener() {
+//	                       @Override
+//	                       public void onClick(DialogInterface dialog, int id) {
+//
+//	                       }
+//	                    })
+//	                    .setNegativeButton("Help", new DialogInterface.OnClickListener() {
+//	                       @Override
+//	                       public void onClick(DialogInterface dialog, int id) {
+//
+//	                       }
+//	                    })
+//	                   .create();
+//	            	}
+//	            }.show(getFragmentManager(), "About");
 	        	break;
 	        case 7:
 	            SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
- <selector xmlns:android="http://schemas.android.com/apk/res/android">
+ <selector xmlns:android="http://schemas.android.com/apk/res/android"
+	android:exitFadeDuration="@android:integer/config_mediumAnimTime">
+     
      <item android:state_pressed="true"
-           android:color="#000000" /> <!-- pressed -->
+           android:color="#AA808080" /> <!-- pressed -->
      <item android:state_focused="true"
-           android:color="#000000" /> <!-- focused -->
-     <item android:color="#808080" /> <!-- default -->
-      <item android:state_activated="true" android:color="@color/red"/>
+           android:color="#AA808080" /> <!-- focused -->
+           <item android:color="#FFFFFF" /> <!-- default -->
  </selector>

@@ -17,17 +17,22 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -97,10 +102,53 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(final Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.create_content, menu);
-		return true;
+    	final MenuItem createItem = menu.findItem(R.id.create);
+		final Button btnCreate = (Button) createItem.getActionView();
+    	btnCreate.setText("Create");
+    	btnCreate.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+    	btnCreate.setTextColor(Color.WHITE);
+    	btnCreate.setGravity(Gravity.CENTER);
+    	btnCreate.setAllCaps(true);
+    	btnCreate.setTypeface(btnCreate.getTypeface(), Typeface.BOLD);
+    	float scale = getResources().getDisplayMetrics().density;
+    	int dpAsPixels = (int) (10*scale + 0.5f);
+    	btnCreate.setPadding(dpAsPixels, 0, dpAsPixels, 0);
+    	btnCreate.setBackgroundResource(R.drawable.ab_selector);
+    	btnCreate.setShadowLayer(1, 1, 1, Color.BLACK);
+    	btnCreate.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				menu.performIdentifierAction(createItem.getItemId(), Menu.CATEGORY_CONTAINER);
+			}
+    		
+    	});
+    	
+    	return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+		case R.id.cancel:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			finish();
+			break;
+		case R.id.create:
+			Toast toast = Toast.makeText(getApplicationContext(), "MATT MAGIC HAPPENS HERE!", 2);
+			toast.show();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	/*
@@ -404,28 +452,6 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			return view;
 		}
 
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-		case R.id.cancel:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			finish();
-			break;
-		case R.id.accept:
-			Toast toast = Toast.makeText(getApplicationContext(), "MATT MAGIC HAPPENS HERE!", 2);
-			toast.show();
-			break;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	public class NewDiscussionFragment extends Fragment {

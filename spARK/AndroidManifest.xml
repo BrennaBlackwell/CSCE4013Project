@@ -98,6 +98,7 @@
 		</activity>
 		<activity android:name="edu.uark.spARK.activity.EditProfileActivity" >
         </activity>
+		<activity android:name="edu.uark.spARK.activity.SettingsActivity" android:parentActivityName="edu.uark.spARK.activity.MainActivity"></activity>
     </application>
 
 </manifest>
