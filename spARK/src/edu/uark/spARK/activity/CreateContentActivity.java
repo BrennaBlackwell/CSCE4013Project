@@ -3,6 +3,7 @@ package edu.uark.spARK.activity;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +25,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,6 +42,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -53,6 +56,7 @@ import edu.uark.spARK.entity.Discussion;
 import edu.uark.spARK.entity.Group;
 import edu.uark.spARK.entity.User;
 import edu.uark.spARK.fragment.DatePickerFragment;
+import edu.uark.spARK.fragment.NewContentFragment;
 import edu.uark.spARK.fragment.TimePickerFragment;
 import edu.uark.spARK.location.MyLocation;
 
@@ -60,7 +64,7 @@ import edu.uark.spARK.location.MyLocation;
 public class CreateContentActivity extends FragmentActivity implements OnNavigationListener {
 
 	private String[] options = new String[] { "BULLETIN", "DISCUSSION", "GROUP", "EVENT" };
-
+	private NewContentFragment curNewFragment;
 	// SectionsPagerAdapter mSectionsPagerAdapter;
 	// ViewPager mViewPager;
 
@@ -75,8 +79,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		// Specify a SpinnerAdapter to populate the dropdown list.
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(actionBar.getThemedContext(), android.R.layout.simple_spinner_item, android.R.id.text1, options);
-
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(actionBar.getThemedContext(), R.layout.simple_spinner_item, android.R.id.text1, options);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		// Set up the dropdown list navigation in the action bar.
@@ -133,18 +136,12 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-		case R.id.cancel:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
+			setResult(RESULT_CANCELED);
 			finish();
 			break;
 		case R.id.create:
 			Toast toast = Toast.makeText(getApplicationContext(), "MATT MAGIC HAPPENS HERE!", 2);
+			curNewFragment.create();
 			toast.show();
 			break;
 		}
@@ -171,25 +168,28 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 
 	@Override
 	public boolean onNavigationItemSelected(int position, long id) {
-		Fragment fragment = new Fragment();
 		if (position == 0) {
-			fragment = new NewBulletinFragment();
+			curNewFragment = new NewBulletinFragment();
 		} else if (position == 1) {
-			fragment = new NewDiscussionFragment();
+			curNewFragment = new NewDiscussionFragment();
 		} else if (position == 2) {
-			fragment = new NewGroupFragment();
+			curNewFragment = new NewGroupFragment();
 		} else if (position == 3) {
-			fragment = new NewEventFragment();
+			curNewFragment = new NewEventFragment();
 		}
-		getFragmentManager().beginTransaction().replace(R.id.create_content_frame, fragment).commit();
+		getFragmentManager().beginTransaction().replace(R.id.create_content_frame, curNewFragment).commit();
 		return false;
 	}
 
-	private final class NewEventFragment extends Fragment implements OnClickListener {
+	private final class NewEventFragment extends NewContentFragment implements OnClickListener {
 		private Button btnStartDate, btnEndDate, btnStartTime, btnEndTime, btnLocation;
 		private EditText editTextLocation;
 		String Location = null;
 
+		public void create() {
+			//creating events logic goes here
+		}
+		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View v = inflater.inflate(R.layout.fragment_new_event, container, false);
@@ -212,19 +212,6 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_spinner_item, list);
 			dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 			groups.setAdapter(dataAdapter);
-			groups.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-				@Override
-				public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-					// TODO Auto-generated method stub
-				}
-
-				@Override
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// TODO Auto-generated method stub
-				}
-
-			});
 
 			SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
 			btnStartDate.setText(sdf.format(new Date()));
@@ -290,7 +277,12 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					@Override
 					public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 						Button btnTime = (Button) v;
-						btnTime.setText(new SimpleDateFormat("h:mm a").format(new Date(0, 0, 0, hourOfDay, minute, 0)));
+				        Calendar c = Calendar.getInstance();
+				        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+				        c.set(Calendar.MINUTE, minute);
+				        Toast t = Toast.makeText(CreateContentActivity.this, DateFormat.format("h:mm a", c), 2);
+				        t.show();
+						btnTime.setText(DateFormat.format("h:mm a", c));
 					}
 				};
 				timeFragment.show(getFragmentManager(), "timePicker");
@@ -378,13 +370,14 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		}
 	}
 
-	public class NewBulletinFragment extends Fragment {
+	public class NewBulletinFragment extends NewContentFragment {
+		
+		private Spinner groups;
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = inflater.inflate(R.layout.fragment_new_bulletin, container, false);
-
-			final Spinner groups = (Spinner) view.findViewById(R.id.bulletin_group_selection);
+			groups = (Spinner) view.findViewById(R.id.bulletin_group_selection);
 			List<String> list = new ArrayList<String>();
 			String listItem = "Public";
 			list.add(listItem);
@@ -392,75 +385,47 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 				listItem = MainActivity.myGroups.get(i).getTitle();
 				list.add(listItem);
 			}
-
 			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, list);
 			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			groups.setAdapter(dataAdapter);
-			groups.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-				@Override
-				public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-					// TODO Auto-generated method stub
-				}
-
-				@Override
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// TODO Auto-generated method stub
-				}
-
-			});
-
-			final Intent intent = getIntent();
-			view.findViewById(R.id.new_bulletin_submit).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					String title = ((TextView) findViewById(R.id.new_bulletin_title)).getText().toString();
-					if (title == null || title.trim().isEmpty()) {
-						return; // do not add blank input to list
-					}
-
-					String desc = ((TextView) findViewById(R.id.new_bulletin_text)).getText().toString();
-					if (desc == null || desc.trim().isEmpty()) {
-						return; // do not add blank input to list
-					}
-					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
-					int position = groups.getSelectedItemPosition();
-
-					int itemSelected = 0;
-					if (position != 0) {
-						itemSelected = MainActivity.myGroups.get(position - 1).getId();
-					}
-
-					String lat = intent.getStringExtra("latitude");
-					String lng = intent.getStringExtra("longitude");
-
-					intent.putExtra("bulletin", new Bulletin(0, title, desc, user, lat, lng));
-					intent.putExtra("groupSelected", itemSelected);
-					setResult(RESULT_OK, intent);
-
-					finish();
-				}
-			});
-			view.findViewById(R.id.new_bulletin_cancel).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					setResult(RESULT_CANCELED);
-					finish();
-				}
-			});
-
 			return view;
 		}
+		
+		public void create() {
+			Intent intent = getIntent();
+			String title = ((TextView) findViewById(R.id.new_bulletin_title)).getText().toString();
+			if (title == null || title.trim().isEmpty()) {
+				return; // do not add blank input to list
+			}
 
+			String desc = ((TextView) findViewById(R.id.new_bulletin_text)).getText().toString();
+			if (desc == null || desc.trim().isEmpty()) {
+				return; // do not add blank input to list
+			}
+			User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
+			int position = groups.getSelectedItemPosition();
+
+			int itemSelected = 0;
+			if (position != 0) {
+				itemSelected = MainActivity.myGroups.get(position - 1).getId();
+			}
+
+			String lat = intent.getStringExtra("latitude");
+			String lng = intent.getStringExtra("longitude");
+			intent.putExtra("bulletin", new Bulletin(0, title, desc, user, lat, lng));
+			intent.putExtra("groupSelected", itemSelected);
+			setResult(RESULT_OK, intent);
+			finish();
+		}	
 	}
 
-	public class NewDiscussionFragment extends Fragment {
-
+	public class NewDiscussionFragment extends NewContentFragment {
+		private Spinner groups;
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = inflater.inflate(R.layout.fragment_new_discussion, container, false);
 
-			final Spinner groups = (Spinner) view.findViewById(R.id.discussion_group_selection);
+			groups = (Spinner) view.findViewById(R.id.discussion_group_selection);
 			List<String> list = new ArrayList<String>();
 			String listItem = "Public";
 
@@ -473,53 +438,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, list);
 			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			groups.setAdapter(dataAdapter);
-			groups.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-				@Override
-				public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// TODO Auto-generated method stub
-
-				}
-
-			});
-
-			final Intent intent = getIntent();
-			view.findViewById(R.id.new_discussion_submit).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					String title = ((TextView) findViewById(R.id.new_discussion_title)).getText().toString();
-					if (title == null || title.trim().isEmpty()) {
-						return; // do not add blank input to list
-					}
-
-					String desc = ((TextView) findViewById(R.id.new_discussion_description)).getText().toString();
-					if (desc == null || desc.trim().isEmpty()) {
-						return; // do not add blank input to list
-					}
-					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
-					int position = groups.getSelectedItemPosition();
-
-					int itemSelected = 0;
-					if (position != 0) {
-						itemSelected = MainActivity.myGroups.get(position - 1).getId();
-					}
-
-					String lat = intent.getStringExtra("latitude");
-					String lng = intent.getStringExtra("longitude");
-
-					intent.putExtra("discussion", new Discussion(0, title, desc, user, lat, lng));
-					intent.putExtra("groupSelected", itemSelected);
-					setResult(RESULT_OK, intent);
-
-					finish();
-				}
-			});
 			view.findViewById(R.id.new_discussion_cancel).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -530,51 +449,69 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 
 			return view;
 		}
+		
+		public void create() {
+			final Intent intent = getIntent();
+			String title = ((TextView) findViewById(R.id.new_discussion_title)).getText().toString();
+			if (title == null || title.trim().isEmpty()) {
+				return; // do not add blank input to list
+			}
+
+			String desc = ((TextView) findViewById(R.id.new_discussion_description)).getText().toString();
+			if (desc == null || desc.trim().isEmpty()) {
+				return; // do not add blank input to list
+			}
+			User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
+			int position = groups.getSelectedItemPosition();
+
+			int itemSelected = 0;
+			if (position != 0) {
+				itemSelected = MainActivity.myGroups.get(position - 1).getId();
+			}
+
+			String lat = intent.getStringExtra("latitude");
+			String lng = intent.getStringExtra("longitude");
+
+			intent.putExtra("discussion", new Discussion(0, title, desc, user, lat, lng));
+			intent.putExtra("groupSelected", itemSelected);
+			setResult(RESULT_OK, intent);
+			finish();
+		}
 	}
 
-	public class NewGroupFragment extends Fragment {
+	public class NewGroupFragment extends NewContentFragment {
+		private Spinner groups;
+		
+		public void create() {
+			final Intent intent = getIntent();
+			String title = ((TextView) findViewById(R.id.new_group_title)).getText().toString();
+			if (title == null || title.trim().isEmpty()) {
+				return; // do not add blank input to list
+			}
 
+			String desc = ((TextView) findViewById(R.id.new_group_description)).getText().toString();
+			if (desc == null || desc.trim().isEmpty()) {
+				return; // do not add blank input to list
+			}
+
+			RadioButton privacy = (RadioButton) findViewById(R.id.radio_open);
+			RadioButton visibility = (RadioButton) findViewById(R.id.radio_visible);
+
+			User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
+
+			String lat = intent.getStringExtra("latitude");
+			String lng = intent.getStringExtra("longitude");
+
+			Group g = new Group(0, title, desc, user, lat, lng, privacy.isChecked(), visibility.isChecked());
+			intent.putExtra("group", g);
+			setResult(RESULT_OK, intent);
+
+			finish();
+		}
+		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = inflater.inflate(R.layout.fragment_new_group, container, false);
-
-			final Intent intent = getIntent();
-			view.findViewById(R.id.new_group_submit).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					String title = ((TextView) findViewById(R.id.new_group_title)).getText().toString();
-					if (title == null || title.trim().isEmpty()) {
-						return; // do not add blank input to list
-					}
-
-					String desc = ((TextView) findViewById(R.id.new_group_description)).getText().toString();
-					if (desc == null || desc.trim().isEmpty()) {
-						return; // do not add blank input to list
-					}
-
-					RadioButton privacy = (RadioButton) findViewById(R.id.radio_open);
-					RadioButton visibility = (RadioButton) findViewById(R.id.radio_visible);
-
-					User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
-
-					String lat = intent.getStringExtra("latitude");
-					String lng = intent.getStringExtra("longitude");
-
-					Group g = new Group(0, title, desc, user, lat, lng, privacy.isChecked(), visibility.isChecked());
-					intent.putExtra("group", g);
-					setResult(RESULT_OK, intent);
-
-					finish();
-				}
-			});
-			view.findViewById(R.id.new_group_cancel).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					setResult(RESULT_CANCELED);
-					finish();
-				}
-			});
-
 			return view;
 		}
 

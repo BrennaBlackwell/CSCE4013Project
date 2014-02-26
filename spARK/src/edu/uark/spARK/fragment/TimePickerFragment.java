@@ -8,6 +8,7 @@ import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -136,18 +138,34 @@ public class TimePickerFragment extends DialogFragment implements
 	public class CustomTimePickerDialog extends TimePickerDialog {
 
 		private TimePicker mTimePicker;
+		private OnTimeSetListener mCallback;
 
 		public CustomTimePickerDialog(Context context,
 				OnTimeSetListener callBack, int hourOfDay, int minute,
 				boolean is24HourView) {
 			super(context, callBack, hourOfDay, minute, is24HourView);
-			mTimePicker = new TimePicker(getActivity());
+			mCallback = callBack;
+			mTimePicker = new TimePicker(context);
 			setView(mTimePicker);
+			mTimePicker.setOnTimeChangedListener(this);
 		}
 
 		public TimePicker getTimePicker() {
 			return mTimePicker;
 		}
-
+		
+	    public void updateTime(int hourOfDay, int minutOfHour) {
+	        mTimePicker.setCurrentHour(hourOfDay);
+	        mTimePicker.setCurrentMinute(minutOfHour);
+	    }
+	    
+		@Override
+	    public void onClick(DialogInterface dialog, int which) {
+	        if (mCallback != null) {
+	            mTimePicker.clearFocus();
+	            mCallback.onTimeSet(mTimePicker, mTimePicker.getCurrentHour(), 
+	                    mTimePicker.getCurrentMinute());
+	        }
+	    }
 	}
 }

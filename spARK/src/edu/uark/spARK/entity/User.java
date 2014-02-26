@@ -8,7 +8,7 @@ public class User extends Entity {
 	private int points;
 	private String fullname = "";
 	private String desc = "";
-	private Bitmap profilePicture;
+	private transient Bitmap profilePicture;
 	
 	public User(int id, String name, String rank) {
 		super(id, name, rank);

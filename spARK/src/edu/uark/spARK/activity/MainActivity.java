@@ -468,7 +468,7 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
         		//TODO: add new content locally
         		//mDiscussionFragment.arrayListContent.add(0, discussion);
         		if(discussion.hasLocation()) {
-        			mMapViewFragment.addContent(discussion, getActionBar().getSelectedTab().getPosition() == 0);
+        			//mMapViewFragment.addContent(discussion, getActionBar().getSelectedTab().getPosition() == 0);
         		}
         		
         		JSONQuery jquery = new JSONQuery(this);
@@ -482,7 +482,7 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
         		Group group = (Group) intent.getSerializableExtra("group");
 				JSONQuery jquery = new JSONQuery(this);
 				if(group.hasLocation()) {
-					mMapViewFragment.addContent(group, false);
+					//mMapViewFragment.addContent(group, false);
 				}
 				
 				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Group", 
