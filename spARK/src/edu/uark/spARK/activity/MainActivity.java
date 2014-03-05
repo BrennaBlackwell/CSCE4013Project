@@ -515,7 +515,7 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 				} else {
 					myProfilePicture = BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.drawer_profile);
 				}
-				
+				mNavListArrayAdapter.notifyDataSetChanged();
 				for (int i = 0; i < MyContents.length(); i++) {
 					JSONObject content = MyContents.getJSONObject(i);
 
