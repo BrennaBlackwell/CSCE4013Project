@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -81,15 +82,15 @@ import edu.uark.spARK.fragment.MyProfileFragment;
 
 public class MainActivity extends FragmentActivity implements AsyncResponse {
 	//auth2.0 authentication variables
-//	private static final String APPLICATION_NAME = "csce.uark.edu-spark/1.0";
+	private static final String APPLICATION_NAME = "csce.uark.edu-spark/1.0";
 //	private static FileDataStoreFactory dataStoreFactory;
-//	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 //	private static final String AUTH_TOKEN_TYPE = "oauth2:https://www.googleapis.com/auth/prediction";
-//	private static HttpTransport httpTransport;
-//	private static Prediction client;
+	private static HttpTransport httpTransport;
+	private static Prediction client;
 //	GoogleCredential credential = new GoogleCredential();
 //	static final String PREF_AUTH_TOKEN = "authToken";
-//	static final String PREF_ACCOUNT_NAME = "accountName";
+	static final String PREF_ACCOUNT_NAME = "accountName";
 //	String accountName;
 //	SharedPreferences settings;
 
@@ -138,16 +139,21 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//initialize account
-//	    Set<String> scopes = new HashSet<String>();
-//	    scopes.add(PredictionScopes.DEVSTORAGE_FULL_CONTROL);
-//	    scopes.add(PredictionScopes.DEVSTORAGE_READ_ONLY);
-//	    scopes.add(PredictionScopes.DEVSTORAGE_READ_WRITE);
-//	    scopes.add(PredictionScopes.PREDICTION);
+	    Set<String> scopes = new HashSet<String>();
+	    scopes.add(PredictionScopes.DEVSTORAGE_FULL_CONTROL);
+	    scopes.add(PredictionScopes.DEVSTORAGE_READ_ONLY);
+	    scopes.add(PredictionScopes.DEVSTORAGE_READ_WRITE);
+	    scopes.add(PredictionScopes.PREDICTION);
+		GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(this, scopes);
+		SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
+		credential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
+		client = new com.google.api.services.prediction.Prediction.Builder(httpTransport, JSON_FACTORY, null)
+			.setApplicationName(APPLICATION_NAME)
+			.build();
 //		//GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientId, clientSecret, scopes);
 ////		client.setApplicationName(APPLICATION_NAME);
 ////		client.setHttpRequestInitializer(credential);
 ////		client.set
-//		client = new com.google.api.services.prediction.Prediction.Builder(httpTransport, JSON_FACTORY, null)
 //		.setApplicationName(APPLICATION_NAME)
 //		.setHttpRequestInitializer(credential)
 //		.build();
