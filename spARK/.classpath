@@ -7,5 +7,18 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="libs/android-support-v13.jar"/>
 	<classpathentry kind="lib" path="libs/prettytime-3.2.1.Final.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/google-api-client-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/google-api-client-android-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/google-http-client-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/google-http-client-android-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/google-http-client-gson-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/google-http-client-jackson2-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/google-http-client-jdo-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/google-oauth-client-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/gson-2.1.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/jackson-core-2.1.3.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/jdo2-api-2.3-eb.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/libs/jsr305-1.3.9.jar"/>
+	<classpathentry kind="lib" path="libs/prediction/google-api-services-prediction-v1.6-rev28-1.17.0-rc.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

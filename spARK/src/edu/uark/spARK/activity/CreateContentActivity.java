@@ -50,6 +50,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import edu.uark.spARK.R;
+import edu.uark.spARK.data.PredictionSample;
 import edu.uark.spARK.dialog.CustomDialogBuilder;
 import edu.uark.spARK.entity.Bulletin;
 import edu.uark.spARK.entity.Discussion;

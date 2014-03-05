@@ -1,12 +1,30 @@
 package edu.uark.spARK.activity;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.prediction.Prediction;
+import com.google.api.services.prediction.PredictionScopes;
+
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
@@ -22,6 +40,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -30,6 +49,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -60,6 +80,19 @@ import edu.uark.spARK.fragment.MapViewFragment;
 import edu.uark.spARK.fragment.MyProfileFragment;
 
 public class MainActivity extends FragmentActivity implements AsyncResponse {
+	//auth2.0 authentication variables
+//	private static final String APPLICATION_NAME = "csce.uark.edu-spark/1.0";
+//	private static FileDataStoreFactory dataStoreFactory;
+//	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+//	private static final String AUTH_TOKEN_TYPE = "oauth2:https://www.googleapis.com/auth/prediction";
+//	private static HttpTransport httpTransport;
+//	private static Prediction client;
+//	GoogleCredential credential = new GoogleCredential();
+//	static final String PREF_AUTH_TOKEN = "authToken";
+//	static final String PREF_ACCOUNT_NAME = "accountName";
+//	String accountName;
+//	SharedPreferences settings;
+
 	
 	// TODO: Need to create a Current/myUser Class for these variables
 	public static int myUserID;
@@ -83,9 +116,70 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 	private final int CREATE_CONTENT_ACTIVITY = 3;   
 	private MapViewFragment mMapViewFragment;
     
+//	void setAuthToken(String authToken) {
+//		    SharedPreferences.Editor editor = settings.edit();
+//		    editor.putString(PREF_AUTH_TOKEN, authToken);
+//		    editor.commit();
+//		    credential.setAccessToken(authToken);
+//	 }
+//	
+//	  void setAccountName(String accountName) {
+//		    SharedPreferences.Editor editor = settings.edit();
+//		    editor.putString(PREF_ACCOUNT_NAME, accountName);
+//		    editor.commit();
+//		    this.accountName = accountName;
+//		  }
+//	
+//	void onAuthToken() {
+//
+//	}
+	  
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//initialize account
+//	    Set<String> scopes = new HashSet<String>();
+//	    scopes.add(PredictionScopes.DEVSTORAGE_FULL_CONTROL);
+//	    scopes.add(PredictionScopes.DEVSTORAGE_READ_ONLY);
+//	    scopes.add(PredictionScopes.DEVSTORAGE_READ_WRITE);
+//	    scopes.add(PredictionScopes.PREDICTION);
+//		//GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientId, clientSecret, scopes);
+////		client.setApplicationName(APPLICATION_NAME);
+////		client.setHttpRequestInitializer(credential);
+////		client.set
+//		client = new com.google.api.services.prediction.Prediction.Builder(httpTransport, JSON_FACTORY, null)
+//		.setApplicationName(APPLICATION_NAME)
+//		.setHttpRequestInitializer(credential)
+//		.build();
+//		
+//		AccountManager accountManager = AccountManager.get(this);
+//		accountManager.getAuthTokenByFeatures(GoogleAccountManager.ACCOUNT_TYPE, 
+//					AUTH_TOKEN_TYPE, 
+//					null, 
+//					MainActivity.this, 
+//					null, 
+//					null, 
+//					new AccountManagerCallback<Bundle>() {
+//
+//						@Override
+//						public void run(AccountManagerFuture<Bundle> future) {
+//							Bundle bundle;
+//							try {
+//								bundle = future.getResult();
+//								setAccountName(bundle.getString(AccountManager.KEY_ACCOUNT_NAME));
+//								setAuthToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+//								onAuthToken();
+//							} catch (OperationCanceledException e) {
+//								//user canceled
+//							} catch (AuthenticatorException e) {
+//								Log.e("OAUTH", e.getMessage(), e);
+//							} catch (IOException e) {
+//								Log.e("OAUTH", e.getMessage(), e);
+//							}
+//						}
+//			
+//		}, null);
+		
 		setContentView(R.layout.activity_main);
 
 		SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
@@ -515,7 +609,7 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 				} else {
 					myProfilePicture = BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.drawer_profile);
 				}
-				
+				mNavListArrayAdapter.notifyDataSetChanged();
 				for (int i = 0; i < MyContents.length(); i++) {
 					JSONObject content = MyContents.getJSONObject(i);
 
