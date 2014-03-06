@@ -1,8 +1,20 @@
 package edu.uark.spARK.activity;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -35,6 +47,17 @@ import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailed
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.plus.PlusClient;
 import com.google.android.gms.plus.PlusClient.OnAccessRevokedListener;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.prediction.Prediction;
+import com.google.api.services.prediction.PredictionScopes;
+import com.google.api.services.prediction.model.Input;
+import com.google.api.services.prediction.model.Input.InputInput;
 
 import edu.uark.spARK.R;
 import edu.uark.spARK.R.color;
@@ -47,18 +70,29 @@ import edu.uark.spARK.data.JSONQuery.AsyncResponse;
 import edu.uark.spARK.dialog.CustomDialogBuilder;
 
 public class LogInActivity extends Activity implements AsyncResponse,
-        ConnectionCallbacks, OnConnectionFailedListener, View.OnClickListener{
+  	ConnectionCallbacks, OnConnectionFailedListener, View.OnClickListener{
 
+	// Prediction API variables
+	private static final String APPLICATION_NAME = "csce.uark.edu-spark/1.0";
+	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+	private static final String AUTH_TOKEN_TYPE = "oauth2:https://www.googleapis.com/auth/prediction";
+	static final String PREF_AUTH_TOKEN = "authToken";
+	static final String PREF_ACCOUNT_NAME = "accountName";
+	private static final int REQUEST_AUTHENTICATE = 11;
+	private final HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+	static Prediction client;
+	GoogleCredential credential = new GoogleCredential();
+	String accountName;
+	SharedPreferences settings;
+	GoogleAccountManager accountManager;
+	
 
     private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
-
     private ProgressDialog mConnectionProgressDialog;
     private PlusClient mPlusClient;
     private ConnectionResult mConnectionResult;
-
 	private static String username;
 	private static String password;
-	
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 1000;
     private View mLoginView;
@@ -70,6 +104,17 @@ public class LogInActivity extends Activity implements AsyncResponse,
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		//initialize Google API account preferences
+		settings = getPreferences(Context.MODE_PRIVATE);
+//		settings.edit().remove(PREF_ACCOUNT_NAME).commit();
+//		settings.edit().remove(PREF_AUTH_TOKEN).commit();
+		accountName = settings.getString(PREF_ACCOUNT_NAME, null);
+	    //Logger.getLogger("com.google.api.client").setLevel(Level.OFF);
+	    accountManager = new GoogleAccountManager(this);
+//	    gotAccount(savedInstanceState);
+        
+        
+        
         mPlusClient = new PlusClient.Builder(this, this, this)
                 .setActions("http://schemas.google.com/AddActivity", "http://schemas.google.com/BuyActivity")
                 .build();
@@ -235,6 +280,13 @@ public class LogInActivity extends Activity implements AsyncResponse,
                }
            }).create().show();
         }
+        else if (requestCode == REQUEST_AUTHENTICATE && resultCode == Activity.RESULT_OK) {
+	        if (resultCode == RESULT_OK) {
+	            gotAccount(data.getExtras());
+	          } else {
+	            chooseAccount();
+	          }
+		} 
 
         if (requestCode == REQUEST_CODE_RESOLVE_ERR && resultCode == RESULT_OK) {
             mConnectionResult = null;
@@ -252,14 +304,14 @@ public class LogInActivity extends Activity implements AsyncResponse,
 			if (success == 1) {
 
                 SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                
+                SharedPreferences.Editor editor = preferences.edit();                
                 editor.putString("currentUsername", username);
                 editor.putString("currentPassword", password);
                 editor.putBoolean("autoLogin", true);
                 editor.apply();
 				
 				Intent MainIntent = new Intent(this, MainActivity.class);
+				//gotAccount(this.getIntent().getExtras());
 				startActivity(MainIntent);
                 finish();
             } else {
@@ -350,5 +402,124 @@ public class LogInActivity extends Activity implements AsyncResponse,
 	            return;
 	        }
 	    }
+	}
+	
+	void setAuthToken(String authToken) {
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(PREF_AUTH_TOKEN, authToken);
+		editor.commit();
+		credential.setAccessToken(authToken);
+	}
+
+	void setAccountName(String accountName) {
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(PREF_ACCOUNT_NAME, accountName);
+		editor.commit();
+		this.accountName = accountName;
+	}
+
+	void onAuthToken() {
+		try {
+			Set<String> scopes = new HashSet<String>();
+			scopes.add(PredictionScopes.DEVSTORAGE_FULL_CONTROL);
+			scopes.add(PredictionScopes.DEVSTORAGE_READ_ONLY);
+			scopes.add(PredictionScopes.DEVSTORAGE_READ_WRITE);
+			scopes.add(PredictionScopes.PREDICTION);
+			GoogleAccountCredential accountCredential = GoogleAccountCredential.usingOAuth2(this, scopes);
+			accountCredential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
+			client = new com.google.api.services.prediction.Prediction.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
+			// test
+			final Input input = new Input();
+			InputInput inputInput = new InputInput();
+			List<Object> params = new ArrayList<Object>();
+			params.add("Como se llama?");
+			inputInput.setCsvInstance(params);
+			input.setInput(inputInput);
+			// Thread t = new Thread(new Runnable() {
+			// @Override
+			// public void run() {
+			// try {
+			// Output output = client.hostedmodels().predict("414649711441", "sample.languageid", input).execute();
+			// System.out.println(output.toPrettyString());
+			// } catch (IOException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			// }
+			// });
+			// t.start();
+
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
+
+	private void chooseAccount() {
+		accountManager.getAccountManager().getAuthTokenByFeatures(GoogleAccountManager.ACCOUNT_TYPE, AUTH_TOKEN_TYPE, null, LogInActivity.this, null, null, new AccountManagerCallback<Bundle>() {
+
+			public void run(AccountManagerFuture<Bundle> future) {
+				Bundle bundle;
+				try {
+					bundle = future.getResult();
+					setAccountName(bundle.getString(AccountManager.KEY_ACCOUNT_NAME));
+					setAuthToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+					onAuthToken();
+				} catch (OperationCanceledException e) {
+					// user canceled
+				} catch (AuthenticatorException e) {
+					Log.e("Oauth", e.getMessage(), e);
+				} catch (IOException e) {
+					Log.e("Oauth", e.getMessage(), e);
+				}
+			}
+		}, null);
+		//TODO: make fancy layout like our app
+		// CustomDialogBuilder builder = new CustomDialogBuilder(this);
+		// builder.setTitle("Choose an Account");
+		// final Account[] accounts = accountManager.getAccountManager().getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+		// final int size = accountManager.getAccounts().length;
+		// String[] names = new String[size];
+		// for (int i = 0; i < size; i++)
+		// names[i] = accounts[i].name;
+		// builder.setItems(names, new DialogInterface.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(DialogInterface dialog, int which) {
+		// setAccountName(accounts[which].name);
+		// //setAccountName(bundle.getString(AccountManager.KEY_ACCOUNT_NAME));
+		// //setAuthToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+		// onAuthToken();
+		// }
+		// }).show();
+	}
+
+	void gotAccount(Bundle b) {
+		Account account = accountManager.getAccountByName(accountName);
+		if (account == null) {
+			chooseAccount();
+			return;
+		}
+		if (credential.getAccessToken() != null) {
+			onAuthToken();
+			return;
+		}
+		accountManager.getAccountManager().getAuthToken(account, AUTH_TOKEN_TYPE, b, true, new AccountManagerCallback<Bundle>() {
+			@Override
+			public void run(AccountManagerFuture<Bundle> future) {
+				try {
+					Bundle bundle = future.getResult();
+					if (bundle.containsKey(AccountManager.KEY_INTENT)) {
+						Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
+						intent.setFlags(intent.getFlags() & ~Intent.FLAG_ACTIVITY_NEW_TASK);
+						startActivityForResult(intent, REQUEST_AUTHENTICATE);
+					} else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
+						setAuthToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+						onAuthToken();
+					}
+				} catch (Exception e) {
+					Log.e("Oauth", e.getMessage(), e);
+				}
+			}
+		}, null);
 	}
 }

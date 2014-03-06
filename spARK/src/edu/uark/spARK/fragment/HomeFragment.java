@@ -34,6 +34,10 @@ public class HomeFragment extends Fragment implements AsyncResponse {
 	ArrayList<String> groupItem = new ArrayList<String>();
 	ArrayList<Object> childItem = new ArrayList<Object>();
 	
+    public HomeFragment() {
+        // Empty constructor required for fragment subclasses
+    }  
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);

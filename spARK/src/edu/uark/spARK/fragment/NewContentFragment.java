@@ -6,7 +6,7 @@ import android.view.View;
 public class NewContentFragment extends Fragment {
 	
 	public NewContentFragment() {
-		
+		super();
 	}
 	
 	public void create() {

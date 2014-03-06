@@ -38,6 +38,10 @@ public class ContentFragment extends Fragment {
         return f;
     }
     
+    public ContentFragment() {
+        // Empty constructor required for fragment subclasses
+    }  
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
