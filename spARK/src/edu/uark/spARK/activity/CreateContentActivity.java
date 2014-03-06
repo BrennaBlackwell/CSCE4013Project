@@ -284,12 +284,12 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 							protected void onPostExecute(Output result) {
 								try {
 									Log.d("PREDICTION", result.toPrettyString());
+									textViewTopic.setText(result.getOutputLabel());
 								} catch (IOException e) {
 									e.printStackTrace();
 								} catch (NullPointerException e) {
 									e.printStackTrace();
 								}
-								textViewTopic.setText(result.getOutputLabel());
 							}
 						};
 						predict.execute();
