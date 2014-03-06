@@ -5,12 +5,27 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.prediction.Prediction;
+import com.google.api.services.prediction.PredictionScopes;
+import com.google.api.services.prediction.model.Input;
+import com.google.api.services.prediction.model.Input.InputInput;
+import com.google.api.services.prediction.model.Output;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -18,23 +33,33 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -50,7 +75,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import edu.uark.spARK.R;
-import edu.uark.spARK.data.PredictionSample;
 import edu.uark.spARK.dialog.CustomDialogBuilder;
 import edu.uark.spARK.entity.Bulletin;
 import edu.uark.spARK.entity.Discussion;
@@ -63,7 +87,13 @@ import edu.uark.spARK.location.MyLocation;
 
 @SuppressLint("ValidFragment")
 public class CreateContentActivity extends FragmentActivity implements OnNavigationListener {
+	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+	private final HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+	GoogleCredential credential = new GoogleCredential();
+	private static Prediction client;
 
+	
+	
 	private String[] options = new String[] { "BULLETIN", "DISCUSSION", "GROUP", "EVENT" };
 	private NewContentFragment curNewFragment;
 	// SectionsPagerAdapter mSectionsPagerAdapter;
@@ -184,23 +214,92 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 
 	private final class NewEventFragment extends NewContentFragment implements OnClickListener {
 		private Button btnStartDate, btnEndDate, btnStartTime, btnEndTime, btnLocation;
-		private EditText editTextLocation;
+		private EditText editTextLocation, editTextDescription;
+		private TextView textViewTopic;
 		String Location = null;
-
 		public void create() {
-			//creating events logic goes here
+			
 		}
 		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View v = inflater.inflate(R.layout.fragment_new_event, container, false);
+			v.setOnTouchListener(new OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+				    InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+				    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+					return false;
+				}
+				
+			});
 			btnStartDate = (Button) v.findViewById(R.id.new_event_date_start);
 			btnEndDate = (Button) v.findViewById(R.id.new_event_date_end);
 			btnStartTime = (Button) v.findViewById(R.id.new_event_time_start);
 			btnEndTime = (Button) v.findViewById(R.id.new_event_time_end);
 			btnLocation = (Button) v.findViewById(R.id.new_event_location_btn);
 			editTextLocation = (EditText) v.findViewById(R.id.new_event_location);
+			editTextDescription = (EditText) v.findViewById(R.id.new_event_description);
+			textViewTopic = (TextView) v.findViewById(R.id.topicTextView);
+			editTextDescription.setOnFocusChangeListener(new OnFocusChangeListener() {
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					PredictionTask predict = null;
+					if (!hasFocus) {
+						predict = new PredictionTask() {
+							@Override
+							protected void onPreExecute() {
+								textViewTopic.setText(null);
+							}
 
+							@Override
+							protected Output doInBackground(Void... param) {
+								Set<String> scopes = new HashSet<String>();
+								scopes.add(PredictionScopes.DEVSTORAGE_FULL_CONTROL);
+								scopes.add(PredictionScopes.DEVSTORAGE_READ_ONLY);
+								scopes.add(PredictionScopes.DEVSTORAGE_READ_WRITE);
+								scopes.add(PredictionScopes.PREDICTION);
+								GoogleAccountCredential accountCredential = GoogleAccountCredential.usingOAuth2(CreateContentActivity.this, scopes);
+								SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+								accountCredential.setSelectedAccountName(preferences.getString(MainActivity.PREF_ACCOUNT_NAME, null));
+								client = new com.google.api.services.prediction.Prediction.Builder(httpTransport, JSON_FACTORY, MainActivity.credential).setApplicationName(
+										MainActivity.APPLICATION_NAME).build();
+								// test
+								final Input input = new Input();
+								InputInput inputInput = new InputInput();
+								List<Object> params = new ArrayList<Object>();
+								params.add(editTextDescription.getText().toString().trim());
+								inputInput.setCsvInstance(params);
+								input.setInput(inputInput);
+								Output output = null;
+								try {
+									output = client.hostedmodels().predict("414649711441", "sample.languageid", input).execute();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								return output;
+							}
+
+							@Override
+							protected void onPostExecute(Output result) {
+								try {
+									Log.d("PREDICTION", result.toPrettyString());
+								} catch (IOException e) {
+									e.printStackTrace();
+								} catch (NullPointerException e) {
+									e.printStackTrace();
+								}
+								textViewTopic.setText(result.getOutputLabel());
+							}
+						};
+						predict.execute();
+					}
+				}
+				
+			});
+			
+			
+			
 			final Spinner groups = (Spinner) v.findViewById(R.id.bulletin_group_selection);
 			List<String> list = new ArrayList<String>();
 			String listItem = "Public";
@@ -516,5 +615,21 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			return view;
 		}
 
+	}
+	
+	public class PredictionTask extends AsyncTask<Void, Void, Output> {
+
+		public PredictionTask() {
+		}
+		
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Output doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			return null;
+		}		
 	}
 }
