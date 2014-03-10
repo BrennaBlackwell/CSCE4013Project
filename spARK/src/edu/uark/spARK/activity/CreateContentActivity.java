@@ -21,11 +21,13 @@ import com.google.api.services.prediction.PredictionScopes;
 import com.google.api.services.prediction.model.Input;
 import com.google.api.services.prediction.model.Input.InputInput;
 import com.google.api.services.prediction.model.Output;
+import com.google.api.services.prediction.model.Output.OutputMulti;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -67,6 +69,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -75,6 +80,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import edu.uark.spARK.R;
+import edu.uark.spARK.data.PredictionUtil;
 import edu.uark.spARK.dialog.CustomDialogBuilder;
 import edu.uark.spARK.entity.Bulletin;
 import edu.uark.spARK.entity.Discussion;
@@ -214,9 +220,13 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 
 	private final class NewEventFragment extends NewContentFragment implements OnClickListener {
 		private Button btnStartDate, btnEndDate, btnStartTime, btnEndTime, btnLocation;
+		private ImageButton btnAddTopic;
 		private EditText editTextLocation, editTextDescription;
-		private TextView textViewTopic;
+		private LinearLayout topicLinearLayout;
 		String Location = null;
+		
+		private List<String> outputList;
+
 		public void create() {
 			
 		}
@@ -238,18 +248,68 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			btnStartTime = (Button) v.findViewById(R.id.new_event_time_start);
 			btnEndTime = (Button) v.findViewById(R.id.new_event_time_end);
 			btnLocation = (Button) v.findViewById(R.id.new_event_location_btn);
+			btnAddTopic = (ImageButton) v.findViewById(R.id.topic_add_button);
+			btnAddTopic.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					DialogFragment d = new DialogFragment() {
+						@Override
+						public Dialog onCreateDialog(Bundle savedInstanceState) {
+						    final ArrayList mSelectedItems = new ArrayList();  // Where we track the selected items
+						    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//						    // Set the dialog title
+						    builder.setTitle("Pick topics");
+//						    // Specify the list array, the items to be selected by default (null for none),
+//						    // and the listener through which to receive callbacks when items are selected
+						           builder.setMultiChoiceItems(outputList.toArray(new String[outputList.size()]), null,
+						                      new DialogInterface.OnMultiChoiceClickListener() {
+						               @Override
+						               public void onClick(DialogInterface dialog, int which,
+						                       boolean isChecked) {
+						                   if (isChecked) {
+						                       // If the user checked the item, add it to the selected items
+						                       mSelectedItems.add(which);
+						                   } else if (mSelectedItems.contains(which)) {
+						                       // Else, if the item is already in the array, remove it 
+						                       mSelectedItems.remove(Integer.valueOf(which));
+						                   }
+						               }
+						           });
+//						    // Set the action buttons
+						           builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+						               @Override
+						               public void onClick(DialogInterface dialog, int id) {
+						                   // User clicked OK, so save the mSelectedItems results somewhere
+						                   // or return them to the component that opened the dialog
+						                   
+						               }
+						           })
+						           .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+						               @Override
+						               public void onClick(DialogInterface dialog, int id) {
+						                   
+						               }
+						           });
+//
+						    return builder.create();
+						}
+					};
+					d.show(getFragmentManager(), "TAG");
+				}
+			});
 			editTextLocation = (EditText) v.findViewById(R.id.new_event_location);
+			topicLinearLayout = (LinearLayout) v.findViewById(R.id.topicLinearLayout);
 			editTextDescription = (EditText) v.findViewById(R.id.new_event_description);
-			textViewTopic = (TextView) v.findViewById(R.id.topicTextView);
 			editTextDescription.setOnFocusChangeListener(new OnFocusChangeListener() {
 				@Override
 				public void onFocusChange(View v, boolean hasFocus) {
 					PredictionTask predict = null;
 					if (!hasFocus) {
 						predict = new PredictionTask() {
+
 							@Override
 							protected void onPreExecute() {
-								textViewTopic.setText(null);
+								//textViewTopic.setText(null);
 							}
 
 							@Override
@@ -273,7 +333,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 								input.setInput(inputInput);
 								Output output = null;
 								try {
-									output = client.hostedmodels().predict("414649711441", "sample.languageid", input).execute();
+									output = client.trainedmodels().predict(PredictionUtil.PROJECT_ID, PredictionUtil.TOPIC_MODEL_ID, input).execute();
 								} catch (IOException e) {
 									e.printStackTrace();
 								}
@@ -284,7 +344,21 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 							protected void onPostExecute(Output result) {
 								try {
 									Log.d("PREDICTION", result.toPrettyString());
-									textViewTopic.setText(result.getOutputLabel());
+									final View newTopic = LayoutInflater.from(CreateContentActivity.this).inflate(R.layout.topic_grid_item, null);
+									outputList = new ArrayList<String>();
+									//dirty output for now
+									for (int i = 0; i < result.getOutputMulti().size(); i++)
+										outputList.add(result.getOutputMulti().get(i).getLabel() + " : " + result.getOutputMulti().get(i).getScore());
+									((TextView) newTopic.findViewById(R.id.topic_textview)).setText(result.getOutputLabel());
+									topicLinearLayout.addView(newTopic);
+									newTopic.findViewById(R.id.topic_delete_btn).setOnClickListener(new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											topicLinearLayout.removeView(newTopic);
+										}
+										
+									});
+									
 								} catch (IOException e) {
 									e.printStackTrace();
 								} catch (NullPointerException e) {
