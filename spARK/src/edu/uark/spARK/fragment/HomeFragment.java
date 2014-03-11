@@ -34,6 +34,16 @@ public class HomeFragment extends Fragment implements AsyncResponse {
 	ArrayList<String> groupItem = new ArrayList<String>();
 	ArrayList<Object> childItem = new ArrayList<Object>();
 	
+    public static HomeFragment newInstance(int num) {
+    	HomeFragment f = new HomeFragment();
+
+        // Supply num input as an argument (0 for discussion fragment, 1 for bulletin).
+        Bundle args = new Bundle();
+        args.putInt("num", num);
+        f.setArguments(args);
+        return f;
+    }
+    
     public HomeFragment() {
         // Empty constructor required for fragment subclasses
     }  

@@ -3,6 +3,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/activity_horizontal_margin"
     android:layout_marginLeft="@dimen/activity_vertical_margin"
     android:layout_marginRight="@dimen/activity_vertical_margin" >
 
@@ -10,6 +11,10 @@
         android:id="@+id/locationLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:duplicateParentState="true"
+        android:clickable="true"
         android:orientation="vertical"
         tools:context=".NewGroupFragment" >
 
@@ -173,9 +178,11 @@
                 android:layout_height="32dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
+                android:background="@drawable/selector"
                 android:cropToPadding="true"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_create" />
+                android:src="@drawable/btn_create"
+                android:padding="2dp" />
 
         </RelativeLayout>
 

@@ -4,12 +4,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -102,6 +107,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 	
 	private String[] options = new String[] { "BULLETIN", "DISCUSSION", "GROUP", "EVENT" };
 	private NewContentFragment curNewFragment;
+	private int selectedNavItem;
 	// SectionsPagerAdapter mSectionsPagerAdapter;
 	// ViewPager mViewPager;
 
@@ -218,30 +224,33 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		return false;
 	}
 
-	private final class NewEventFragment extends NewContentFragment implements OnClickListener {
+	private class NewEventFragment extends NewContentFragment implements OnClickListener {
 		private Button btnStartDate, btnEndDate, btnStartTime, btnEndTime, btnLocation;
 		private ImageButton btnAddTopic;
 		private EditText editTextLocation, editTextDescription;
 		private LinearLayout topicLinearLayout;
-		String Location = null;
-		
 		private List<String> outputList;
+		private List<String> selectedOutput;
+		String Location = null;		
 
 		public void create() {
 			
 		}
 		
+		public void hideSoftKeyboard(Activity activity) {
+		    InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		    inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+		}
+		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View v = inflater.inflate(R.layout.fragment_new_event, container, false);
-			v.setOnTouchListener(new OnTouchListener() {
+			v.findViewById(R.id.locationLinearLayout).setOnTouchListener(new OnTouchListener() {
 				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-				    InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
-				    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-					return false;
+				public boolean onTouch(View arg0, MotionEvent ev) {
+				    hideSoftKeyboard(getActivity());
+				    return false;
 				}
-				
 			});
 			btnStartDate = (Button) v.findViewById(R.id.new_event_date_start);
 			btnEndDate = (Button) v.findViewById(R.id.new_event_date_end);
@@ -255,43 +264,60 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 					DialogFragment d = new DialogFragment() {
 						@Override
 						public Dialog onCreateDialog(Bundle savedInstanceState) {
-						    final ArrayList mSelectedItems = new ArrayList();  // Where we track the selected items
-						    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//						    // Set the dialog title
-						    builder.setTitle("Pick topics");
-//						    // Specify the list array, the items to be selected by default (null for none),
-//						    // and the listener through which to receive callbacks when items are selected
-						           builder.setMultiChoiceItems(outputList.toArray(new String[outputList.size()]), null,
-						                      new DialogInterface.OnMultiChoiceClickListener() {
-						               @Override
-						               public void onClick(DialogInterface dialog, int which,
-						                       boolean isChecked) {
-						                   if (isChecked) {
-						                       // If the user checked the item, add it to the selected items
-						                       mSelectedItems.add(which);
-						                   } else if (mSelectedItems.contains(which)) {
-						                       // Else, if the item is already in the array, remove it 
-						                       mSelectedItems.remove(Integer.valueOf(which));
-						                   }
-						               }
-						           });
-//						    // Set the action buttons
-						           builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-						               @Override
-						               public void onClick(DialogInterface dialog, int id) {
-						                   // User clicked OK, so save the mSelectedItems results somewhere
-						                   // or return them to the component that opened the dialog
-						                   
-						               }
-						           })
-						           .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-						               @Override
-						               public void onClick(DialogInterface dialog, int id) {
-						                   
-						               }
-						           });
-//
-						    return builder.create();
+							final ArrayList mSelectedItems = new ArrayList(); // Where we track the selected items
+							AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+							// // Set the dialog title
+							builder.setTitle("Suggested");
+							// // Specify the list array, the items to be selected by default (null for none),
+							// // and the listener through which to receive callbacks when items are selected
+							boolean[] checked = new boolean[outputList.size()];
+							for (int i = 0; i < outputList.size(); i++)
+								if (selectedOutput.contains(outputList.get(i)))
+									checked[i] = true;
+							// ((String) selectedOutput.keySet().toArray()[i])
+							builder.setMultiChoiceItems(outputList.toArray(new String[outputList.size()]), checked, new DialogInterface.OnMultiChoiceClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+									if (isChecked) {
+										// If the user checked the item, add it to the selected items
+										// mSelectedItems.add(which);
+										selectedOutput.add(outputList.get(which));
+									} else if (selectedOutput.contains(outputList.get(which))) {
+										// Else, if the item is already in the array, remove it
+										// mSelectedItems.remove(Integer.valueOf(which));
+										selectedOutput.remove(outputList.get(which));
+									}
+								}
+							});
+							// // Set the action buttons
+							builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+									// User clicked OK, so save the mSelectedItems results somewhere
+									// or return them to the component that opened the dialog
+									topicLinearLayout.removeAllViews();
+									for (int i = 0; i < selectedOutput.size(); i++) {
+										final View newTopic = LayoutInflater.from(CreateContentActivity.this).inflate(R.layout.topic_grid_item, null);
+										((TextView) newTopic.findViewById(R.id.topic_textview)).setText(selectedOutput.get(i));
+										topicLinearLayout.addView(newTopic);
+										newTopic.findViewById(R.id.topic_delete_btn).setOnClickListener(new OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												topicLinearLayout.removeView(newTopic);
+												selectedOutput.remove(((TextView) newTopic.findViewById(R.id.topic_textview)).getText());
+											}
+
+										});
+									}
+								}
+							}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+
+								}
+							});
+							//
+							return builder.create();
 						}
 					};
 					d.show(getFragmentManager(), "TAG");
@@ -310,6 +336,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 							@Override
 							protected void onPreExecute() {
 								//textViewTopic.setText(null);
+								topicLinearLayout.removeAllViews();
 							}
 
 							@Override
@@ -343,22 +370,37 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 							@Override
 							protected void onPostExecute(Output result) {
 								try {
+									// sort in reverse sorted order
+									Collections.sort(result.getOutputMulti(), new Comparator<OutputMulti>() {
+										@Override
+										public int compare(OutputMulti o1, OutputMulti o2) {
+											if (Double.valueOf(o1.getScore()) < Double.valueOf(o2.getScore()))
+												return 1;
+											if (Double.valueOf(o1.getScore()) > Double.valueOf(o2.getScore()))
+												return -1;
+											return 0;
+										}
+
+									});
 									Log.d("PREDICTION", result.toPrettyString());
 									final View newTopic = LayoutInflater.from(CreateContentActivity.this).inflate(R.layout.topic_grid_item, null);
 									outputList = new ArrayList<String>();
-									//dirty output for now
+									selectedOutput = new ArrayList<String>();
+									// dirty output for now
 									for (int i = 0; i < result.getOutputMulti().size(); i++)
-										outputList.add(result.getOutputMulti().get(i).getLabel() + " : " + result.getOutputMulti().get(i).getScore());
+										outputList.add(result.getOutputMulti().get(i).getLabel());
+									selectedOutput.add(result.getOutputLabel());
 									((TextView) newTopic.findViewById(R.id.topic_textview)).setText(result.getOutputLabel());
 									topicLinearLayout.addView(newTopic);
 									newTopic.findViewById(R.id.topic_delete_btn).setOnClickListener(new OnClickListener() {
 										@Override
 										public void onClick(View v) {
 											topicLinearLayout.removeView(newTopic);
+											selectedOutput.remove(((TextView) newTopic.findViewById(R.id.topic_textview)).getText());
 										}
-										
+
 									});
-									
+
 								} catch (IOException e) {
 									e.printStackTrace();
 								} catch (NullPointerException e) {
@@ -369,7 +411,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 						predict.execute();
 					}
 				}
-				
+
 			});
 			
 			
@@ -462,82 +504,8 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 				timeFragment.show(getFragmentManager(), "timePicker");
 				break;
 			case R.id.new_event_location_btn:
-				final CharSequence[] items = { "Use current location", "Other", "None" };
-				final CustomDialogBuilder builder = new CustomDialogBuilder(getActivity());
-				ArrayAdapter<CharSequence> mAdapter = new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_list_item_1, items);
-
-				builder.setTitle("Pick a location").setTitleColor(getResources().getColor(android.R.color.black)).setDividerColor(getResources().getColor(R.color.red))
-						.setCustomView(R.layout.dialog_location_picker, getActivity()).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								// set location and be amazed
-								editTextLocation.setText(Location);
-
-							}
-						}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-
-							}
-						});
-				((TextView) builder.getView().findViewById(R.id.message)).setTextSize(12);
-				ListView mList = (ListView) builder.getCustomView().findViewById(R.id.listView1);
-				mList.setAdapter(mAdapter);
-				mList.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-						switch (position) {
-						// checkins might come in handy here, as we can use it
-						// to see nearby places
-						case 0:
-							final MyLocation location = new MyLocation();
-
-							final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "Finding your location", "Please wait...", true);
-
-							final MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
-								@Override
-								public void gotLocation(Location location) {
-									String _Location = "N/A";
-									// get closest place for naming purposes
-									Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-									try {
-										List<Address> listAddresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-										if (null != listAddresses && listAddresses.size() > 0) {
-											_Location = listAddresses.get(0).getAddressLine(0);
-										}
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-
-									String curlat = String.valueOf(location.getLatitude());
-									String curlong = String.valueOf(location.getLongitude());
-									progressDialog.dismiss();
-									builder.setMessage(curlat + ", " + curlong + "\nAt " + _Location + "?");
-									Location = _Location + " (" + curlat + "," + curlong + ")";
-								}
-							};
-
-							Runnable run = new Runnable() {
-								@Override
-								public void run() {
-									location.getLocation(getActivity().getApplicationContext(), locationResult);
-								}
-
-							};
-							run.run();
-							break;
-						case 1:
-
-							break;
-						case 2:
-							builder.setMessage("NO LOCATION");
-							Location = null;
-							break;
-						}
-					}
-
-				});
-				builder.create().show();
+				Intent i = new Intent(CreateContentActivity.this, AddLocationActivity.class);
+				this.startActivityForResult(i, 400);
 				break;
 			}
 
@@ -706,4 +674,24 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			return null;
 		}		
 	}
+	
+//	@Override
+//	public void onSaveInstanceState(Bundle savedInstanceState) {
+//	  super.onSaveInstanceState(savedInstanceState);
+//	  savedInstanceState.putInt("currentContent", getActionBar().getSelectedNavigationIndex());
+//	}
+//
+//	@Override
+//	public void onRestoreInstanceState(Bundle savedInstanceState) {
+//	  super.onRestoreInstanceState(savedInstanceState);
+//	  selectedNavItem = savedInstanceState.getInt("currentContent");
+//	  // where mMyCurrentPosition should be a public value in your activity.
+//	}
+//	
+//	@Override
+//	public void onResume() {
+//		super.onResume();
+//		if (selectedNavItem != 0)
+//			getActionBar().setSelectedNavigationItem(selectedNavItem);
+//	}
 }

@@ -200,7 +200,6 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 		//initialize content to home
 		selectItem(1);
 		
-		if (savedInstanceState == null) {
 			// TODO: Place the map initialization code somewhere after things have been loaded from the server, or just find a way to hide it until data appears
 			//this won't really be a problem now since you can't see the map behind the home screen
 			mMapViewFragment = new MapViewFragment() {
@@ -229,8 +228,7 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 					resetView();
 				}
 			};
-			getSupportFragmentManager().beginTransaction().add(R.id.map_frame, mMapViewFragment).commit();
-		}    
+			getSupportFragmentManager().beginTransaction().add(R.id.map_frame, mMapViewFragment).commit();   
 	}
 
 
@@ -374,7 +372,7 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 	    	case 1:
 	    		//Home fragment
 		            fm.beginTransaction()
-		            .replace(R.id.fragment_frame, new HomeFragment(), "Home").commit();
+		            .replace(R.id.fragment_frame, HomeFragment.newInstance(position), "Home").commit();
 		    		setTitle(mNavDrawerTitles[position]);
 	            break;
 	        case 2:
