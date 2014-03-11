@@ -326,17 +326,17 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			editTextLocation = (EditText) v.findViewById(R.id.new_event_location);
 			topicLinearLayout = (LinearLayout) v.findViewById(R.id.topicLinearLayout);
 			editTextDescription = (EditText) v.findViewById(R.id.new_event_description);
-			editTextDescription.setOnFocusChangeListener(new OnFocusChangeListener() {
-				@Override
-				public void onFocusChange(View v, boolean hasFocus) {
+			((Button) v.findViewById(R.id.button1)).setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
 					PredictionTask predict = null;
-					if (!hasFocus) {
+					if (editTextDescription.getText().toString() != "") {
 						predict = new PredictionTask() {
-
+							ProgressDialog progressDialog = null;
 							@Override
 							protected void onPreExecute() {
 								//textViewTopic.setText(null);
 								topicLinearLayout.removeAllViews();
+								progressDialog = ProgressDialog.show(CreateContentActivity.this, "Predicting", "Please wait...", true);
 							}
 
 							@Override
@@ -369,6 +369,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 
 							@Override
 							protected void onPostExecute(Output result) {
+								progressDialog.dismiss();
 								try {
 									// sort in reverse sorted order
 									Collections.sort(result.getOutputMulti(), new Comparator<OutputMulti>() {
@@ -411,11 +412,15 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 						predict.execute();
 					}
 				}
+			});
+			editTextDescription.setOnFocusChangeListener(new OnFocusChangeListener() {
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					
+				}
 
 			});
-			
-			
-			
+
 			final Spinner groups = (Spinner) v.findViewById(R.id.bulletin_group_selection);
 			List<String> list = new ArrayList<String>();
 			String listItem = "Public";
@@ -674,24 +679,4 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			return null;
 		}		
 	}
-	
-//	@Override
-//	public void onSaveInstanceState(Bundle savedInstanceState) {
-//	  super.onSaveInstanceState(savedInstanceState);
-//	  savedInstanceState.putInt("currentContent", getActionBar().getSelectedNavigationIndex());
-//	}
-//
-//	@Override
-//	public void onRestoreInstanceState(Bundle savedInstanceState) {
-//	  super.onRestoreInstanceState(savedInstanceState);
-//	  selectedNavItem = savedInstanceState.getInt("currentContent");
-//	  // where mMyCurrentPosition should be a public value in your activity.
-//	}
-//	
-//	@Override
-//	public void onResume() {
-//		super.onResume();
-//		if (selectedNavItem != 0)
-//			getActionBar().setSelectedNavigationItem(selectedNavItem);
-//	}
 }

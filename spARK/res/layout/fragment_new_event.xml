@@ -11,10 +11,10 @@
         android:id="@+id/locationLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:duplicateParentState="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:duplicateParentState="true"
-        android:clickable="true"
         android:orientation="vertical"
         tools:context=".NewGroupFragment" >
 
@@ -31,14 +31,28 @@
             <requestFocus />
         </EditText>
 
-        <EditText
-            android:id="@+id/new_event_description"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/RelativeLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:ems="10"
-            android:hint="Event Description"
-            android:inputType="textMultiLine" />
+            android:layout_marginTop="@dimen/activity_horizontal_margin" >
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Predict" />
+
+            <EditText
+                android:id="@+id/new_event_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Event Description"
+                android:inputType="textMultiLine" />
+
+        </LinearLayout>
 
         <GridLayout
             android:layout_width="match_parent"
@@ -168,7 +182,6 @@
                 android:background="@drawable/tags_background"
                 android:minHeight="108dp"
                 android:orientation="vertical" >
-
             </LinearLayout>
 
             <ImageButton
@@ -180,12 +193,10 @@
                 android:layout_alignParentRight="true"
                 android:background="@drawable/selector"
                 android:cropToPadding="true"
+                android:padding="2dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/btn_create"
-                android:padding="2dp" />
-
+                android:src="@drawable/btn_create" />
         </RelativeLayout>
-
     </LinearLayout>
 
 </ScrollView>
