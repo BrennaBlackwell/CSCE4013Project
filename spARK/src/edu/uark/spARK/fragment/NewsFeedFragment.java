@@ -48,6 +48,7 @@ import edu.uark.spARK.entity.Bulletin;
 import edu.uark.spARK.entity.Comment;
 import edu.uark.spARK.entity.Content;
 import edu.uark.spARK.entity.Discussion;
+import edu.uark.spARK.entity.Event;
 import edu.uark.spARK.entity.Group;
 import edu.uark.spARK.entity.User;
 import edu.uark.spARK.view.SelectiveViewPager;
@@ -73,12 +74,13 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 		return fragment;
 	}
 	
-    public static NewsFeedFragment newInstance(int num) {
+    public static NewsFeedFragment newInstance(int contentType, int sortType) {
     	NewsFeedFragment f = new NewsFeedFragment();
 
-        // Supply num input as an argument (0 for discussion fragment, 1 for bulletin).
+        // Supply int inputs as arguments
         Bundle args = new Bundle();
-        args.putInt("num", num);
+        args.putInt("content", contentType);
+        args.putInt("sort", sortType);
         f.setArguments(args);
 
         return f;
@@ -87,8 +89,6 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 	public NewsFeedFragment() {
 		
 	}
-	
-	
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -236,15 +236,27 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 	
 	public void loadContent() {
 		String contentType = null;
-		//get int from instantiating the content fragment type
-		int pos = getArguments().getInt("num");
+		//get ints from instantiating the content fragment type
+		int content = getArguments().getInt("content");
+		int sort = getArguments().getInt("sort");
 		
-		//int tab_position = getActivity().getActionBar().getSelectedTab().getPosition();
-		if (pos == 0) {
+		//set content type (THIS VALUE IS POSITION IN NAVLISTDRAWER, so we might change it to a string to make it easier to understand)
+		if (content == 5) {
 			contentType = "Discussion";
-		} else if (pos == 1){
+		} else if (content == 3) {
+			contentType = "Event";
+			// test event
+			Event e1 = new Event(0, "ACM Movie Night: Iron Man 2", "Come relax a bit before finals week and join us for our ACM Movie Night! We will be showing Iron Man 2 and Eureka Pizza will be catering.",
+					new User(0, "testuser", "rank"), new Date(), "", "", null, false);
+			//Bulletin b = new Bulletin(contentID, contentTitle, contentBody, user, contentTimestamp, latitude, longitude, group, favorited);
+			arrayListContent.add(e1);
+			mAdapter.notifyDataSetChanged();
+		} else if (content == 2){
 			contentType = "Bulletin";
 		}	
+		//TODO: implement new content types as they are added (eg events)
+		//TODO: set sorting type
+		
 		JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, contentType);
 		

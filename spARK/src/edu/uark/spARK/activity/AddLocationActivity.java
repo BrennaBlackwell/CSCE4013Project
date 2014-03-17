@@ -12,6 +12,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import edu.uark.spARK.location.MyLocation;
 
 public class AddLocationActivity extends Activity {
 	private String Location;
+	private MyLocation myLocation;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,7 @@ public class AddLocationActivity extends Activity {
 				// checkins might come in handy here, as we can use it
 				// to see nearby places
 				case 0:
-					final MyLocation location = new MyLocation();
+					myLocation = new MyLocation();
 
 					final ProgressDialog progressDialog = ProgressDialog.show(AddLocationActivity.this, "Finding your location", "Please wait...", true);
 
@@ -90,7 +92,7 @@ public class AddLocationActivity extends Activity {
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-
+							AddLocationActivity.this.getIntent().putExtra("Location", location);
 							String curlat = String.valueOf(location.getLatitude());
 							String curlong = String.valueOf(location.getLongitude());
 							progressDialog.dismiss();
@@ -102,7 +104,7 @@ public class AddLocationActivity extends Activity {
 					Runnable run = new Runnable() {
 						@Override
 						public void run() {
-							location.getLocation(getApplicationContext(), locationResult);
+							myLocation.getLocation(getApplicationContext(), locationResult);
 						}
 
 					};
@@ -164,6 +166,19 @@ public class AddLocationActivity extends Activity {
 		case android.R.id.home:
 			setResult(RESULT_CANCELED);
 			finish();
+			break;
+		case R.id.accept:
+			//simple error checking for now, may want to display dialog telling user they didn't select a location
+			Location l = null;
+			try {
+				l = getIntent().getParcelableExtra("Location");
+			} catch (NullPointerException npe) {
+				npe.printStackTrace();
+			}
+			if (l != null) {
+				setResult(RESULT_OK, getIntent());			
+				finish();
+			}
 			break;
 		}
 		return true;

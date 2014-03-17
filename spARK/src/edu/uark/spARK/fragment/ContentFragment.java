@@ -25,13 +25,14 @@ import edu.uark.spARK.view.SelectiveViewPager;
 
 @SuppressLint("NewApi")
 public class ContentFragment extends Fragment {
+	private static final String[] titles = { "Recommended", "Recent", "Nearby", "Popular", "Favorites"};
 	private SelectiveViewPager mPager;
 	private MyAdapter mAdapter;
 	
     public static ContentFragment newInstance(int num) {
     	ContentFragment f = new ContentFragment();
 
-        // Supply num input as an argument (0 for discussion fragment, 1 for bulletin).
+        // Supply num input as an argument (0 for discussion fragment, 1 for bulletin, etc.).
         Bundle args = new Bundle();
         args.putInt("num", num);
         f.setArguments(args);
@@ -82,8 +83,7 @@ public class ContentFragment extends Fragment {
         return v;
     }
     
-    public static class MyAdapter extends FragmentPagerAdapter {
-    	private static final String[] titles = { "Recommended", "Recent", "Nearby", "Popular", "Favorites"};
+    public class MyAdapter extends FragmentPagerAdapter {
     	private FragmentManager mFragmentManager;
     	public MyAdapter(FragmentManager fm) {
             super(fm);
@@ -97,7 +97,8 @@ public class ContentFragment extends Fragment {
         
         @Override
         public NewsFeedFragment getItem(int position) {
-        	return NewsFeedFragment.newInstance(position);
+        	//first variable is content type (Discussion, Bulletin, etc.); second is sort type (Recent, Nearby, etc.)
+        	return NewsFeedFragment.newInstance(ContentFragment.this.getArguments().getInt("num"), position);
         }     
         
         @Override
@@ -110,7 +111,7 @@ public class ContentFragment extends Fragment {
         		return  (NewsFeedFragment) mFragmentManager.findFragmentByTag(name);
         	}
 
-        	private static String makeFragmentName(int viewId, int index) {
+        	private String makeFragmentName(int viewId, int index) {
         	    return "android:switcher:" + viewId + ":" + index;
         	}
     }  	

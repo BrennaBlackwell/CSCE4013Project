@@ -18,6 +18,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -98,6 +99,7 @@ import edu.uark.spARK.location.MyLocation;
 
 @SuppressLint("ValidFragment")
 public class CreateContentActivity extends FragmentActivity implements OnNavigationListener {
+	static final int REQUEST_LOCATION = 100;
 	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 	private final HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
 	GoogleCredential credential = new GoogleCredential();
@@ -107,15 +109,14 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 	
 	private String[] options = new String[] { "BULLETIN", "DISCUSSION", "GROUP", "EVENT" };
 	private NewContentFragment curNewFragment;
+	private Location contentLocation;
 	private int selectedNavItem;
 	// SectionsPagerAdapter mSectionsPagerAdapter;
 	// ViewPager mViewPager;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_content);
-
 		// Set up the action bar to show a dropdown list.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
@@ -184,8 +185,8 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			break;
 		case R.id.create:
 			Toast toast = Toast.makeText(getApplicationContext(), "MATT MAGIC HAPPENS HERE!", 2);
-			curNewFragment.create();
 			toast.show();
+			curNewFragment.create();	//each type of content Fragment has its own create method that is being called here
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -224,7 +225,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		return false;
 	}
 
-	private class NewEventFragment extends NewContentFragment implements OnClickListener {
+	public class NewEventFragment extends NewContentFragment implements OnClickListener {
 		private Button btnStartDate, btnEndDate, btnStartTime, btnEndTime, btnLocation;
 		private ImageButton btnAddTopic;
 		private EditText editTextLocation, editTextDescription;
@@ -234,7 +235,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		String Location = null;		
 
 		public void create() {
-			
+			//JSONQuery blah blah...
 		}
 		
 		public void hideSoftKeyboard(Activity activity) {
@@ -406,7 +407,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 									e.printStackTrace();
 								} catch (NullPointerException e) {
 									e.printStackTrace();
-								}
+								} 
 							}
 						};
 						predict.execute();
@@ -510,7 +511,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 				break;
 			case R.id.new_event_location_btn:
 				Intent i = new Intent(CreateContentActivity.this, AddLocationActivity.class);
-				this.startActivityForResult(i, 400);
+				CreateContentActivity.this.startActivityForResult(i, REQUEST_LOCATION);
 				break;
 			}
 
@@ -679,4 +680,17 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			return null;
 		}		
 	}
+	
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    	
+		if (requestCode == REQUEST_LOCATION) {
+			if (resultCode == RESULT_OK) {
+				//return location
+				contentLocation = intent.getParcelableExtra("Location");
+				((TextView) findViewById(R.id.new_event_location)).setText(String.valueOf(contentLocation.getLatitude()) + ", " + String.valueOf(contentLocation.getLongitude()));
+			} else if (resultCode == RESULT_CANCELED) {
+				// Handle cancel
+			}
+		} 
+    }
 }
