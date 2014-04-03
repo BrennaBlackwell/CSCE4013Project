@@ -247,12 +247,6 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 			contentType = "Discussion";
 		} else if (content == 3) {
 			contentType = "Event";
-			// test event
-			Event e1 = new Event(0, "ACM Movie Night: Iron Man 2", "Come relax a bit before finals week and join us for our ACM Movie Night! We will be showing Iron Man 2 and Eureka Pizza will be catering.",
-					new User(0, "testuser", "rank"), new Date(), "", "", "", null, false, "", "", "", "");
-			//Bulletin b = new Bulletin(contentID, contentTitle, contentBody, user, contentTimestamp, latitude, longitude, group, favorited);
-			arrayListContent.add(e1);
-			mAdapter.notifyDataSetChanged();
 		} else if (content == 2){
 			contentType = "Bulletin";
 		}	
