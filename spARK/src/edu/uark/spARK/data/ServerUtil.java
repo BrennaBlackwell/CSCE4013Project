@@ -20,8 +20,13 @@ public class ServerUtil {
 	public static final String TAG_TYPE = "type";
 	public static final String TAG_TIMESTAMP = "timestamp";
 	public static final String TAG_FAVORITE = "favorite";
+	public static final String TAG_LOCATION = "location";
 	public static final String TAG_LATITUDE = "latitude";
 	public static final String TAG_LONGITUDE = "longitude";
+	public static final String TAG_STARTDATE = "startDate";
+	public static final String TAG_STARTTIME = "startTime";
+	public static final String TAG_ENDDATE = "endDate";
+	public static final String TAG_ENDTIME = "endTime";
 	
 	public static final String TAG_USER_ID = "userid";
 	public static final String TAG_USER_NAME = "username";

@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
@@ -120,11 +121,12 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
                 		   contentType = "Discussion";
                 	   } else if (((Content) listView.getItemAtPosition(position)).getClass().toString().contains("Bulletin")) {
                 		   contentType = "Bulletin";
+                	   } else if (((Content) listView.getItemAtPosition(position)).getClass().toString().contains("Event")) {
+                		   contentType = "Event";
                 	   }
                        JSONQuery jquery = new JSONQuery(NewsFeedFragment.this);
                        jquery.execute(ServerUtil.URL_BLOCK_CONTENT, "Block", Integer.toString(MainActivity.myUserID), Integer.toString(contentID), contentType);
                        mAdapter.remove(((Content) listView.getItemAtPosition(position)));	//we need to ignore both the refresh header and map header, that's why there is a -2
-
                    }
                    mAdapter.notifyDataSetChanged();
                 }
@@ -238,7 +240,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 		String contentType = null;
 		//get ints from instantiating the content fragment type
 		int content = getArguments().getInt("content");
-		int sort = getArguments().getInt("sort");
+		String sort = String.valueOf(getArguments().getInt("sort"));
 		
 		//set content type (THIS VALUE IS POSITION IN NAVLISTDRAWER, so we might change it to a string to make it easier to understand)
 		if (content == 5) {
@@ -247,7 +249,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 			contentType = "Event";
 			// test event
 			Event e1 = new Event(0, "ACM Movie Night: Iron Man 2", "Come relax a bit before finals week and join us for our ACM Movie Night! We will be showing Iron Man 2 and Eureka Pizza will be catering.",
-					new User(0, "testuser", "rank"), new Date(), "", "", null, false);
+					new User(0, "testuser", "rank"), new Date(), "", "", "", null, false, "", "", "", "");
 			//Bulletin b = new Bulletin(contentID, contentTitle, contentBody, user, contentTimestamp, latitude, longitude, group, favorited);
 			arrayListContent.add(e1);
 			mAdapter.notifyDataSetChanged();
@@ -257,8 +259,10 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 		//TODO: implement new content types as they are added (eg events)
 		//TODO: set sorting type
 		
+		Location cur = ((MapViewFragment) getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).getLocationClient().getLastLocation();
+		
 		JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, contentType);
+		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, contentType, sort, String.valueOf(cur.getLatitude()), String.valueOf(cur.getLatitude()));
 		
 	}
 	
@@ -294,7 +298,6 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 						} 
 					}
 					
-					
 					// Creator
 					int contentUserID = Integer.parseInt(content.getString(ServerUtil.TAG_USER_ID).trim());
 					String contentUsername = content.getString(ServerUtil.TAG_USER_NAME).trim();
@@ -314,7 +317,6 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 					}
 					User user = new User(contentUserID, contentUsername, "", contentUserFullName, contentUserDesc, 0, contentProfilePicture);
 					
-					
 					// Group Attached
 					int groupID = Integer.parseInt(content.getString(ServerUtil.TAG_GROUP_ID).trim());
 					String groupName = content.getString(ServerUtil.TAG_GROUP_NAME).trim();
@@ -330,6 +332,24 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 							((MapViewFragment) getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).addContent(b, true);
 						}
 						arrayListContent.add(b);
+					} else if (contentType.equals("Event")) {
+						
+						// Location
+						String location = content.getString(ServerUtil.TAG_LOCATION).trim();
+						
+						// Dates/Times
+						String startDate = content.getString(ServerUtil.TAG_STARTDATE).trim();
+						String startTime = content.getString(ServerUtil.TAG_STARTTIME).trim();
+						String endDate = content.getString(ServerUtil.TAG_ENDDATE).trim();
+						String endTime = content.getString(ServerUtil.TAG_ENDTIME).trim();
+						
+						Event e = new Event(contentID, contentTitle, contentBody, user, contentTimestamp, location, latitude, longitude, group, favorited, startDate, startTime, endDate, endTime);
+						e.setTotalRating(totalRating);
+						e.setUserRating(userRating);
+						if (e.hasLocation()) {
+							((MapViewFragment) getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).addContent(e, true);
+						}
+						arrayListContent.add(e);
 					} else if (contentType.equals("Discussion")) {
 						comments = content.getJSONArray(ServerUtil.TAG_COMMENTS);
 						List<Comment> commentsList = new ArrayList<Comment>();

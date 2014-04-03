@@ -1,34 +1,14 @@
 package edu.uark.spARK.activity;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.prediction.Prediction;
-import com.google.api.services.prediction.PredictionScopes;
-import com.google.api.services.prediction.model.Input;
-import com.google.api.services.prediction.model.Output;
-import com.google.api.services.prediction.model.Input.InputInput;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -38,22 +18,16 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -61,7 +35,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -76,15 +49,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.services.prediction.PredictionScopes;
+
 import edu.uark.spARK.R;
 import edu.uark.spARK.arrayadapter.NavListArrayAdapter;
 import edu.uark.spARK.data.JSONQuery;
 import edu.uark.spARK.data.JSONQuery.AsyncResponse;
 import edu.uark.spARK.data.ServerUtil;
-import edu.uark.spARK.dialog.CustomDialogBuilder;
 import edu.uark.spARK.entity.Bulletin;
 import edu.uark.spARK.entity.Discussion;
+import edu.uark.spARK.entity.Event;
 import edu.uark.spARK.entity.Group;
 import edu.uark.spARK.fragment.ContentFragment;
 import edu.uark.spARK.fragment.HomeFragment;
@@ -551,11 +529,27 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 						(group.isOpen() ? "Open" : "Closed"), 
 						(group.isVisible() ? "Visible" : "Hidden"),
 						group.getLatitude(), group.getLongitude());
+        	} else if (intent.hasExtra("event")) {
+        		Event event = (Event) intent.getSerializableExtra("event");
+        		int groupSelected = intent.getIntExtra("groupSelected", 0);
+        		//TODO: add new content locally
+        		//mDiscussionFragment.arrayListContent.add(0, event);
+        		if(event.hasLocation()) {
+        			//mMapViewFragment.addContent(event, getActionBar().getSelectedTab().getPosition() == 0);
+        		}
+        		
+        		JSONQuery jquery = new JSONQuery(this);
+				jquery.execute(ServerUtil.URL_CREATE_CONTENT, "Event", 
+						Integer.toString(event.getCreator().getId()), 
+						event.getTitle(), event.getText(), 
+						Integer.toString(groupSelected),
+						event.getLatitude(), event.getLongitude(), event.getLocation(),
+						event.getStartDate(), event.getStartTime(),
+						event.getEndDate(), event.getEndTime());
         	}
         }
     	JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_GET_MY_CONTENT, myUsername);
-		
     }
 
     @Override

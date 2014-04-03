@@ -67,6 +67,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			}
 			if (c instanceof Event) {
 				convertView = mInflater.inflate(R.layout.content_list_item_event, null);
+				holder.event_where_text = (TextView) convertView.findViewById(R.id.event_where_text);
+				holder.event_start_text = (TextView) convertView.findViewById(R.id.event_start_text);
+				holder.event_end_text = (TextView) convertView.findViewById(R.id.event_end_text);				
 			}
 			
 			holder.mainFL = (FrameLayout) convertView.findViewById(R.id.list_discussionMainFrame);
@@ -84,7 +87,8 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.likeBtn = (ToggleButton) convertView.findViewById(R.id.likeBtn);
 			holder.dislikeBtn = (ToggleButton) convertView.findViewById(R.id.dislikeBtn);
 			holder.pinpointBtn = (Button) convertView.findViewById(R.id.pinpointBtn);
-			holder.favoriteBtn = (ToggleButton) convertView.findViewById(R.id.favoriteBtn);
+			holder.favoriteBtn = (ToggleButton) convertView.findViewById(R.
+					id.favoriteBtn);
 			holder.deleteBtn = (Button) convertView.findViewById(R.id.trashBtn);
 			holder.deleteBtn.setVisibility(View.GONE);
 			holder.scoreRadioGroup = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
@@ -102,7 +106,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				float[] results = new float[3];
 				Location.distanceBetween(cur.getLatitude(), cur.getLongitude(), Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()), results);
 				//holder.locationTextView.setText(c.getLatitude() + ", " + c.getLongitude());
-				holder.locationTextView.setText(String.format("%.1f", results[0]*0.000621371) + " mi.");
+				holder.locationTextView.setText(String.format("%.1f", results[0]*0.000621371) + " miles away");
 			}
 			//holder.locationTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -129,6 +133,9 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 
 		holder.titleTextView.setText(c.getTitle());
 		holder.descTextView.setText(c.getText());
+		if (c.getText() == null || c.getText() == "null" || c.getText().isEmpty()) {
+			holder.descTextView.setText("N/A");
+		}
 		holder.descTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		Linkify.addLinks(holder.descTextView, Linkify.ALL);
 		holder.groupAndDateTextView.setText("posted publicly - " + c.getCreationDateAsPrettyTime());
@@ -157,6 +164,19 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				}
 				
 			});
+		} else if (c instanceof Event) {
+			holder.event_where_text.setText(((Event) c).getLocation());
+			if (((Event) c).getLocation() == null || ((Event) c).getLocation().isEmpty()) {
+				holder.event_where_text.setText("N/A");
+			}
+			holder.event_start_text.setText(((Event) c).getStartDate() + " - " + ((Event) c).getStartTime());
+			if (((Event) c).getStartTime() == null || ((Event) c).getStartTime().isEmpty()) {
+				holder.event_start_text.setText(((Event) c).getStartDate() + " - All Day");
+			}
+			holder.event_end_text.setText(((Event) c).getEndDate() + " - " + ((Event) c).getEndTime());			
+			if (((Event) c).getEndTime() == null || ((Event) c).getEndTime().isEmpty()) {
+				holder.event_end_text.setText(((Event) c).getEndDate() + " - All Day");
+			}
 		}
 		holder.likeBtn.setTag(position);
 		holder.dislikeBtn.setTag(position);	
@@ -351,6 +371,8 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				String content = "Discussion";
 				if (c.getClass().toString().contains("Bulletin")) {
 					content = "Bulletin";
+				} else if (c.getClass().toString().contains("Event")) {
+					content = "Event";
 				}
 				final String contentType = content;
 				
@@ -426,6 +448,10 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		public ToggleButton favoriteBtn;
 		public Button deleteBtn;
 		int position;
+		
+		public TextView event_where_text;
+		public TextView event_start_text;
+		public TextView event_end_text;
 	}
 	
 	public void update() {

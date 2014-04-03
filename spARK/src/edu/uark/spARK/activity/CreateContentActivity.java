@@ -1,33 +1,17 @@
 package edu.uark.spARK.activity;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.prediction.Prediction;
-import com.google.api.services.prediction.PredictionScopes;
-import com.google.api.services.prediction.model.Input;
-import com.google.api.services.prediction.model.Input.InputInput;
-import com.google.api.services.prediction.model.Output;
-import com.google.api.services.prediction.model.Output.OutputMulti;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -37,16 +21,12 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -59,7 +39,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,34 +47,40 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.prediction.Prediction;
+import com.google.api.services.prediction.PredictionScopes;
+import com.google.api.services.prediction.model.Input;
+import com.google.api.services.prediction.model.Input.InputInput;
+import com.google.api.services.prediction.model.Output;
+import com.google.api.services.prediction.model.Output.OutputMulti;
+
 import edu.uark.spARK.R;
 import edu.uark.spARK.data.PredictionUtil;
-import edu.uark.spARK.dialog.CustomDialogBuilder;
-import edu.uark.spARK.entity.Bulletin;
 import edu.uark.spARK.entity.Discussion;
+import edu.uark.spARK.entity.Event;
 import edu.uark.spARK.entity.Group;
 import edu.uark.spARK.entity.User;
 import edu.uark.spARK.fragment.DatePickerFragment;
 import edu.uark.spARK.fragment.NewContentFragment;
 import edu.uark.spARK.fragment.TimePickerFragment;
-import edu.uark.spARK.location.MyLocation;
 
 @SuppressLint("ValidFragment")
 public class CreateContentActivity extends FragmentActivity implements OnNavigationListener {
@@ -107,9 +92,10 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 
 	
 	
-	private String[] options = new String[] { "BULLETIN", "DISCUSSION", "GROUP", "EVENT" };
+	private String[] options = new String[] { "EVENT", "DISCUSSION", "GROUP" };
 	private NewContentFragment curNewFragment;
 	private Location contentLocation;
+	private String address = "N/A";
 	private int selectedNavItem;
 	// SectionsPagerAdapter mSectionsPagerAdapter;
 	// ViewPager mViewPager;
@@ -184,8 +170,6 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			finish();
 			break;
 		case R.id.create:
-			Toast toast = Toast.makeText(getApplicationContext(), "MATT MAGIC HAPPENS HERE!", 2);
-			toast.show();
 			curNewFragment.create();	//each type of content Fragment has its own create method that is being called here
 			break;
 		}
@@ -212,14 +196,15 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 
 	@Override
 	public boolean onNavigationItemSelected(int position, long id) {
+//		if (position == 0) {
+//			curNewFragment = new NewBulletinFragment();
+//		} 
 		if (position == 0) {
-			curNewFragment = new NewBulletinFragment();
+			curNewFragment = new NewEventFragment();
 		} else if (position == 1) {
 			curNewFragment = new NewDiscussionFragment();
 		} else if (position == 2) {
 			curNewFragment = new NewGroupFragment();
-		} else if (position == 3) {
-			curNewFragment = new NewEventFragment();
 		}
 		getFragmentManager().beginTransaction().replace(R.id.create_content_frame, curNewFragment).commit();
 		return false;
@@ -232,10 +217,50 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		private LinearLayout topicLinearLayout;
 		private List<String> outputList;
 		private List<String> selectedOutput;
+		private Spinner groups;
 		String Location = null;		
 
 		public void create() {
-			//JSONQuery blah blah...
+			
+			Intent intent = getIntent();
+			String title = ((TextView) findViewById(R.id.new_event_title)).getText().toString();
+			if (title == null || title.trim().isEmpty()) {
+				Toast toast = Toast.makeText(getApplicationContext(), "An Event Title is Required", 2);
+				toast.show();
+				return; // do not add blank input to list
+			}
+
+			String desc = ((TextView) findViewById(R.id.new_event_description)).getText().toString();
+			if (desc == null || desc.trim().isEmpty()) {
+				Toast toast = Toast.makeText(getApplicationContext(), "An Event Description is Required", 2);
+				toast.show();
+				return; // do not add blank input to list
+			}
+			User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
+			int position = groups.getSelectedItemPosition();
+			int itemSelected = 0;
+			if (position != 0) {
+				itemSelected = MainActivity.myGroups.get(position - 1).getId();
+			}
+			
+			String startDate = ((TextView) findViewById(R.id.new_event_date_start)).getText().toString();
+			
+			String startTime = ((TextView) findViewById(R.id.new_event_time_start)).getText().toString();
+			
+			String endDate = ((TextView) findViewById(R.id.new_event_date_end)).getText().toString();
+			
+			String endTime = ((TextView) findViewById(R.id.new_event_time_end)).getText().toString();
+			
+			if (contentLocation != null) {
+				String lat = String.valueOf(contentLocation.getLatitude());
+				String lng = String.valueOf(contentLocation.getLongitude());
+				intent.putExtra("event", new Event(0, title, desc, user, address, lat, lng, startDate, startTime, endDate, endTime));
+			} else {
+				intent.putExtra("event", new Event(0, title, desc, user, "", "", "", startDate, startTime, endDate, endTime));				
+			}
+			intent.putExtra("groupSelected", itemSelected);
+			setResult(RESULT_OK, intent);
+			finish();
 		}
 		
 		public void hideSoftKeyboard(Activity activity) {
@@ -253,6 +278,20 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 				    return false;
 				}
 			});
+			
+			groups = (Spinner) v.findViewById(R.id.event_group_selection);
+			List<String> list = new ArrayList<String>();
+			String listItem = "Public";
+			list.add(listItem);
+			for (int i = 0; i < MainActivity.myGroups.size(); i++) {
+				listItem = MainActivity.myGroups.get(i).getTitle();
+				list.add(listItem);
+			}
+
+			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_spinner_item, list);
+			dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+			groups.setAdapter(dataAdapter);
+			
 			btnStartDate = (Button) v.findViewById(R.id.new_event_date_start);
 			btnEndDate = (Button) v.findViewById(R.id.new_event_date_end);
 			btnStartTime = (Button) v.findViewById(R.id.new_event_time_start);
@@ -422,19 +461,6 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 
 			});
 
-			final Spinner groups = (Spinner) v.findViewById(R.id.bulletin_group_selection);
-			List<String> list = new ArrayList<String>();
-			String listItem = "Public";
-			list.add(listItem);
-			for (int i = 0; i < MainActivity.myGroups.size(); i++) {
-				listItem = MainActivity.myGroups.get(i).getTitle();
-				list.add(listItem);
-			}
-
-			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_spinner_item, list);
-			dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-			groups.setAdapter(dataAdapter);
-
 			SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
 			btnStartDate.setText(sdf.format(new Date()));
 			btnStartDate.setOnClickListener(this);
@@ -518,6 +544,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		}
 	}
 
+	/*
 	public class NewBulletinFragment extends NewContentFragment {
 		
 		private Spinner groups;
@@ -525,7 +552,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = inflater.inflate(R.layout.fragment_new_bulletin, container, false);
-			groups = (Spinner) view.findViewById(R.id.bulletin_group_selection);
+			groups = (Spinner) view.findViewById(R.id.event_group_selection);
 			List<String> list = new ArrayList<String>();
 			String listItem = "Public";
 			list.add(listItem);
@@ -565,7 +592,7 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			setResult(RESULT_OK, intent);
 			finish();
 		}	
-	}
+	} */
 
 	public class NewDiscussionFragment extends NewContentFragment {
 		private Spinner groups;
@@ -602,11 +629,15 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			final Intent intent = getIntent();
 			String title = ((TextView) findViewById(R.id.new_discussion_title)).getText().toString();
 			if (title == null || title.trim().isEmpty()) {
+				Toast toast = Toast.makeText(getApplicationContext(), "Title is Required", 2);
+				toast.show();
 				return; // do not add blank input to list
 			}
 
 			String desc = ((TextView) findViewById(R.id.new_discussion_description)).getText().toString();
 			if (desc == null || desc.trim().isEmpty()) {
+				Toast toast = Toast.makeText(getApplicationContext(), "Description is Required", 2);
+				toast.show();
 				return; // do not add blank input to list
 			}
 			User user = new User(MainActivity.myUserID, MainActivity.myUsername, null, MainActivity.myFullName, MainActivity.myDesc, 0, MainActivity.myProfilePicture);
@@ -634,11 +665,15 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			final Intent intent = getIntent();
 			String title = ((TextView) findViewById(R.id.new_group_title)).getText().toString();
 			if (title == null || title.trim().isEmpty()) {
+				Toast toast = Toast.makeText(getApplicationContext(), "A Group Title is Required", 2);
+				toast.show();
 				return; // do not add blank input to list
 			}
 
 			String desc = ((TextView) findViewById(R.id.new_group_description)).getText().toString();
 			if (desc == null || desc.trim().isEmpty()) {
+				Toast toast = Toast.makeText(getApplicationContext(), "A Group Description is Required", 2);
+				toast.show();
 				return; // do not add blank input to list
 			}
 
@@ -687,7 +722,18 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 			if (resultCode == RESULT_OK) {
 				//return location
 				contentLocation = intent.getParcelableExtra("Location");
-				((TextView) findViewById(R.id.new_event_location)).setText(String.valueOf(contentLocation.getLatitude()) + ", " + String.valueOf(contentLocation.getLongitude()));
+				Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+				List<Address> listAddresses;
+				try {
+					listAddresses = geocoder.getFromLocation(contentLocation.getLatitude(), contentLocation.getLongitude(), 1);
+					if (listAddresses != null && listAddresses.size() > 0) {
+						address = listAddresses.get(0).getAddressLine(0);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				((TextView) findViewById(R.id.new_event_location)).setText(address);
 			} else if (resultCode == RESULT_CANCELED) {
 				// Handle cancel
 			}
