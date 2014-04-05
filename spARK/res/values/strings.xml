@@ -10,8 +10,8 @@
         <item>Home</item>
         <item>Headlines</item>
         <item>Events</item>
-        <item>Groups</item>
         <item>Discussions</item>
+        <item>Groups</item>
         <item>Settings</item>
         <item>Logout</item>
     </string-array>

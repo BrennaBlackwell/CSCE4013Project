@@ -243,12 +243,12 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 		String sort = String.valueOf(getArguments().getInt("sort"));
 		
 		//set content type (THIS VALUE IS POSITION IN NAVLISTDRAWER, so we might change it to a string to make it easier to understand)
-		if (content == 5) {
-			contentType = "Discussion";
+		if (content == 2) {
+			contentType = "Bulletin";
 		} else if (content == 3) {
 			contentType = "Event";
-		} else if (content == 2){
-			contentType = "Bulletin";
+		} else if (content == 4){
+			contentType = "Discussion";
 		}	
 		//TODO: implement new content types as they are added (eg events)
 		//TODO: set sorting type

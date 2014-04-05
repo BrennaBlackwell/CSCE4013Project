@@ -366,15 +366,15 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 		    		setTitle(mNavDrawerTitles[position]);
 	            break;
 	        case 4:
-	        	//Groups fragment
-		            fm.beginTransaction()
-		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Groups").commit();
-		    		setTitle(mNavDrawerTitles[position]);
-	            break;
-	        case 5:
 	        	//Discussions fragment
 		            fm.beginTransaction()
 		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Discussions").commit();
+		    		setTitle(mNavDrawerTitles[position]);
+	            break;
+	        case 5:
+		    	//Groups fragment
+		            fm.beginTransaction()
+		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Groups").commit();
 		    		setTitle(mNavDrawerTitles[position]);
 	        	break;
 	        case 6:
