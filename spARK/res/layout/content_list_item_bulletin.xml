@@ -134,7 +134,7 @@
                         android:text="http://www.google.com"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@android:color/black"
-                        android:textSize="14dp" />
+                        android:textSize="14dp"/>
 
                 </LinearLayout>
             </RelativeLayout>

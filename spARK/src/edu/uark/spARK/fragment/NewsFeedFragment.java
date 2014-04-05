@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.util.Base64;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -32,6 +34,7 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -95,6 +98,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 	    mAdapter = new NewsFeedArrayAdapter(getActivity(), R.layout.content_list_item_discussion, arrayListContent, this);
+	   // mListView.setBackgroundResource(R.color.list_item_bg);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnRefreshListener(new OnRefreshListener() {
 		
@@ -263,6 +267,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 	@Override
 	public void processFinish(JSONObject result) {
     	loadScreen.animate().alpha(0).setDuration(500);
+    	mListView.setBackgroundColor(Color.TRANSPARENT);
 		try {
 			int success = result.getInt(ServerUtil.TAG_SUCCESS);
 
@@ -379,11 +384,30 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 					}
 				}
 				mAdapter.notifyDataSetChanged();
+				((MainActivity)getParentFragment().getActivity()).updateMapMarkers();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		((MainActivity)getParentFragment().getActivity()).updateMapMarkers();
+		//TODO: set height of footer equal to hide map when no content is being shown (and make sure it doesn't block UI, commented code is too slow)
+        //mListView.getFooterFillView().setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, params.height+400));
+	    //LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) fill.getLayoutParams();
+
+//	    int totHeight = 0;
+//	    for (int i = 0; i < mAdapter.getCount(); i++) {
+//	        View mView = mAdapter.getView(i, null, mListView);
+//	        mView.measure(
+//	                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+//	                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+//	        totHeight += mView.getMeasuredHeight();
+//	        System.out.println("HEIGHT " + i + ": " + String.valueOf(totHeight));
+//	    }
+		if (mAdapter.getCount() < 3) {
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mListView.getFooterFillView().getLayoutParams();
+			params.height = mListView.getMeasuredHeight() - mListView.getHeaderHeight();
+	    	mListView.getFooterFillView().setLayoutParams(params);
+	    	mListView.requestLayout();
+		}
 		mListView.onRefreshComplete();
 	}
 	

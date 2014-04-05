@@ -18,7 +18,7 @@
                   android:drawSelectorOnTop="true"
                   android:listSelector="@drawable/list_selector"
                   android:overScrollFooter="@null"
-                  android:scrollbars="none" >
+                  android:scrollbarStyle="outsideOverlay">
               </edu.uark.spARK.PullToRefreshListView>
 
 <!--               <View -->
