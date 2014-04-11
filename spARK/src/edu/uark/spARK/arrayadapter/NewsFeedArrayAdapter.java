@@ -63,7 +63,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				holder.commentLinearLayout = (LinearLayout) holder.commentTextView.getParent();
 			}
 			if (c instanceof Bulletin) {
-				convertView = mInflater.inflate(R.layout.content_list_item_discussion, null);
+				convertView = mInflater.inflate(R.layout.content_list_item_bulletin, null);
 			}
 			if (c instanceof Event) {
 				convertView = mInflater.inflate(R.layout.content_list_item_event, null);
