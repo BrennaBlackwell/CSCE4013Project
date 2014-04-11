@@ -129,7 +129,7 @@ public class GroupFragment extends Fragment implements AsyncResponse {
 
 	public void loadContent() {
 		JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, "Group");
+		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, "Group", "1");
 	}
 	
 	@Override

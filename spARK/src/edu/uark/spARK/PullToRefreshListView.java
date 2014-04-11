@@ -11,6 +11,7 @@ import edu.uark.spARK.activity.MainActivity;
 import edu.uark.spARK.fragment.MapViewFragment;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.*;
@@ -86,6 +87,8 @@ public class PullToRefreshListView extends ListView {
     private State                   state;
     private LinearLayout            headerContainer;
     private FrameLayout          	header;
+    private LinearLayout			footerContainer;
+    private View					mFooterView;
     private RotateAnimation         flipAnimation;
     private RotateAnimation         reverseFlipAnimation;
     private ImageView               image;
@@ -267,7 +270,13 @@ public class PullToRefreshListView extends ListView {
         addMapHeader(c);
 //	    addFooterView(footerView);
 //	    footerView.setText("Loading more data...");
-        
+        footerContainer = new LinearLayout(c);
+        mFooterView = new View(c);
+        footerContainer.addView(mFooterView);
+        footerContainer.setEnabled(false);
+        //footerContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, getHeaderHeight()));      
+        addFooterView(footerContainer);
+        mFooterView.setBackgroundResource(R.color.list_item_bg);
         setState(State.PULL_TO_REFRESH);
         scrollbarEnabled = isVerticalScrollBarEnabled();
 
@@ -290,6 +299,9 @@ public class PullToRefreshListView extends ListView {
 	    mapHeader.setBackgroundColor(Color.TRANSPARENT);
 	}
 	
+	public int getHeaderHeight() {
+		return mapHeader.getMeasuredHeight() + headerPadding;
+	}
     private void setHeaderPadding(int padding){
         headerPadding = padding;
 
@@ -575,5 +587,44 @@ public class PullToRefreshListView extends ListView {
 
             return false;
         }
+    }
+    
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+    	super.dispatchDraw(canvas);
+    }
+    
+    protected int getTotalHeightofListView() {
+
+        ListAdapter mAdapter = getAdapter();
+        int totHeight = 0;
+        for (int i = 0; i < mAdapter.getCount(); i++) {
+            View mView = mAdapter.getView(i, null, this);
+            mView.measure(
+                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+            totHeight += mView.getMeasuredHeight();
+        }
+
+        return totHeight; 
+    }
+
+    public void addFooterFill(int sizeUsed){
+
+        //View fill = (View) mFooter.findViewById(R.id.fill);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mFooterView.getLayoutParams();
+        params.height = getMeasuredHeight() - sizeUsed;
+        mFooterView.setLayoutParams(params);
+        mFooterView.setBackgroundColor(Color.BLACK);
+    }
+    
+    public View getFooterFillView() {
+    	return mFooterView;
+    }
+    
+    public void resetFooterFill() {
+ 	   if((getMeasuredHeight() + getTotalHeightofListView()) < getMeasuredHeight())
+	        addFooterFill(getMeasuredHeight() + getTotalHeightofListView());
     }
 }

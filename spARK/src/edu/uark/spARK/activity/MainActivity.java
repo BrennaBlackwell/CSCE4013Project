@@ -65,6 +65,7 @@ import edu.uark.spARK.entity.Discussion;
 import edu.uark.spARK.entity.Event;
 import edu.uark.spARK.entity.Group;
 import edu.uark.spARK.fragment.ContentFragment;
+import edu.uark.spARK.fragment.GroupFragment;
 import edu.uark.spARK.fragment.HomeFragment;
 import edu.uark.spARK.fragment.MapViewFragment;
 import edu.uark.spARK.fragment.MyProfileFragment;
@@ -366,15 +367,15 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
 		    		setTitle(mNavDrawerTitles[position]);
 	            break;
 	        case 4:
-	        	//Groups fragment
-		            fm.beginTransaction()
-		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Groups").commit();
-		    		setTitle(mNavDrawerTitles[position]);
-	            break;
-	        case 5:
 	        	//Discussions fragment
 		            fm.beginTransaction()
 		            .replace(R.id.fragment_frame, ContentFragment.newInstance(position), "Discussions").commit();
+		    		setTitle(mNavDrawerTitles[position]);
+	            break;
+	        case 5:
+		    	//Groups fragment
+		            fm.beginTransaction()
+		            .replace(R.id.fragment_frame, new GroupFragment(), "Groups").commit();
 		    		setTitle(mNavDrawerTitles[position]);
 	        	break;
 	        case 6:

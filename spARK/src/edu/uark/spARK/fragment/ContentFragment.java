@@ -62,7 +62,7 @@ public class ContentFragment extends Fragment {
         PagerTabStrip mPagerTabStrip = (PagerTabStrip) v.findViewById(R.id.pager_tab_strip);
         mPagerTabStrip.setDrawFullUnderline(true);
         mPagerTabStrip.setTabIndicatorColorResource(R.color.tabstrip);
-        mAdapter = new MyAdapter(getChildFragmentManager());   
+        mAdapter = new MyAdapter(getChildFragmentManager());  
         mPager.setAdapter(mAdapter);
         mPager.setCurrentItem(1);
         mPager.setOnPageChangeListener(new OnPageChangeListener() {
@@ -96,7 +96,7 @@ public class ContentFragment extends Fragment {
         }
         
         @Override
-        public NewsFeedFragment getItem(int position) {
+        public Fragment getItem(int position) {
         	//first variable is content type (Discussion, Bulletin, etc.); second is sort type (Recent, Nearby, etc.)
         	return NewsFeedFragment.newInstance(ContentFragment.this.getArguments().getInt("num"), position);
         }     

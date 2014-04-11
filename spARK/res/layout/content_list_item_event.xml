@@ -361,7 +361,6 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:gravity="center"
-                    android:text="12 comments"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" 
                     android:visibility="invisible"/>
