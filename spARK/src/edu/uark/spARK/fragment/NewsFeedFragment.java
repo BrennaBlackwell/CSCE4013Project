@@ -256,9 +256,13 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 		}	
 		//TODO: implement new content types as they are added (eg events)
 		//TODO: set sorting type
-		
-		Location cur = ((MapViewFragment) getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).getLocationClient().getLastLocation();
-		
+		Location cur = null;
+		try {
+		cur = ((MapViewFragment) getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).getLocationClient().getLastLocation();
+		}
+		catch (IllegalStateException ise) {
+			ise.printStackTrace();
+		}
 		JSONQuery jquery = new JSONQuery(this);
 		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, contentType, sort, String.valueOf(cur.getLatitude()), String.valueOf(cur.getLongitude()));
 		
