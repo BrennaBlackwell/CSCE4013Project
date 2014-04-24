@@ -73,14 +73,14 @@ import edu.uark.spARK.fragment.MyProfileFragment;
 public class MainActivity extends FragmentActivity implements AsyncResponse {
 	//auth2.0 Prediction API authentication variables
 	static final String APPLICATION_NAME = "csce.uark.edu-spark/1.0";
-	private static final String AUTH_TOKEN_TYPE = "oauth2:https://www.googleapis.com/auth/prediction";
+	static final String AUTH_TOKEN_TYPE = "oauth2:https://www.googleapis.com/auth/prediction";
 	static final String PREF_AUTH_TOKEN = "authToken";
 	static final String PREF_ACCOUNT_NAME = "accountName";	
 	static GoogleCredential credential = new GoogleCredential();
-	String accountName;
+	static String accountName;
 	SharedPreferences preferences;
-	GoogleAccountManager accountManager;
-	private static final int REQUEST_AUTHENTICATE = 11;
+	static GoogleAccountManager accountManager;
+	static final int REQUEST_AUTHENTICATE = 11;
 
 	
 	// TODO: Need to create a Current/myUser Class for these variables
