@@ -371,8 +371,14 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 			TextView rating = (TextView) mContentView.findViewById(R.id.totalScoreTextView);
 			ToggleButton likeBtn = (ToggleButton) mContentView.findViewById(R.id.likeBtn);
 			ToggleButton dislikeBtn = (ToggleButton) mContentView.findViewById(R.id.dislikeBtn);
+			
+			if (c.getText() == "null") {
+				desc.setText("");
+			} else {
+				desc.setText(c.getText());
+			}
+			
 			title.setText(c.getTitle());
-			desc.setText(c.getText());
 			//loc.setText(c.getLatitude() + ", " + c.getLongitude());
 			rating.setText(String.valueOf(c.getTotalRating()));
 			if (c.getUserRating() == 1) {
