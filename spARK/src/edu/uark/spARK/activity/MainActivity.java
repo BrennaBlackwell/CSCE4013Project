@@ -93,10 +93,10 @@ public class MainActivity extends FragmentActivity implements AsyncResponse {
     private JSONArray MyContents = null;
 
     //Navigation menus
-    private DrawerLayout mNavDrawerLayout;
-    private MainDrawerListener mNavDrawerListener;
-    private NavListArrayAdapter mNavListArrayAdapter;
-    private ListView mNavDrawerList;
+    public DrawerLayout mNavDrawerLayout;
+    public MainDrawerListener mNavDrawerListener;
+    public NavListArrayAdapter mNavListArrayAdapter;
+    public ListView mNavDrawerList;
     private ListView mNotificationList;
     private ActionBarDrawerToggle mNavDrawerToggle;
     private CharSequence mTitle;

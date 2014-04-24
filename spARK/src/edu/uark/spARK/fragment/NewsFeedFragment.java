@@ -260,7 +260,7 @@ public class NewsFeedFragment extends Fragment implements AsyncResponse {
 		Location cur = ((MapViewFragment) getParentFragment().getFragmentManager().findFragmentById(R.id.map_frame)).getLocationClient().getLastLocation();
 		
 		JSONQuery jquery = new JSONQuery(this);
-		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, contentType, sort, String.valueOf(cur.getLatitude()), String.valueOf(cur.getLatitude()));
+		jquery.execute(ServerUtil.URL_LOAD_ALL_POSTS, MainActivity.myUsername, contentType, sort, String.valueOf(cur.getLatitude()), String.valueOf(cur.getLongitude()));
 		
 	}
 	

@@ -68,4 +68,6 @@ public class ServerUtil {
 	
 	public static final String URL_FAVORITE = SERVER_ADDR + "favorite.php";
 
+	public static final String URL_HOME = SERVER_ADDR + "home.php";
+
 }
