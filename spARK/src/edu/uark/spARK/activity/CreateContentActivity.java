@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
@@ -87,7 +91,6 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 	static final int REQUEST_LOCATION = 100;
 	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 	private final HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
-	GoogleCredential credential = new GoogleCredential();
 	private static Prediction client;
 
 	
@@ -132,8 +135,60 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 				}
 			}
 		}
+		
+		//prediction
+//		Account account = MainActivity.accountManager.getAccountByName(MainActivity.accountName);
+//		final SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+//		if (account == null) {
+//			System.out.println("ACCOUNT IS NULL");
+//		}
+//		if (MainActivity.credential.getAccessToken() != null) {
+//				Set<String> scopes = new HashSet<String>();
+//				scopes.add(PredictionScopes.DEVSTORAGE_FULL_CONTROL);
+//				scopes.add(PredictionScopes.DEVSTORAGE_READ_ONLY);
+//				scopes.add(PredictionScopes.DEVSTORAGE_READ_WRITE);
+//				scopes.add(PredictionScopes.PREDICTION);
+//				GoogleAccountCredential accountCredential = GoogleAccountCredential.usingOAuth2(this, scopes);
+//				accountCredential.setSelectedAccountName(preferences.getString(MainActivity.PREF_ACCOUNT_NAME, null));
+//		}
+//		MainActivity.accountManager.getAccountManager().getAuthToken(account, MainActivity.AUTH_TOKEN_TYPE, savedInstanceState, true, new AccountManagerCallback<Bundle>() {
+//			@Override
+//			public void run(AccountManagerFuture<Bundle> future) {
+//				try {
+//					Bundle bundle = future.getResult();
+//					if (bundle.containsKey(AccountManager.KEY_INTENT)) {
+//						Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
+//						intent.setFlags(intent.getFlags() & ~Intent.FLAG_ACTIVITY_NEW_TASK);
+//						startActivityForResult(intent, MainActivity.REQUEST_AUTHENTICATE);
+//					} else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
+//						setAuthToken(bundle.getString(AccountManager.KEY_AUTHTOKEN));
+//						Set<String> scopes = new HashSet<String>();
+//						scopes.add(PredictionScopes.DEVSTORAGE_FULL_CONTROL);
+//						scopes.add(PredictionScopes.DEVSTORAGE_READ_ONLY);
+//						scopes.add(PredictionScopes.DEVSTORAGE_READ_WRITE);
+//						scopes.add(PredictionScopes.PREDICTION);
+//						GoogleAccountCredential accountCredential = GoogleAccountCredential.usingOAuth2(CreateContentActivity.this, scopes);
+//						accountCredential.setSelectedAccountName(preferences.getString(MainActivity.PREF_ACCOUNT_NAME, null));
+//					}
+//				} catch (Exception e) {
+//					Log.e("Oauth", e.getMessage(), e);
+//				}
+//			}
+//		}, null);
+		
+		//invalidate authentication token
+		//MainActivity.credential.getAccessToken().
+		//Toast.makeText(this, MainActivity.credential.get, duration)
 	}
 
+	void setAuthToken(String authToken) {
+		SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putString(MainActivity.PREF_AUTH_TOKEN, authToken);
+		editor.commit();
+		MainActivity.credential.setAccessToken(authToken);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
