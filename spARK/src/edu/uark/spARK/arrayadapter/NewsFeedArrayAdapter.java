@@ -87,8 +87,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			holder.likeBtn = (ToggleButton) convertView.findViewById(R.id.likeBtn);
 			holder.dislikeBtn = (ToggleButton) convertView.findViewById(R.id.dislikeBtn);
 			holder.pinpointBtn = (Button) convertView.findViewById(R.id.pinpointBtn);
-			holder.favoriteBtn = (ToggleButton) convertView.findViewById(R.
-					id.favoriteBtn);
+			holder.favoriteBtn = (ToggleButton) convertView.findViewById(R.id.favoriteBtn);
 			holder.deleteBtn = (Button) convertView.findViewById(R.id.trashBtn);
 			holder.deleteBtn.setVisibility(View.GONE);
 			holder.scoreRadioGroup = (RadioGroup) convertView.findViewById(R.id.discussionScoreRadioGroup);
@@ -192,11 +191,7 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 		}
 		
 		holder.favoriteBtn.setTag(position);
-		if (c.isFavorited()) {
-			holder.favoriteBtn.setChecked(true);
-		} else {
-			holder.favoriteBtn.setChecked(false);
-		}
+		holder.favoriteBtn.setChecked(c.isFavorited());
 		
 		if (c.getCreator().getId() == MainActivity.myUserID) {
 			holder.deleteBtn.setVisibility(View.VISIBLE);
@@ -311,7 +306,6 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 			
 		});
 		
-		// TODO: Favorite button not refreshing immediately
 		holder.favoriteBtn.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -322,10 +316,12 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				if (button.isChecked()) {
 					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "favorite");
 					button.setChecked(true);	
+					getItem((Integer) v.getTag()).setFavorited(true);
 					update();
 				} else {
 					jquery.execute(ServerUtil.URL_FAVORITE, Integer.toString(MainActivity.myUserID), Integer.toString(c.getId()), "unfavorite");
 					button.setChecked(false);	
+					getItem((Integer) v.getTag()).setFavorited(false);
 					update();
 				}
 			}
@@ -336,7 +332,6 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 
 			@Override
 			public void onClick(View v) {
-				// TODO: Need to implement addToBackStack on Profiles
 				Fragment profileFragment;
 				if (MainActivity.myUserID == c.getCreator().getId()) {
 					profileFragment = new MyProfileFragment() {
@@ -423,6 +418,8 @@ public class NewsFeedArrayAdapter extends ArrayAdapter<Content> implements Async
 				// Do something for favoriting later
 			}
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

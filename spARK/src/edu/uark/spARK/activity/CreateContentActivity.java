@@ -63,9 +63,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.api.client.auth.oauth2.CredentialRefreshListener;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -89,11 +91,6 @@ import edu.uark.spARK.fragment.TimePickerFragment;
 @SuppressLint("ValidFragment")
 public class CreateContentActivity extends FragmentActivity implements OnNavigationListener {
 	static final int REQUEST_LOCATION = 100;
-	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
-	private final HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
-	private static Prediction client;
-
-	
 	
 	private String[] options = new String[] { "EVENT", "DISCUSSION", "GROUP" };
 	private NewContentFragment curNewFragment;
@@ -444,7 +441,9 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 								GoogleAccountCredential accountCredential = GoogleAccountCredential.usingOAuth2(CreateContentActivity.this, scopes);
 								SharedPreferences preferences = getSharedPreferences("MyPreferences", Activity.MODE_PRIVATE);
 								accountCredential.setSelectedAccountName(preferences.getString(MainActivity.PREF_ACCOUNT_NAME, null));
-								client = new com.google.api.services.prediction.Prediction.Builder(httpTransport, JSON_FACTORY, MainActivity.credential).setApplicationName(
+								HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+								JsonFactory jsonFactory = new JacksonFactory();
+								Prediction client = new com.google.api.services.prediction.Prediction.Builder(httpTransport, jsonFactory, MainActivity.credential).setApplicationName(
 										MainActivity.APPLICATION_NAME).build();
 								// test
 								final Input input = new Input();
@@ -456,8 +455,25 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 								Output output = null;
 								try {
 									output = client.trainedmodels().predict(PredictionUtil.PROJECT_ID, PredictionUtil.TOPIC_MODEL_ID, input).execute();
+								} catch (final GoogleJsonResponseException ge) {
+									//toast response error code (typically 401 because refresh tokens are horrible)
+									//encapsulated in runOnUiThread because you can't post the json response in onPostExecute
+									progressDialog.dismiss();
+									ge.printStackTrace();
+									//if user has given spark authorization, refresh token and try again
+									if (MainActivity.credential != null && ge.getStatusCode() == 401) {
+										try {
+											MainActivity.credential.refreshToken();
+											Toast.makeText(getApplicationContext(), "Refreshing token, try again in a few seconds." , Toast.LENGTH_LONG).show();
+										} catch (IOException e) {
+											//well now we're screwed
+											e.printStackTrace();
+										}
+									}
+									
 								} catch (IOException e) {
-									e.printStackTrace();
+									//unexpected error. try again
+									return doInBackground(param);
 								}
 								return output;
 							}
@@ -476,7 +492,6 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 												return -1;
 											return 0;
 										}
-
 									});
 									Log.d("PREDICTION", result.toPrettyString());
 									final View newTopic = LayoutInflater.from(CreateContentActivity.this).inflate(R.layout.topic_grid_item, null);
@@ -494,11 +509,10 @@ public class CreateContentActivity extends FragmentActivity implements OnNavigat
 											topicLinearLayout.removeView(newTopic);
 											selectedOutput.remove(((TextView) newTopic.findViewById(R.id.topic_textview)).getText());
 										}
-
 									});
-
 								} catch (IOException e) {
-									e.printStackTrace();
+									//unexpected error. try again
+									this.execute();
 								} catch (NullPointerException e) {
 									e.printStackTrace();
 								} 
